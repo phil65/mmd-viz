@@ -116,6 +116,25 @@ const svg = renderAnimatedSvg(
 );
 ```
 
+### Animating pele's SVGs inside an app
+
+`renderAnimatedSvg` frames a diagram for READMEs and docs (its own canvas, theme and fonts). An
+app that already draws with pele, in its own colors, can add just the motion:
+
+```ts
+import { animateSvg, loops } from "mmd-viz/animate";
+import { renderAsync } from "pele/lazy";
+
+const { svg, type } = await renderAsync(source);
+const animated = animateSvg(svg, type, { idPrefix: "d1" }); // unique per SVG on the page
+// loops(type): false for types that build up once (pie, class, kanban, …), true where
+// packets keep moving, so only those need pausing while out of view
+```
+
+The drawing stays as pele made it, colors follow the page's `--pele-*` variables (packets use
+pele's accent `--_c` and `--pele-series-N`), and `mmd-viz/animate` imports nothing from pele, so
+diagram types still load on demand.
+
 ### Mind maps
 
 ```ts

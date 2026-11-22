@@ -1,4 +1,6 @@
 export { renderAnimatedSvg } from "./animate.js";
+export { animateSvg, loops } from "./embed.js";
+export type { AnimateSvgOptions } from "./embed.js";
 export {
   cleanInline,
   countDescendants,
