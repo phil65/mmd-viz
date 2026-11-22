@@ -1,0 +1,7 @@
+architecture-beta
+  group api(cloud)[API Layer]
+  service gw(internet)[Gateway] in api
+  service pool(server)[Workers] in api
+  service db(database)[Storage]
+  gw:R --> L:pool
+  pool:B --> T:db

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="ishikawa-root" viewBox="0 0 577 334" width="577" height="334" role="img" aria-label="Ishikawa · causes flow into the effect">
+  <defs>
+    <style>
+      .ishikawa-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .ishikawa-bg { fill: var(--mv-bg); }
+      .ishikawa-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .ishikawa-dot { fill: var(--mv-dot); }
+      .ishikawa-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .ishikawa-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .ishikawa-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .ishikawa-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .ishikawa-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .ishikawa-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: ishikawa-dash 1.80s linear infinite; }
+      .ishikawa-pulse { transform-box: fill-box; transform-origin: center; animation: ishikawa-ring 3.20s ease-in-out infinite; }
+      @keyframes ishikawa-dash { to { stroke-dashoffset: -40; } }
+      @keyframes ishikawa-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      .ishikawa-flash { opacity: 0.15; animation: ishikawa-flash 4s linear infinite; }
+      @keyframes ishikawa-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .ishikawa-working > rect { animation: ishikawa-working 3.20s ease-in-out infinite; }
+      @keyframes ishikawa-working { 50% { fill-opacity: 0.55; } }
+      @media (prefers-reduced-motion: reduce) {
+        .ishikawa-flow, .ishikawa-pulse, .ishikawa-flash, .ishikawa-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .ishikawa-packets, .ishikawa-smil { display: none; }
+      }
+      .ishikawa-beat { transform-box: fill-box; transform-origin: center; animation: ishikawa-beat 3.20s ease-in-out infinite; }
+      @keyframes ishikawa-beat { 0%, 70%, 100% { scale: 1; } 85% { scale: 1.05; } }
+      @media (prefers-reduced-motion: reduce) { .ishikawa-beat { animation: none; } }
+    </style>
+    <pattern id="ishikawa-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="ishikawa-dot"/>
+    </pattern>
+    <radialGradient id="ishikawa-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ishikawa-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ishikawa-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+    <path id="ishikawa-bone-0" d="M-58.5,-49L-37.13,-6.26L-37.13,0H-7"/>
+    <path id="ishikawa-bone-1" d="M-58.5,49L-37.13,6.26L-37.13,0H-7"/>
+    <path id="ishikawa-bone-2" d="M-227.65,-49L-206.28,-6.26L-206.28,0H-7"/>
+    <path id="ishikawa-bone-3" d="M-227.65,49L-206.28,6.26L-206.28,0H-7"/>
+  </defs>
+
+  <rect width="577" height="334" rx="18" class="ishikawa-bg"/>
+  <rect width="577" height="334" rx="18" fill="url(#ishikawa-dots)"/>
+  <circle cx="150" cy="120" r="162" fill="url(#ishikawa-glow-l)"/>
+  <circle cx="427" cy="214" r="162" fill="url(#ishikawa-glow-r)"/>
+  <text x="288.5" y="42" text-anchor="middle" class="ishikawa-title">Ishikawa · causes flow into the effect</text>
+
+  <g class="ishikawa-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g transform="translate(327.28,91)"><path class="pele-ishikawa-spine" d="M-231.15,0H-7" fill="none" stroke="var(--_l)"/><path class="pele-marker" d="M0,0L-8,3.36L-8,-3.36Z" fill="var(--_l)" stroke="none"/><g class="pele-ishikawa-category" data-id="People"><path class="pele-ishikawa-bones" d="M-37.13,-6.26L-58.5,-49M-47.75,-27.5H-65.75" fill="none" stroke="var(--_l)"/><circle class="ishikawa-smil" r="3.8" fill="#38BDF8"><animateMotion dur="3.20s" begin="0.00s" repeatCount="indefinite"><mpath href="#ishikawa-bone-0"/></animateMotion></circle><path class="pele-marker" d="M-34,0L-40.58,-5.65L-34.57,-8.66Z" fill="var(--_l)" stroke="none"/><rect x="-93.4" y="-83" width="69.81" height="34" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="-58.5" y="-60.4" text-anchor="middle">People</text><g class="pele-ishikawa-causes" font-size="14"><text x="-101.86" y="-22.6" text-anchor="middle">New hires</text></g></g><g class="pele-ishikawa-category" data-id="Tools"><path class="pele-ishikawa-bones" d="M-37.13,6.26L-58.5,49M-47.75,27.5H-65.75" fill="none" stroke="var(--_l)"/><circle class="ishikawa-smil" r="3.8" fill="#818CF8"><animateMotion dur="3.20s" begin="-0.97s" repeatCount="indefinite"><mpath href="#ishikawa-bone-1"/></animateMotion></circle><path class="pele-marker" d="M-34,0L-34.57,8.66L-40.58,5.65Z" fill="var(--_l)" stroke="none"/><rect x="-88.06" y="49" width="59.12" height="34" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="-58.5" y="71.6" text-anchor="middle">Tools</text><g class="pele-ishikawa-causes" font-size="14"><text x="-116.26" y="32.4" text-anchor="middle">Old CI runners</text></g></g><g class="pele-ishikawa-category" data-id="Process"><path class="pele-ishikawa-bones" d="M-206.28,-6.26L-227.65,-49M-216.9,-27.5H-234.9" fill="none" stroke="var(--_l)"/><circle class="ishikawa-smil" r="3.8" fill="#FBBF24"><animateMotion dur="3.20s" begin="-1.94s" repeatCount="indefinite"><mpath href="#ishikawa-bone-2"/></animateMotion></circle><path class="pele-marker" d="M-203.15,0L-209.73,-5.65L-203.72,-8.66Z" fill="var(--_l)" stroke="none"/><rect x="-266.54" y="-83" width="77.79" height="34" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="-227.65" y="-60.4" text-anchor="middle">Process</text><g class="pele-ishikawa-causes" font-size="14"><text x="-274.91" y="-22.6" text-anchor="middle">No caching</text></g></g><g class="pele-ishikawa-category" data-id="Code"><path class="pele-ishikawa-bones" d="M-206.28,6.26L-227.65,49M-216.9,27.5H-234.9" fill="none" stroke="var(--_l)"/><circle class="ishikawa-smil" r="3.8" fill="#34D399"><animateMotion dur="3.20s" begin="-2.91s" repeatCount="indefinite"><mpath href="#ishikawa-bone-3"/></animateMotion></circle><path class="pele-marker" d="M-203.15,0L-203.72,8.66L-209.73,5.65Z" fill="var(--_l)" stroke="none"/><rect x="-256.77" y="49" width="58.24" height="34" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="-227.65" y="71.6" text-anchor="middle">Code</text><g class="pele-ishikawa-causes" font-size="14"><text x="-279.59" y="32.4" text-anchor="middle">Huge bundle</text></g></g><g class="pele-ishikawa-head ishikawa-beat" data-id="Slow builds"><path d="M0,-24H112.91A24,24 0 0 1 112.91,24H0Z" fill="var(--_s)" stroke="var(--_b)" stroke-linejoin="round"/><text class="pele-label" font-weight="var(--_hw)" text-anchor="middle" xml:space="preserve"><tspan x="56.46" y="5.6">Slow builds</tspan></text></g></g>
+  </g>
+
+  <rect x="139" y="282" width="300" height="30" rx="15" class="ishikawa-card"/>
+  <text x="288.5" y="301" text-anchor="middle" class="ishikawa-footer">ishikawa-beta</text>
+</svg>

@@ -1,0 +1,70 @@
+{
+  "architecture": {
+    "title": "mmd-viz · Mermaid to styled & animated SVG",
+    "footer": "npx mmd-viz diagram.mmd -o out.svg"
+  },
+  "complex-loop": {
+    "title": "Agentic loop · subgraphs + labels + feedback",
+    "footer": "flowchart LR with subgraphs, a decision & a retry edge"
+  },
+  "light-td": {
+    "title": "Light theme · top-down architecture",
+    "footer": "mmd-viz --theme light",
+    "theme": "light"
+  },
+  "sequence": {
+    "title": "Sequence diagram · chronological relay",
+    "footer": "messages fire in order: 1 -> 2 -> 3 -> 4"
+  },
+  "state": {
+    "title": "State machine · one transition at a time",
+    "footer": "stateDiagram-v2: a token walks the transitions"
+  },
+  "gitgraph": {
+    "title": "gitGraph · history replays",
+    "footer": "commits flash as the replay reaches them"
+  },
+  "tokyo-night": {
+    "title": "Tokyo Night · thick & dotted edges",
+    "footer": "mmd-viz --theme tokyo-night --speed 1.2",
+    "theme": "tokyo-night",
+    "speed": 1.2
+  },
+  "arch-beta": {
+    "title": "architecture-beta · service traffic",
+    "footer": "architecture-beta via pele"
+  },
+  "sankey": {
+    "title": "Sankey · particles in proportion",
+    "footer": "each ribbon carries as many particles as its value"
+  },
+  "gantt": {
+    "title": "Gantt · sweeping playhead",
+    "footer": "done tasks faded, the active one glowing"
+  },
+  "timeline": {
+    "title": "Timeline · axis & milestones",
+    "footer": "a pulse travels the axis"
+  },
+  "pie": {
+    "title": "Pie · slices bloom once",
+    "footer": "charts and structure build up, then stand still"
+  },
+  "journey": {
+    "title": "Journey · walking the experience",
+    "footer": "a marker walks the satisfaction line"
+  },
+  "ishikawa": {
+    "title": "Ishikawa · causes flow into the effect",
+    "footer": "ishikawa-beta"
+  },
+  "class": {
+    "title": "Class diagram · relations draw",
+    "footer": "classes rise in, inheritance draws (no packets)"
+  },
+  "mindmap": {
+    "source": "mindmap.mindmap.md",
+    "title": "Mind map · from a Markdown outline",
+    "footer": "headings and lists become branches"
+  }
+}

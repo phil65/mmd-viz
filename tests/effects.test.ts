@@ -96,3 +96,13 @@ describe("framed nodes", () => {
     expect(flow).toMatch(/width="5" height="[^"]+" rx="2.5"/);
   });
 });
+
+describe("reduced motion", () => {
+  it("hides what SMIL moves, since SMIL ignores the media query", () => {
+    const flow = renderAnimatedSvg("flowchart LR\n  a --> b");
+    expect(flow).toMatch(/prefers-reduced-motion: reduce\)[^@]*\.mmd-packets, \.mmd-smil \{ display: none; \}/);
+    expect(flow).toContain('<g class="mmd-packets">');
+    const journey = renderAnimatedSvg("journey\n  section S\n    a: 5: Me\n    b: 2: Me");
+    expect(journey).toMatch(/<circle class="mmd-smil"[^>]*><animateMotion/);
+  });
+});

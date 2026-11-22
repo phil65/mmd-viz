@@ -1,6 +1,6 @@
 # Diagram Type Support
 
-All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get `mmd-viz`'s self-contained SVG canvas, typography, color palette, 8 themes (including `--theme auto`), `--title` / `--footer`, `--transparent` and `--static`. **Every type is animated**, zero-JS (CSS `@keyframes` + SMIL), in the way that suits what it shows, and every animation stops for `prefers-reduced-motion`:
+All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get `mmd-viz`'s self-contained SVG canvas, typography, color palette, 8 themes (including `--theme auto`), `--title` / `--footer`, `--transparent` and `--static`. **Every type is animated**, zero-JS (CSS `@keyframes` + SMIL), in the way that suits what it shows, and every animation stops for `prefers-reduced-motion` (CSS animations stop, SMIL packets and markers are hidden):
 
 - **Flow**: packets keep traveling the edges, for diagrams about traffic and data moving.
 - **Relay**: one packet at a time, edge after edge, looping, for diagrams whose edges are steps taken in order.

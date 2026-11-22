@@ -1,4 +1,5 @@
-import { render } from "pele";
+import { render } from "pele/core";
+import "../src/diagrams.js";
 import { describe, expect, it } from "vitest";
 import { canFold, fold } from "../src/fold.js";
 
@@ -80,7 +81,62 @@ describe("fold classDiagram", () => {
   it("knows which types fold", () => {
     expect(canFold("treeView")).toBe(true);
     expect(canFold("class")).toBe(true);
-    expect(canFold("flowchart")).toBe(false);
-    expect(fold("flowchart LR\n  a --> b", "flowchart")).toBeNull();
+    expect(canFold("flowchart")).toBe(true);
+    expect(canFold("sequence")).toBe(false);
+    expect(fold("sequenceDiagram\n  a->>b: x", "sequence")).toBeNull();
+  });
+});
+
+const FLOW = `flowchart LR
+  a[Client] --> api
+  a --> db
+  subgraph backend [Backend]
+    api[API] --> db[(DB)]
+    subgraph store [Store]
+      db --> disk
+    end
+  end
+  db --> report[Report]`;
+
+const drawn = (model: unknown) =>
+  [...render(model as never).svg.matchAll(/<g class="pele-(node|edge|cluster)[^"]*" data-id="([^"]*)"/g)].map(
+    (m) => `${m[1]}:${m[2]}`
+  );
+
+describe("fold flowchart subgraphs", () => {
+  it("lists subgraphs with how many nodes they hold", () => {
+    const folded = fold(FLOW, "flowchart")!;
+    expect([...folded.foldable].sort()).toEqual([
+      ["backend", 3],
+      ["store", 2],
+    ]);
+    expect(folded.keyAt(0, "backend")).toBe("backend");
+    expect(folded.keyAt(0, "api")).toBeNull();
+  });
+
+  it("makes a folded subgraph one node, edges into it end there, edges inside it go", () => {
+    const folded = fold(FLOW, "flowchart", new Set(["backend"]))!;
+    const items = drawn(folded.model);
+    expect(items).toContain("node:backend");
+    expect(items).not.toContain("node:api");
+    expect(items).not.toContain("cluster:store");
+    // a→api and a→db became one a→backend; db→report starts at backend
+    expect(items.filter((item) => item.startsWith("edge:"))).toHaveLength(2);
+    expect(render(folded.model as never).svg).toContain("Backend (+3)");
+  });
+
+  it("folds a nested subgraph inside its parent", () => {
+    const folded = fold(FLOW, "flowchart", new Set(["store"]))!;
+    const items = drawn(folded.model);
+    expect(items).toContain("cluster:backend");
+    expect(items).toContain("node:store");
+    expect(items).toContain("node:api");
+    expect(items).not.toContain("node:disk");
+  });
+
+  it("hides a folded subgraph inside a folded one with it", () => {
+    const items = drawn(fold(FLOW, "flowchart", new Set(["store", "backend"]))!.model);
+    expect(items).toContain("node:backend");
+    expect(items).not.toContain("node:store");
   });
 });

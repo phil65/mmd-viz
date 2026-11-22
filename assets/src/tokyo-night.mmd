@@ -1,0 +1,5 @@
+flowchart LR
+  src["Source"]:::violet ==> build["Build"]:::cyan
+  build ==> test["Test"]:::emerald
+  test -.-> docs["Docs"]:::amber
+  test ==> ship(["Ship"]):::hub

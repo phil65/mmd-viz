@@ -1,60 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 781 446" width="781" height="446" role="img" aria-label="MMD-VIZ · MERMAID TO STYLED &amp; ANIMATED SVG">
+<svg xmlns="http://www.w3.org/2000/svg" class="architecture-root" viewBox="0 0 748 446" width="748" height="446" role="img" aria-label="mmd-viz · Mermaid to styled &amp; animated SVG">
   <defs>
     <style>
-      .mmd-bg { fill: #070B14; }
-      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #38BDF8; text-transform: uppercase; }
-      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #94A3B8; }
-      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #F8FAFC; }
-      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
-      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #94A3B8; }
-      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #F8FAFC; }
-      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #38BDF8; }
-      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
-      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
-      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
-      @keyframes mmd-ring {
+      .architecture-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .architecture-bg { fill: var(--mv-bg); }
+      .architecture-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .architecture-dot { fill: var(--mv-dot); }
+      .architecture-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .architecture-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .architecture-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .architecture-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .architecture-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .architecture-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: architecture-dash 1.80s linear infinite; }
+      .architecture-pulse { transform-box: fill-box; transform-origin: center; animation: architecture-ring 3.20s ease-in-out infinite; }
+      @keyframes architecture-dash { to { stroke-dashoffset: -40; } }
+      @keyframes architecture-ring {
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
         50% { opacity: 0.65; transform: scale(1.03); }
       }
+      .architecture-flash { opacity: 0.15; animation: architecture-flash 4s linear infinite; }
+      @keyframes architecture-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .architecture-working > rect { animation: architecture-working 3.20s ease-in-out infinite; }
+      @keyframes architecture-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
-        .mmd-flow, .mmd-pulse { animation: none; }
+        .architecture-flow, .architecture-pulse, .architecture-flash, .architecture-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .architecture-packets, .architecture-smil { display: none; }
       }
     </style>
-    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="1.5" cy="1.5" r="1" fill="rgba(148,163,184,0.14)"/>
+    <pattern id="architecture-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="architecture-dot"/>
     </pattern>
-    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+    <radialGradient id="architecture-glow-l" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+    <radialGradient id="architecture-glow-r" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1E293B"/>
-      <stop offset="100%" stop-color="#0F172A"/>
+    <linearGradient id="architecture-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
     </linearGradient>
   </defs>
 
-  <rect width="781" height="446" rx="18" class="mmd-bg"/>
-  <rect width="781" height="446" rx="18" fill="url(#mmd-dots)"/>
-  <circle cx="203" cy="161" r="219" fill="url(#mmd-glow-l)"/>
-  <circle cx="578" cy="285" r="219" fill="url(#mmd-glow-r)"/>
+  <rect width="748" height="446" rx="18" class="architecture-bg"/>
+  <rect width="748" height="446" rx="18" fill="url(#architecture-dots)"/>
+  <circle cx="194" cy="161" r="209" fill="url(#architecture-glow-l)"/>
+  <circle cx="554" cy="285" r="209" fill="url(#architecture-glow-r)"/>
+  <text x="374" y="42" text-anchor="middle" class="architecture-title">mmd-viz · Mermaid to styled &amp; animated SVG</text>
 
-  <text x="390.5" y="42" text-anchor="middle" class="mmd-title">MMD-VIZ · MERMAID TO STYLED &amp; ANIMATED SVG</text>
-
-  <g transform="translate(52,76)" style="--_bg:#070B14;--_fg:#F8FAFC;--_m:#94A3B8;--_l:#38BDF8;--_s:#0F172A;--_a:#1E293B;--_b:rgba(148,163,184,0.24);--_c:#38BDF8;--_r:12px">
-    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_mmd_core_0"><path id="mmd-edge-0" d="M196.05,41C215.62,41 215.62,131 235.19,131L241.19,131" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,41C215.62,41 215.62,131 235.19,131L241.19,131" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M248.19,131L240.19,134.36L240.19,127.64Z" fill="#38BDF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_cli_core_0"><path id="mmd-edge-1" d="M196.05,147L237.05,147" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,147L237.05,147" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M244.05,147L236.05,150.36L236.05,143.64Z" fill="#818CF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_api_core_0"><path id="mmd-edge-2" d="M196.05,253C215.62,253 215.62,163 235.19,163L241.19,163" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,253C215.62,253 215.62,163 235.19,163L241.19,163" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M248.19,163L240.19,166.36L240.19,159.64Z" fill="#FBBF24" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_core_gh_0"><path id="mmd-edge-3" d="M433.46,139C451.45,139 451.45,94 469.44,94L475.44,94" stroke="#34D399" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M433.46,139C451.45,139 451.45,94 469.44,94L475.44,94" stroke="#34D399" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M482.44,94L474.44,97.36L474.44,90.64Z" fill="#34D399" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_core_docs_0"><path id="mmd-edge-4" d="M433.46,155C451.45,155 451.45,200 469.44,200L475.44,200" stroke="#F472B6" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M433.46,155C451.45,155 451.45,200 469.44,200L475.44,200" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M482.44,200L474.44,203.36L474.44,196.64Z" fill="#F472B6" fill-opacity="0.85" stroke="none"/></g></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="mmd" transform="translate(102.26,41)"><rect x="-93.78" y="-33" width="187.57" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-83.8" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Mermaid Source</tspan><tspan x="0" y="16.1">flowchart · sequence</tspan></text></g><g class="pele-node pele-shape-stadium hub mmd-hub-node" data-id="core" transform="translate(339.24,147)"><rect x="-102.2" y="-40.0" width="204.4" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="mmd-pulse"/><rect x="-95.2" y="-33" width="190.39" height="66" rx="18" fill="url(#mmd-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">mmd-viz</tspan><tspan x="0" y="16.1">Pele + SVG Styler</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="cli" transform="translate(132.71,147)"><rect x="-63.34" y="-33" width="126.67" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-53.3" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">CLI / Stdin</tspan><tspan x="0" y="16.1">npx mmd-viz</tspan></text></g><g class="pele-node pele-shape-rect amber" data-id="api" transform="translate(102.02,253)"><rect x="-94.02" y="-33" width="188.05" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-84.0" y="-20.0" width="5" height="40.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">TypeScript API</tspan><tspan x="0" y="16.1">renderAnimatedSvg()</tspan></text></g><g class="pele-node pele-shape-rect emerald" data-id="gh" transform="translate(561.78,94)"><rect x="-79.34" y="-33" width="158.69" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-69.3" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">GitHub README</tspan><tspan x="0" y="16.1">Zero JS ·  Safe</tspan></text></g><g class="pele-node pele-shape-rect pink" data-id="docs" transform="translate(575.58,200)"><rect x="-93.14" y="-33" width="186.27" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-83.1" y="-20.0" width="5" height="40.0" rx="2.5" fill="#F472B6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Static Docs</tspan><tspan x="0" y="16.1">Dark &amp; Light Themes</tspan></text></g></g>
-    <g class="mmd-packets">
-      <circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle>
-      <circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle>
-      <circle r="3.8" fill="#FBBF24"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle>
-      <circle r="3.8" fill="#34D399"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle>
-      <circle r="3.8" fill="#F472B6"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#mmd-edge-4"/></animateMotion></circle>
-    </g>
+  <g class="architecture-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_md_pele_0"><path id="architecture-edge-0" d="M180.38,94C198.38,94 198.38,139 216.37,139L222.37,139" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M180.38,94C198.38,94 198.38,139 216.37,139L222.37,139" stroke="#38BDF8" stroke-width="2.2" fill="none" class="architecture-flow"/><path class="pele-marker" d="M229.37,139L221.37,142.36L221.37,135.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_outline_pele_0"><path id="architecture-edge-1" d="M180.38,200C198.38,200 198.38,155 216.37,155L222.37,155" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M180.38,200C198.38,200 198.38,155 216.37,155L222.37,155" stroke="#818CF8" stroke-width="2.2" fill="none" class="architecture-flow"/><path class="pele-marker" d="M229.37,155L221.37,158.36L221.37,151.64Z" fill="#818CF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_pele_svg_0"><path id="architecture-edge-2" d="M425.25,131C444.81,131 444.81,41 464.38,41L470.38,41" stroke="#34D399" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M425.25,131C444.81,131 444.81,41 464.38,41L470.38,41" stroke="#34D399" stroke-width="2.2" fill="none" class="architecture-flow"/><path class="pele-marker" d="M477.38,41L469.38,44.36L469.38,37.64Z" fill="#34D399" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_pele_app_0"><path id="architecture-edge-3" d="M429.38,147L470.38,147" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M429.38,147L470.38,147" stroke="#FBBF24" stroke-width="2.2" fill="none" class="architecture-flow"/><path class="pele-marker" d="M477.38,147L469.38,150.36L469.38,143.64Z" fill="#FBBF24" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_pele_site_0"><path id="architecture-edge-4" d="M425.25,163C444.81,163 444.81,253 464.38,253L470.38,253" stroke="#F472B6" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M425.25,163C444.81,163 444.81,253 464.38,253L470.38,253" stroke="#F472B6" stroke-width="2.2" fill="none" class="architecture-flow"/><path class="pele-marker" d="M477.38,253L469.38,256.36L469.38,249.64Z" fill="#F472B6" fill-opacity="0.88" stroke="none"/></g></g><g class="architecture-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#architecture-edge-0"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#architecture-edge-1"/></animateMotion></circle><circle r="3.8" fill="#34D399"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#architecture-edge-2"/></animateMotion></circle><circle r="3.8" fill="#FBBF24"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#architecture-edge-3"/></animateMotion></circle><circle r="3.8" fill="#F472B6"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#architecture-edge-4"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="md" transform="translate(94.19,94)"><rect x="-86.19" y="-33" width="172.38" height="66" rx="12" class="architecture-card"/><rect x="-76.2" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Mermaid source</tspan><tspan x="0" y="16.1">.mmd · ```mermaid</tspan></text></g><g class="pele-node pele-shape-stadium hub architecture-hub-node" data-id="pele" transform="translate(328.88,147)"><rect x="-107.5" y="-40.0" width="215.0" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="architecture-pulse"/><rect x="-100.5" y="-33" width="201" height="66" rx="18" fill="url(#architecture-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">pele</tspan><tspan x="0" y="16.1">layout · no browser</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="outline" transform="translate(99.7,200)"><rect x="-80.69" y="-33" width="161.38" height="66" rx="12" class="architecture-card"/><rect x="-70.7" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Markdown outline</tspan><tspan x="0" y="16.1">headings · lists</tspan></text></g><g class="pele-node pele-shape-rect emerald" data-id="svg" transform="translate(548.3,41)"><rect x="-70.91" y="-33" width="141.82" height="66" rx="12" class="architecture-card"/><rect x="-60.9" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Animated SVG</tspan><tspan x="0" y="16.1">zero JS</tspan></text></g><g class="pele-node pele-shape-rect amber" data-id="app" transform="translate(556.28,147)"><rect x="-78.9" y="-33" width="157.79" height="66" rx="12" class="architecture-card"/><rect x="-68.9" y="-20.0" width="5" height="40.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">In your app</tspan><tspan x="0" y="16.1">mmd-viz/animate</tspan></text></g><g class="pele-node pele-shape-rect pink" data-id="site" transform="translate(553.82,253)"><rect x="-76.43" y="-33" width="152.86" height="66" rx="12" class="architecture-card"/><rect x="-66.4" y="-20.0" width="5" height="40.0" rx="2.5" fill="#F472B6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Static sites</tspan><tspan x="0" y="16.1">remark · rehype</tspan></text></g></g>
   </g>
 
-  <rect x="234" y="394" width="313" height="30" rx="15" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/>
-  <text x="390.5" y="413" text-anchor="middle" class="mmd-footer">npx mmd-viz diagram.mmd -o out.svg</text>
+  <rect x="217" y="394" width="313" height="30" rx="15" class="architecture-card"/>
+  <text x="374" y="413" text-anchor="middle" class="architecture-footer">npx mmd-viz diagram.mmd -o out.svg</text>
 </svg>

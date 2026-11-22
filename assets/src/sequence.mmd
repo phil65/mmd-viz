@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant IDE as Editor
+  participant AP as Agent
+  participant LLM as Model
+  IDE->>AP: session/prompt
+  AP->>LLM: stream request
+  LLM-->>AP: tool_call + deltas
+  AP-->>IDE: session/update

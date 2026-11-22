@@ -311,7 +311,7 @@ export function animateJourney(inner: string, ctx: EffectContext, color: string)
       const rest = attrs.replace(/\sstroke="[^"]*"/, "");
       return (
         `<path class="pele-edge" d="${d}"${rest} stroke="${color}" stroke-width="2.4"/>` +
-        `<circle r="5.5" fill="${color}" stroke="#fff" stroke-opacity="0.6" stroke-width="1.5">` +
+        `<circle class="${ctx.pfx}-smil" r="5.5" fill="${color}" stroke="#fff" stroke-opacity="0.6" stroke-width="1.5">` +
         `<animateMotion dur="${walk}s" begin="0s" repeatCount="indefinite" calcMode="linear"><mpath href="#${id}"/></animateMotion></circle>`
       );
     }
@@ -344,7 +344,7 @@ export function animateRailroad(inner: string, ctx: EffectContext, color: string
     if (start?.[1] && start[2] && end?.[1]) {
       const id = `${ctx.pfx}-rail-${index}`;
       ctx.defs.push(`<path id="${id}" d="M${start[1]},${start[2]}H${end[1]}"/>`);
-      next += `<circle r="4.5" fill="${color}"><animateMotion dur="${dur(3.4, ctx.speed)}s" begin="${dur(-index * 0.8, ctx.speed)}s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
+      next += `<circle class="${ctx.pfx}-smil" r="4.5" fill="${color}"><animateMotion dur="${dur(3.4, ctx.speed)}s" begin="${dur(-index * 0.8, ctx.speed)}s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
     }
     return next;
   });
@@ -369,7 +369,7 @@ export function animateIshikawa(inner: string, ctx: EffectContext, colors: reado
       ctx.defs.push(`<path id="${id}" d="M${tx},${ty}L${jx},${jy}L${jx},${spineY}H${headX}"/>`);
       const color = colors[index % colors.length] ?? "#38BDF8";
       const begin = dur(-index * (cycle / 3.3), ctx.speed);
-      return `${full}<circle r="3.8" fill="${color}"><animateMotion dur="${dur(cycle, ctx.speed)}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
+      return `${full}<circle class="${ctx.pfx}-smil" r="3.8" fill="${color}"><animateMotion dur="${dur(cycle, ctx.speed)}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${id}"/></animateMotion></circle>`;
     }
   );
   return flowing.replace(

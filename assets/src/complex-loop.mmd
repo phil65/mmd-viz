@@ -1,0 +1,10 @@
+flowchart LR
+  subgraph intake [Intake]
+    prompt["User prompt"]:::cyan --> plan["Planner"]:::indigo
+  end
+  subgraph work [Execution]
+    plan --> tool["Tool call"]:::amber
+    tool --> check{"Tests pass?"}
+  end
+  check -->|yes| done(["Reply"]):::emerald
+  check -.->|retry| plan

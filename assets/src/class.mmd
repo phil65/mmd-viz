@@ -1,0 +1,13 @@
+classDiagram
+  class Diagram {
+    +String source
+    +render() Svg
+  }
+  class Flowchart {
+    +edges Edge[]
+  }
+  class Sequence {
+    +messages Message[]
+  }
+  Diagram <|-- Flowchart
+  Diagram <|-- Sequence

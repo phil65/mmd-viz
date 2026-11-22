@@ -22,11 +22,11 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![Sequence diagram](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/sequence.svg)
 
-**State machines (`stateDiagram-v2`):**
+**State machines (`stateDiagram-v2`, one transition at a time):**
 
 ![State machine](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/state.svg)
 
-**Git graphs (`gitGraph`):**
+**Git graphs (`gitGraph`, history replaying commit by commit):**
 
 ![Git graph](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/gitgraph.svg)
 
@@ -38,7 +38,7 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![Architecture beta](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/arch-beta.svg)
 
-**Sankey (`sankey-beta` centerline particle streams):**
+**Sankey (`sankey-beta`, particles in proportion to each flow):**
 
 ![Sankey flow](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/sankey.svg)
 
@@ -53,6 +53,20 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 **Mind maps from plain Markdown (headings & lists, branches grow once):**
 
 ![Mind map](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/mindmap.svg)
+
+**Charts and structure build up once (`pie`, `classDiagram`, …):**
+
+![Pie chart](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/pie.svg)
+
+![Class diagram](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/class.svg)
+
+**Motions of their own (`journey` walking the experience, `ishikawa` causes flowing into the effect):**
+
+![User journey](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/journey.svg)
+
+![Ishikawa diagram](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/ishikawa.svg)
+
+All images are generated from [assets/src](./assets/src) (`npm run assets`).
 
 ## Features
 
@@ -179,16 +193,18 @@ controls.reset();
 - **Hover** a node: it, its edges and its neighbors stay, the rest fades (flowchart, C4,
   architecture, state, class, ER, …). **Sankey**: a node shows every flow through it, a ribbon its
   two ends. **gitGraph**: a branch, commit or line shows that branch.
-- **Stepping** (`steps > 0` for sequence and state diagrams): `next()`, `prev()`, `setStep(n)`,
-  `reset()`; past steps stay dimmed, the current one is bright, a state diagram shows the state
-  it's in. Packets hide while stepping.
+- **Stepping** (`steps > 0` for sequence, state, agentflow and event-model diagrams): `next()`,
+  `prev()`, `setStep(n)`, `reset()`; past steps stay dimmed, the current one is bright, and where
+  a step leads somewhere (a state, the agent work is handed to) that node lights up too. Packets
+  hide while stepping.
 - Nothing is drawn again: it sets classes and adds a small stylesheet; `destroy()` removes both.
   The [playground](https://phil65.github.io/mmd-viz/) uses it (arrow keys step).
 
-### Folding (tree views and class diagrams)
+### Folding (tree views, class diagrams, flowchart subgraphs)
 
-`mmd-viz/fold` folds a `treeView-beta` folder (its entries) or a `classDiagram` class (its
-members) by rewriting the Mermaid source; draw the result again and map clicks back with `keyAt`:
+`mmd-viz/fold` folds a `treeView-beta` folder (its entries), a `classDiagram` class (its members)
+or a flowchart `subgraph` (into one node; edges into it end there). Draw the result again
+(`folded.model` for flowcharts, else `folded.source`) and map clicks back with `keyAt`:
 
 ```ts
 import { canFold, fold } from "mmd-viz/fold";
@@ -197,11 +213,15 @@ const folds = new Set<string>();
 const folded = fold(source, type, folds); // { source, foldable, keyAt }
 draw(folded.source);
 // on a click on the n-th g.pele-node with data-id `id`:
-const key = folded.keyAt(n, id); // "L4" (tree entry on line 4) or "Animal" (class), null if it can't fold
+const key = folded.keyAt(n, id); // "L4" (tree entry on line 4), "Animal" (class), "backend"
+// (subgraph: its g.pele-cluster frame or the node it folded into); null if it can't fold
 ```
 
+Flowcharts fold on pele's parsed model, so register the type with `pele/core` first (`import
+"pele"` or `pele/lazy`'s `load("flowchart")`).
+
 A folded folder reads `src (+3)`, a folded class keeps its name and annotations with
-`⋯ 3 members`. Mind maps fold through their outline (`markdownToMindmap`'s `folds`). The
+`⋯ 3 members`, a folded subgraph `Backend (+3)`. Mind maps fold through their outline (`markdownToMindmap`'s `folds`). The
 playground folds on click.
 
 ### Mind maps

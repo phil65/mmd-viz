@@ -1,0 +1,6 @@
+flowchart LR
+  md["Mermaid source<br/>.mmd · ```mermaid"]:::cyan --> pele(["pele<br/>layout · no browser"]):::hub
+  outline["Markdown outline<br/>headings · lists"]:::indigo --> pele
+  pele --> svg["Animated SVG<br/>zero JS"]:::emerald
+  pele --> app["In your app<br/>mmd-viz/animate"]:::amber
+  pele --> site["Static sites<br/>remark · rehype"]:::pink

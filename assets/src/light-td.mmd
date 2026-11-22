@@ -1,0 +1,5 @@
+flowchart TD
+  ui["Web UI<br/>React · SSE"]:::cyan --> api(["API<br/>Node · Bun"]):::hub
+  cli["CLI<br/>npx · CI"]:::indigo --> api
+  api --> db["Postgres<br/>pgvector"]:::emerald
+  api --> queue["Queue<br/>jobs · retries"]:::amber

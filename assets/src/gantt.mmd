@@ -1,0 +1,8 @@
+gantt
+  dateFormat YYYY-MM-DD
+  section Core
+  Parser & layout :done, a1, 2026-01-01, 5d
+  Animations      :active, a2, after a1, 6d
+  section Launch
+  Docs & assets   :a3, after a2, 3d
+  npm release     :milestone, m1, after a3, 0d

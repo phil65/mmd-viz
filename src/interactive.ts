@@ -6,7 +6,8 @@
  * - hover a node: it, its edges and its neighbors stay, the rest fades
  * - sankey: hover a node or ribbon to see the flows through it
  * - gitGraph: hover a branch, commit or line to see that branch
- * - sequence and state diagrams: step through messages or transitions
+ * - sequence, state, agentflow and event-model diagrams: step through their
+ *   messages, transitions or handoffs in order
  *
  * Nothing is drawn again: it only sets classes on pele's elements, and a
  * small stylesheet in the SVG fades what's out of focus.
@@ -22,7 +23,7 @@ export interface InteractiveOptions {
 }
 
 export interface InteractiveState {
-  /** Steps of a sequence or state diagram (`0`: the type has none). */
+  /** Steps of a sequence, state, agentflow or event-model diagram (`0`: none). */
   steps: number;
   /** The current step, or `-1` when not stepping (everything shown). */
   step: number;
@@ -46,7 +47,9 @@ export interface Interactive extends InteractiveState {
 }
 
 /** Types whose edges are steps in order. */
-const STEPPED = new Set(["sequence", "state"]);
+const STEPPED = new Set(["sequence", "state", "agentflow", "eventmodeling"]);
+/** Stepped types whose steps lead somewhere: the node reached is shown too. */
+const REACHES = new Set(["state", "agentflow", "eventmodeling"]);
 
 const ON = "mmdi-on";
 const FOCUS = "mmdi-focus";
@@ -61,7 +64,7 @@ const STYLE = `
   .${FOCUS} .pele-sankey-link:not(.${ON}), .${FOCUS} .pele-sankey-node:not(.${ON}), .${FOCUS} g.pele-label:not(.${ON}),
   .${FOCUS} .pele-commit:not(.${ON}), .${FOCUS} .pele-commit-label:not(.${ON}), .${FOCUS} .pele-branch:not(.${ON}),
   .${FOCUS} [class$="-packets"], .${FOCUS} [class$="-flow"]:not(.${ON}):not(.${ON} *) { opacity: 0.18; transition: opacity 0.15s; }
-  .${STEPPING} .pele-message:not(.${PAST}):not(.${NOW}), .${STEPPING} .pele-transition:not(.${PAST}):not(.${NOW}),
+  .${STEPPING} .pele-edge:not(.${PAST}):not(.${NOW}),
   .${STEPPING} .pele-edge-label:not(.${PAST}):not(.${NOW}) { opacity: 0.12; }
   .${STEPPING} .${PAST} { opacity: 0.55; }
   .${STEPPING}.${STATES} .pele-node:not(.${NOW}) { opacity: 0.4; }
@@ -187,7 +190,7 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
     options.type ??
     [...svg.classList].find((name) => name.startsWith("pele-"))?.slice("pele-".length) ??
     "";
-  if (type === "state") svg.classList.add(STATES);
+  if (REACHES.has(type)) svg.classList.add(STATES);
   const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
   style.textContent = STYLE;
   svg.prepend(style);
@@ -291,8 +294,9 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
         const name = index === state.step ? NOW : PAST;
         mark([edge, labelOf(index)], name);
       });
-      // A state diagram is in the state the current transition leads to
-      if (type === "state") mark([nodes.get(edgeEnds[state.step]?.[1] ?? "")], NOW);
+      // A state diagram is in the state the current transition leads to (agentflow: the
+      // agent the work was handed to, event model: the box the step reaches)
+      if (REACHES.has(type)) mark([nodes.get(edgeEnds[state.step]?.[1] ?? "")], NOW);
     }
     changed();
   };

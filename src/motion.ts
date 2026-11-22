@@ -487,6 +487,8 @@ function motionCss(
       @keyframes ${pfx}-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
         .${pfx}-flow, .${pfx}-pulse, .${pfx}-flash, .${pfx}-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .${pfx}-packets, .${pfx}-smil { display: none; }
       }${grow}${entrances ? entranceCss(pfx, speed) : ""}${beat ? beatCss(pfx, speed) : ""}`;
 }
 

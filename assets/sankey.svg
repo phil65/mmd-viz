@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 720 568" width="720" height="568" role="img" aria-label="SANKEY · WEIGHTED FLOW PARTICLES">
+<svg xmlns="http://www.w3.org/2000/svg" class="sankey-root" viewBox="0 0 720 568" width="720" height="568" role="img" aria-label="Sankey · particles in proportion">
   <defs>
     <style>
-      .mmd-root {
+      .sankey-root {
         --mv-bg: #070B14;
         --mv-card: #0F172A;
         --mv-border: rgba(148,163,184,0.24);
@@ -17,12 +17,12 @@
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
       }
-      .mmd-bg { fill: var(--mv-bg); }
-      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
-      .mmd-dot { fill: var(--mv-dot); }
-      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
-      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
-      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .sankey-bg { fill: var(--mv-bg); }
+      .sankey-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .sankey-dot { fill: var(--mv-dot); }
+      .sankey-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .sankey-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .sankey-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
       .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
       .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
       .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
@@ -30,52 +30,60 @@
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
       .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
-      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
-      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
-      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.80s linear infinite; }
-      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.20s ease-in-out infinite; }
-      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
-      @keyframes mmd-ring {
+      .sankey-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .sankey-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .sankey-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: sankey-dash 1.80s linear infinite; }
+      .sankey-pulse { transform-box: fill-box; transform-origin: center; animation: sankey-ring 3.20s ease-in-out infinite; }
+      @keyframes sankey-dash { to { stroke-dashoffset: -40; } }
+      @keyframes sankey-ring {
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
         50% { opacity: 0.65; transform: scale(1.03); }
       }
+      .sankey-flash { opacity: 0.15; animation: sankey-flash 4s linear infinite; }
+      @keyframes sankey-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .sankey-working > rect { animation: sankey-working 3.20s ease-in-out infinite; }
+      @keyframes sankey-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
-        .mmd-flow, .mmd-pulse { animation: none; }
+        .sankey-flow, .sankey-pulse, .sankey-flash, .sankey-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .sankey-packets, .sankey-smil { display: none; }
       }
     </style>
-    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    <pattern id="sankey-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="sankey-dot"/>
     </pattern>
-    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+    <radialGradient id="sankey-glow-l" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+    <radialGradient id="sankey-glow-r" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="sankey-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="var(--mv-hub-start)"/>
       <stop offset="100%" stop-color="var(--mv-hub-end)"/>
     </linearGradient>
-    <path id="mmd-sankey-0" d="M10.0,264.7C152.5,264.7 152.5,265.4 295.0,265.4"/>
-    <path id="mmd-sankey-1" d="M10.0,91.7C300.0,91.7 300.0,69.2 590.0,69.2"/>
-    <path id="mmd-sankey-2" d="M305.0,222.2C447.5,222.2 447.5,225.9 590.0,225.9"/>
-    <path id="mmd-sankey-3" d="M305.0,326.0C447.5,326.0 447.5,356.8 590.0,356.8"/>
+    <path id="sankey-sankey-0" d="M10.0,280.0C103.3,280.0 103.3,280.0 196.7,280.0"/>
+    <path id="sankey-sankey-1" d="M10.0,80.0C300.0,80.0 300.0,80.0 590.0,80.0"/>
+    <path id="sankey-sankey-2" d="M206.7,330.0C300.0,330.0 300.0,330.0 393.3,330.0"/>
+    <path id="sankey-sankey-3" d="M206.7,210.0C398.3,210.0 398.3,237.0 590.0,237.0"/>
+    <path id="sankey-sankey-4" d="M403.3,300.0C496.7,300.0 496.7,354.0 590.0,354.0"/>
   </defs>
 
-  <rect width="720" height="568" rx="18" class="mmd-bg"/>
-  <rect width="720" height="568" rx="18" fill="url(#mmd-dots)"/>
-  <circle cx="187" cy="204" r="202" fill="url(#mmd-glow-l)"/>
-  <circle cx="533" cy="364" r="202" fill="url(#mmd-glow-r)"/>
-  <text x="360" y="42" text-anchor="middle" class="mmd-title">SANKEY · WEIGHTED FLOW PARTICLES</text>
+  <rect width="720" height="568" rx="18" class="sankey-bg"/>
+  <rect width="720" height="568" rx="18" fill="url(#sankey-dots)"/>
+  <circle cx="187" cy="204" r="202" fill="url(#sankey-glow-l)"/>
+  <circle cx="533" cy="364" r="202" fill="url(#sankey-glow-r)"/>
+  <text x="360" y="42" text-anchor="middle" class="sankey-title">Sankey · particles in proportion</text>
 
-  <g class="mmd-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px">
-    <g transform="translate(8,8)"><g class="pele-sankey-links" fill-opacity="0.4"><path class="pele-sankey-link" data-id="Prompt-&gt;Planner" d="M10,160.91C152.5,160.91 152.5,161.65 295,161.65L295,369.25C152.5,369.25 152.5,368.51 10,368.51Z" fill="var(--pele-series-1,#4c78a8)"><title>Prompt → Planner: 60</title></path><path class="pele-sankey-link" data-id="Prompt-&gt;Direct" d="M10,22.51C300,22.51 300,0 590,0L590,138.4C300,138.4 300,160.91 10,160.91Z" fill="var(--pele-series-1,#4c78a8)"><title>Prompt → Direct: 40</title></path><path class="pele-sankey-link" data-id="Planner-&gt;Coder" d="M305,161.65C447.5,161.65 447.5,165.4 590,165.4L590,286.5C447.5,286.5 447.5,282.75 305,282.75Z" fill="var(--pele-series-2,#f58518)"><title>Planner → Coder: 35</title></path><path class="pele-sankey-link" data-id="Planner-&gt;Research" d="M305,282.75C447.5,282.75 447.5,313.5 590,313.5L590,400C447.5,400 447.5,369.25 305,369.25Z" fill="var(--pele-series-2,#f58518)"><title>Planner → Research: 25</title></path></g><g class="mmd-packets"><circle r="3.6" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="2.60s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-sankey-0"/></animateMotion></circle><circle r="2.8" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="2.60s" begin="-1.50s" repeatCount="indefinite"><mpath href="#mmd-sankey-0"/></animateMotion></circle><circle r="3.6" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="2.95s" begin="-0.65s" repeatCount="indefinite"><mpath href="#mmd-sankey-1"/></animateMotion></circle><circle r="2.8" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="2.95s" begin="-2.13s" repeatCount="indefinite"><mpath href="#mmd-sankey-1"/></animateMotion></circle><circle r="3.6" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="3.30s" begin="-1.10s" repeatCount="indefinite"><mpath href="#mmd-sankey-2"/></animateMotion></circle><circle r="2.8" fill="#818CF8" fill-opacity="0.65"><animateMotion dur="3.30s" begin="-2.75s" repeatCount="indefinite"><mpath href="#mmd-sankey-2"/></animateMotion></circle><circle r="3.6" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="2.60s" begin="-1.55s" repeatCount="indefinite"><mpath href="#mmd-sankey-3"/></animateMotion></circle><circle r="2.8" fill="#818CF8" fill-opacity="0.65"><animateMotion dur="2.60s" begin="-2.85s" repeatCount="indefinite"><mpath href="#mmd-sankey-3"/></animateMotion></circle></g><g class="pele-sankey-nodes"><rect class="pele-sankey-node" data-id="Prompt" x="0" y="22.51" width="10" height="346" rx="2" fill="var(--pele-series-1,#4c78a8)"/><rect class="pele-sankey-node" data-id="Planner" x="295" y="161.65" width="10" height="207.6" rx="2" fill="var(--pele-series-2,#f58518)"/><rect class="pele-sankey-node" data-id="Direct" x="590" y="0" width="10" height="138.4" rx="2" fill="var(--pele-series-3,#54a24b)"/><rect class="pele-sankey-node" data-id="Coder" x="590" y="165.4" width="10" height="121.1" rx="2" fill="var(--pele-series-4,#e45756)"/><rect class="pele-sankey-node" data-id="Research" x="590" y="313.5" width="10" height="86.5" rx="2" fill="var(--pele-series-5,#72b7b2)"/></g><g class="pele-labels" font-size="14"><g class="pele-label" data-id="Prompt"><text x="16" y="200.41" text-anchor="start">Prompt <tspan class="pele-sankey-value" fill="var(--_m)">100</tspan></text></g><g class="pele-label" data-id="Planner"><text x="311" y="270.35" text-anchor="start">Planner <tspan class="pele-sankey-value" fill="var(--_m)">60</tspan></text></g><g class="pele-label" data-id="Direct"><text x="584" y="74.1" text-anchor="end">Direct <tspan class="pele-sankey-value" fill="var(--_m)">40</tspan></text></g><g class="pele-label" data-id="Coder"><text x="584" y="230.85" text-anchor="end">Coder <tspan class="pele-sankey-value" fill="var(--_m)">35</tspan></text></g><g class="pele-label" data-id="Research"><text x="584" y="361.65" text-anchor="end">Research <tspan class="pele-sankey-value" fill="var(--_m)">25</tspan></text></g></g></g>
+  <g class="sankey-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g transform="translate(8,8)"><g class="pele-sankey-links" fill-opacity="0.4"><path class="pele-sankey-link" data-id="Prompt-&gt;Planner" d="M10,160C103.33,160 103.33,160 196.67,160L196.67,400C103.33,400 103.33,400 10,400Z" fill="var(--pele-series-1,#4c78a8)"><title>Prompt → Planner: 60</title></path><path class="pele-sankey-link" data-id="Prompt-&gt;Direct answer" d="M10,0C300,0 300,0 590,0L590,160C300,160 300,160 10,160Z" fill="var(--pele-series-1,#4c78a8)"><title>Prompt → Direct answer: 40</title></path><path class="pele-sankey-link" data-id="Planner-&gt;Coder" d="M206.67,260C300,260 300,260 393.33,260L393.33,400C300,400 300,400 206.67,400Z" fill="var(--pele-series-2,#f58518)"><title>Planner → Coder: 35</title></path><path class="pele-sankey-link" data-id="Planner-&gt;Research" d="M206.67,160C398.33,160 398.33,187 590,187L590,287C398.33,287 398.33,260 206.67,260Z" fill="var(--pele-series-2,#f58518)"><title>Planner → Research: 25</title></path><path class="pele-sankey-link" data-id="Coder-&gt;Tests" d="M403.33,260C496.67,260 496.67,314 590,314L590,394C496.67,394 496.67,340 403.33,340Z" fill="var(--pele-series-4,#e45756)"><title>Coder → Tests: 20</title></path></g><g class="sankey-packets"><circle r="4.0" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="0.00s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-0.50s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-1.00s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-1.50s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-2.00s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-2.50s" repeatCount="indefinite"><mpath href="#sankey-sankey-0"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-1.11s" repeatCount="indefinite"><mpath href="#sankey-sankey-1"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-1.86s" repeatCount="indefinite"><mpath href="#sankey-sankey-1"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-2.61s" repeatCount="indefinite"><mpath href="#sankey-sankey-1"/></animateMotion></circle><circle r="4.0" fill="#38BDF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-3.36s" repeatCount="indefinite"><mpath href="#sankey-sankey-1"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-2.22s" repeatCount="indefinite"><mpath href="#sankey-sankey-2"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-2.97s" repeatCount="indefinite"><mpath href="#sankey-sankey-2"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-3.72s" repeatCount="indefinite"><mpath href="#sankey-sankey-2"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-4.47s" repeatCount="indefinite"><mpath href="#sankey-sankey-2"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-0.33s" repeatCount="indefinite"><mpath href="#sankey-sankey-3"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-1.33s" repeatCount="indefinite"><mpath href="#sankey-sankey-3"/></animateMotion></circle><circle r="4.0" fill="#818CF8" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-2.33s" repeatCount="indefinite"><mpath href="#sankey-sankey-3"/></animateMotion></circle><circle r="3.7" fill="#34D399" fill-opacity="0.92"><animateMotion dur="3.00s" begin="-1.44s" repeatCount="indefinite"><mpath href="#sankey-sankey-4"/></animateMotion></circle><circle r="3.7" fill="#34D399" fill-opacity="0.65"><animateMotion dur="3.00s" begin="-2.94s" repeatCount="indefinite"><mpath href="#sankey-sankey-4"/></animateMotion></circle></g><g class="pele-sankey-nodes"><rect class="pele-sankey-node" data-id="Prompt" x="0" y="0" width="10" height="400" rx="2" fill="var(--pele-series-1,#4c78a8)"/><rect class="pele-sankey-node" data-id="Planner" x="196.67" y="160" width="10" height="240" rx="2" fill="var(--pele-series-2,#f58518)"/><rect class="pele-sankey-node" data-id="Direct answer" x="590" y="0" width="10" height="160" rx="2" fill="var(--pele-series-3,#54a24b)"/><rect class="pele-sankey-node" data-id="Coder" x="393.33" y="260" width="10" height="140" rx="2" fill="var(--pele-series-4,#e45756)"/><rect class="pele-sankey-node" data-id="Research" x="590" y="187" width="10" height="100" rx="2" fill="var(--pele-series-5,#72b7b2)"/><rect class="pele-sankey-node" data-id="Tests" x="590" y="314" width="10" height="80" rx="2" fill="var(--pele-series-6,#eeca3b)"/></g><g class="pele-labels" font-size="14"><g class="pele-label" data-id="Prompt"><text x="16" y="204.9" text-anchor="start">Prompt <tspan class="pele-sankey-value" fill="var(--_m)">100</tspan></text></g><g class="pele-label" data-id="Planner"><text x="212.67" y="284.9" text-anchor="start">Planner <tspan class="pele-sankey-value" fill="var(--_m)">60</tspan></text></g><g class="pele-label" data-id="Direct answer"><text x="584" y="84.9" text-anchor="end">Direct answer <tspan class="pele-sankey-value" fill="var(--_m)">40</tspan></text></g><g class="pele-label" data-id="Coder"><text x="387.33" y="334.9" text-anchor="end">Coder <tspan class="pele-sankey-value" fill="var(--_m)">35</tspan></text></g><g class="pele-label" data-id="Research"><text x="584" y="241.9" text-anchor="end">Research <tspan class="pele-sankey-value" fill="var(--_m)">25</tspan></text></g><g class="pele-label" data-id="Tests"><text x="584" y="358.9" text-anchor="end">Tests <tspan class="pele-sankey-value" fill="var(--_m)">20</tspan></text></g></g></g>
   </g>
 
-  <rect x="172" y="516" width="376" height="30" rx="15" class="mmd-card"/>
-  <text x="360" y="535" text-anchor="middle" class="mmd-footer">sankey-beta with centerline Bezier streams</text>
+  <rect x="141" y="516" width="438" height="30" rx="15" class="sankey-card"/>
+  <text x="360" y="535" text-anchor="middle" class="sankey-footer">each ribbon carries as many particles as its value</text>
 </svg>

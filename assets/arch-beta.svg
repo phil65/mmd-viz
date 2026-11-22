@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 421 416" width="421" height="416" role="img" aria-label="ARCHITECTURE-BETA · SERVICE TRAFFIC">
+<svg xmlns="http://www.w3.org/2000/svg" class="archbeta-root" viewBox="0 0 421 416" width="421" height="416" role="img" aria-label="architecture-beta · service traffic">
   <defs>
     <style>
-      .mmd-root {
+      .archbeta-root {
         --mv-bg: #070B14;
         --mv-card: #0F172A;
         --mv-border: rgba(148,163,184,0.24);
@@ -17,12 +17,12 @@
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
       }
-      .mmd-bg { fill: var(--mv-bg); }
-      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
-      .mmd-dot { fill: var(--mv-dot); }
-      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
-      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
-      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .archbeta-bg { fill: var(--mv-bg); }
+      .archbeta-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .archbeta-dot { fill: var(--mv-dot); }
+      .archbeta-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .archbeta-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .archbeta-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
       .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
       .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
       .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
@@ -30,48 +30,55 @@
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
       .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
-      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
-      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
-      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.80s linear infinite; }
-      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.20s ease-in-out infinite; }
-      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
-      @keyframes mmd-ring {
+      .archbeta-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .archbeta-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .archbeta-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: archbeta-dash 1.80s linear infinite; }
+      .archbeta-pulse { transform-box: fill-box; transform-origin: center; animation: archbeta-ring 3.20s ease-in-out infinite; }
+      @keyframes archbeta-dash { to { stroke-dashoffset: -40; } }
+      @keyframes archbeta-ring {
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
         50% { opacity: 0.65; transform: scale(1.03); }
       }
+      .archbeta-flash { opacity: 0.15; animation: archbeta-flash 4s linear infinite; }
+      @keyframes archbeta-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .archbeta-working > rect { animation: archbeta-working 3.20s ease-in-out infinite; }
+      @keyframes archbeta-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
-        .mmd-flow, .mmd-pulse { animation: none; }
+        .archbeta-flow, .archbeta-pulse, .archbeta-flash, .archbeta-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .archbeta-packets, .archbeta-smil { display: none; }
       }
     </style>
-    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    <pattern id="archbeta-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="archbeta-dot"/>
     </pattern>
-    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+    <radialGradient id="archbeta-glow-l" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+    <radialGradient id="archbeta-glow-r" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="archbeta-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="var(--mv-hub-start)"/>
       <stop offset="100%" stop-color="var(--mv-hub-end)"/>
     </linearGradient>
   </defs>
 
-  <rect width="421" height="416" rx="18" class="mmd-bg"/>
-  <rect width="421" height="416" rx="18" fill="url(#mmd-dots)"/>
-  <circle cx="109" cy="150" r="118" fill="url(#mmd-glow-l)"/>
-  <circle cx="312" cy="266" r="118" fill="url(#mmd-glow-r)"/>
-  <text x="210.5" y="42" text-anchor="middle" class="mmd-title">ARCHITECTURE-BETA · SERVICE TRAFFIC</text>
+  <rect width="421" height="416" rx="18" class="archbeta-bg"/>
+  <rect width="421" height="416" rx="18" fill="url(#archbeta-dots)"/>
+  <circle cx="109" cy="150" r="118" fill="url(#archbeta-glow-l)"/>
+  <circle cx="312" cy="266" r="118" fill="url(#archbeta-glow-r)"/>
+  <text x="210.5" y="42" text-anchor="middle" class="archbeta-title">architecture-beta · service traffic</text>
 
-  <g class="mmd-stage" transform="translate(94,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px">
-    <g transform="translate(8,8)"><g class="pele-clusters"><g class="pele-cluster" data-id="api"><rect x="0" y="0" width="218" height="132" fill="var(--_a)" fill-opacity="0.5" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="cloud" x="10" y="8" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5z" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-cluster-label" fill="var(--_m)" x="71.13" y="23.6" text-anchor="middle">API Layer</text></g></g><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round" stroke-linejoin="round"><g class="pele-edge" data-id="gw-pool"><path id="mmd-edge-0" d="M76,60L130,60" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M76,60L130,60" stroke="#38BDF8" stroke-width="2.2" fill="none" class="mmd-flow"/><path class="pele-marker" d="M137,60L129,63.36L129,56.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="pool-db"><path id="mmd-edge-1" d="M161,114L161,165" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M161,114L161,165" stroke="#818CF8" stroke-width="2.2" fill="none" class="mmd-flow"/><path class="pele-marker" d="M161,172L157.64,164L164.36,164Z" fill="#818CF8" fill-opacity="0.88" stroke="none"/></g></g><g class="mmd-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-service" data-id="gw" transform="translate(52,36)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="internet" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0M3 12h18M12 3a13 13 0 0 0 0 18M12 3a13 13 0 0 1 0 18" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">Gateway</text></g><g class="pele-node pele-service" data-id="pool" transform="translate(161,36)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="server" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v7H3zM3 13h18v7H3zM7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">AgentPool</text></g><g class="pele-node pele-service" data-id="db" transform="translate(161,172)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="database" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0-16 0M4 6v12a8 3 0 0 0 16 0V6M4 12a8 3 0 0 0 16 0" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">Storage</text></g></g></g>
+  <g class="archbeta-stage" transform="translate(101,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g transform="translate(8,8)"><g class="pele-clusters"><g class="pele-cluster" data-id="api"><rect x="0" y="0" width="204" height="132" fill="var(--_a)" fill-opacity="0.5" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="cloud" x="10" y="8" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-.5-7.97A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5z" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-cluster-label" fill="var(--_m)" x="71.13" y="23.6" text-anchor="middle">API Layer</text></g></g><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round" stroke-linejoin="round"><g class="pele-edge" data-id="gw-pool"><path id="archbeta-edge-0" d="M76,60L123,60" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M76,60L123,60" stroke="#38BDF8" stroke-width="2.2" fill="none" class="archbeta-flow"/><path class="pele-marker" d="M130,60L122,63.36L122,56.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="pool-db"><path id="archbeta-edge-1" d="M154,114L154,165" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M154,114L154,165" stroke="#818CF8" stroke-width="2.2" fill="none" class="archbeta-flow"/><path class="pele-marker" d="M154,172L150.64,164L157.36,164Z" fill="#818CF8" fill-opacity="0.88" stroke="none"/></g></g><g class="archbeta-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#archbeta-edge-0"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#archbeta-edge-1"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-service" data-id="gw" transform="translate(52,36)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="internet" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0M3 12h18M12 3a13 13 0 0 0 0 18M12 3a13 13 0 0 1 0 18" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">Gateway</text></g><g class="pele-node pele-service" data-id="pool" transform="translate(154,36)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="server" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v7H3zM3 13h18v7H3zM7 7.5h.01M7 16.5h.01M11 7.5h6M11 16.5h6" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">Workers</text></g><g class="pele-node pele-service" data-id="db" transform="translate(154,172)"><rect x="-24" width="48" height="48" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><svg class="pele-icon" data-icon="database" x="-12" y="12" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0-16 0M4 6v12a8 3 0 0 0 16 0V6M4 12a8 3 0 0 0 16 0" stroke="var(--_fg)" stroke-width="1.5"/></svg><text class="pele-label" x="0" y="69.6" text-anchor="middle">Storage</text></g></g></g>
   </g>
 
-  <rect x="61" y="364" width="300" height="30" rx="15" class="mmd-card"/>
-  <text x="210.5" y="383" text-anchor="middle" class="mmd-footer">architecture-beta via Pele</text>
+  <rect x="61" y="364" width="300" height="30" rx="15" class="archbeta-card"/>
+  <text x="210.5" y="383" text-anchor="middle" class="archbeta-footer">architecture-beta via pele</text>
 </svg>

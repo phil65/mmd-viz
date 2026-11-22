@@ -77,7 +77,7 @@ function update(): void {
     keyAt = folded?.keyAt ?? null;
     currentSvg = isOutline(sourceEl.value)
       ? renderMindmapSvg(sourceEl.value, opts)
-      : renderAnimatedSvg(folded?.source ?? sourceEl.value, opts);
+      : renderAnimatedSvg(folded?.model ?? folded?.source ?? sourceEl.value, opts);
     previewEl.innerHTML = currentSvg;
     controls?.destroy();
     const svg = previewEl.querySelector("svg");
@@ -87,6 +87,9 @@ function update(): void {
     [...previewEl.querySelectorAll<SVGGElement>("g.pele-node[data-id]")].forEach((node, index) => {
       if (keyAt?.(index, node.dataset.id ?? "")) node.style.cursor = "pointer";
     });
+    for (const cluster of previewEl.querySelectorAll<SVGGElement>("g.pele-cluster[data-id]")) {
+      if (keyAt?.(-1, cluster.dataset.id ?? "")) cluster.style.cursor = "pointer";
+    }
     showStep();
     const ms = (performance.now() - t0).toFixed(1);
     const kb = (new Blob([currentSvg]).size / 1024).toFixed(1);
@@ -114,7 +117,8 @@ sourceEl.addEventListener("input", () => {
 });
 // Click a folder (tree view) or class to fold it
 previewEl.addEventListener("click", (event) => {
-  const node = (event.target as Element).closest<SVGGElement>("g.pele-node[data-id]");
+  // Nodes, and flowchart subgraphs (their frame, or the node a folded one became)
+  const node = (event.target as Element).closest<SVGGElement>("g.pele-node[data-id], g.pele-cluster[data-id]");
   if (!node || !keyAt) return;
   const index = [...previewEl.querySelectorAll("g.pele-node[data-id]")].indexOf(node);
   const key = keyAt(index, node.dataset.id ?? "");

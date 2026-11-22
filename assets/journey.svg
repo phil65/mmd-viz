@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="journey-root" viewBox="0 0 756 479" width="756" height="479" role="img" aria-label="Journey · walking the experience">
+  <defs>
+    <style>
+      .journey-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .journey-bg { fill: var(--mv-bg); }
+      .journey-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .journey-dot { fill: var(--mv-dot); }
+      .journey-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .journey-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .journey-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .journey-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .journey-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .journey-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: journey-dash 1.80s linear infinite; }
+      .journey-pulse { transform-box: fill-box; transform-origin: center; animation: journey-ring 3.20s ease-in-out infinite; }
+      @keyframes journey-dash { to { stroke-dashoffset: -40; } }
+      @keyframes journey-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      .journey-flash { opacity: 0.15; animation: journey-flash 4s linear infinite; }
+      @keyframes journey-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .journey-working > rect { animation: journey-working 3.20s ease-in-out infinite; }
+      @keyframes journey-working { 50% { fill-opacity: 0.55; } }
+      @media (prefers-reduced-motion: reduce) {
+        .journey-flow, .journey-pulse, .journey-flash, .journey-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .journey-packets, .journey-smil { display: none; }
+      }
+      .journey-fx-fade {  animation: journey-in-fade 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-fade { from { opacity: 0; } }
+      .journey-fx-pop { transform-box: fill-box; transform-origin: center; animation: journey-in-pop 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-pop { from { opacity: 0; scale: 0.6; } }
+      .journey-fx-bloom { transform-box: view-box; transform-origin: 0 0; animation: journey-in-bloom 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-bloom { from { opacity: 0; scale: 0; } }
+      .journey-fx-rise {  animation: journey-in-rise 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-rise { from { opacity: 0; translate: 0 12px; } }
+      .journey-fx-grow-y { transform-box: fill-box; transform-origin: bottom; animation: journey-in-grow-y 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-grow-y { from { scale: 1 0; } }
+      .journey-fx-grow-x { transform-box: fill-box; transform-origin: left; animation: journey-in-grow-x 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-grow-x { from { scale: 0 1; } }
+      .journey-fx-draw { stroke-dasharray: 1; animation: journey-in-draw 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes journey-in-draw { from { stroke-dashoffset: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .journey-fx-fade, .journey-fx-pop, .journey-fx-bloom, .journey-fx-rise, .journey-fx-grow-y, .journey-fx-grow-x, .journey-fx-draw { animation: none; }
+      }
+    </style>
+    <pattern id="journey-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="journey-dot"/>
+    </pattern>
+    <radialGradient id="journey-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="journey-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="journey-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+    <path id="journey-journey" d="M104,167L260,219L416,245L572,193"/>
+  </defs>
+
+  <rect width="756" height="479" rx="18" class="journey-bg"/>
+  <rect width="756" height="479" rx="18" fill="url(#journey-dots)"/>
+  <circle cx="197" cy="172" r="212" fill="url(#journey-glow-l)"/>
+  <circle cx="559" cy="307" r="212" fill="url(#journey-glow-r)"/>
+  <text x="378" y="42" text-anchor="middle" class="journey-title">Journey · walking the experience</text>
+
+  <g class="journey-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <text class="pele-title" font-weight="var(--_tw)" text-anchor="middle" xml:space="preserve"><tspan x="326" y="25.6">Checkout</tspan></text><path class="pele-grid" d="M26,167H644M26,193H644M26,219H644M26,245H644M26,271H644" fill="none" stroke="var(--_a)"/><g class="pele-scale" font-size="12" text-anchor="end" fill="var(--_m)"><text x="20" y="171.2">5</text><text x="20" y="197.2">4</text><text x="20" y="223.2">3</text><text x="20" y="249.2">2</text><text x="20" y="275.2">1</text></g><path class="pele-stems" d="M104,140V156M260,140V208M416,140V234M572,140V182" fill="none" stroke="var(--_b)" stroke-dasharray="2 3"/><path class="pele-edge journey-fx-draw" d="M104,167L260,219L416,245L572,193" fill="none" stroke-linejoin="round" stroke="#38BDF8" stroke-width="2.4" style="animation-delay:0.40s" pathLength="1"/><circle class="journey-smil" r="5.5" fill="#38BDF8" stroke="#fff" stroke-opacity="0.6" stroke-width="1.5"><animateMotion dur="6.00s" begin="0s" repeatCount="indefinite" calcMode="linear"><mpath href="#journey-journey"/></animateMotion></circle><g class="pele-face pele-face-happy journey-fx-pop" transform="translate(104,167)" style="animation-delay:0.50s"><circle r="11" fill="var(--_bg)" stroke="var(--_l)"/><g fill="var(--_l)"><circle cx="-3.6" cy="-2.8" r="1.3"/><circle cx="3.6" cy="-2.8" r="1.3"/></g><path d="M-5,2A6,6 0 0 0 5,2" fill="none" stroke="var(--_l)" stroke-linecap="round"/></g><g class="pele-face pele-face-neutral journey-fx-pop" transform="translate(260,219)" style="animation-delay:0.68s"><circle r="11" fill="var(--_bg)" stroke="var(--_l)"/><g fill="var(--_l)"><circle cx="-3.6" cy="-2.8" r="1.3"/><circle cx="3.6" cy="-2.8" r="1.3"/></g><path d="M-4.5,4.5H4.5" fill="none" stroke="var(--_l)" stroke-linecap="round"/></g><g class="pele-face pele-face-sad journey-fx-pop" transform="translate(416,245)" style="animation-delay:0.86s"><circle r="11" fill="var(--_bg)" stroke="var(--_l)"/><g fill="var(--_l)"><circle cx="-3.6" cy="-2.8" r="1.3"/><circle cx="3.6" cy="-2.8" r="1.3"/></g><path d="M-5,6.5A6,6 0 0 1 5,6.5" fill="none" stroke="var(--_l)" stroke-linecap="round"/></g><g class="pele-face pele-face-happy journey-fx-pop" transform="translate(572,193)" style="animation-delay:1.04s"><circle r="11" fill="var(--_bg)" stroke="var(--_l)"/><g fill="var(--_l)"><circle cx="-3.6" cy="-2.8" r="1.3"/><circle cx="3.6" cy="-2.8" r="1.3"/></g><path d="M-5,2A6,6 0 0 0 5,2" fill="none" stroke="var(--_l)" stroke-linecap="round"/></g><g class="pele-cluster pele-section" data-id="Browse"><rect x="32" y="48" width="300" height="33" fill="var(--_a)" style="rx:var(--_r)"/><text font-size="14" font-weight="var(--_hw)" text-anchor="middle" xml:space="preserve"><tspan x="182" y="69.4">Browse</tspan></text><g class="pele-node pele-task journey-fx-rise" data-id="Find product" style="animation-delay:0.00s"><rect x="32" y="87" width="144" height="53" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text font-size="14" x="104" y="110.4" text-anchor="middle">Find product</text><circle class="pele-actor" cx="104" cy="127" r="5" fill="var(--pele-series-2,#f58518)" stroke="var(--_s)"><title>Shopper</title></circle></g><g class="pele-node pele-task journey-fx-rise" data-id="Read reviews" style="animation-delay:0.10s"><rect x="188" y="87" width="144" height="53" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text font-size="14" x="260" y="110.4" text-anchor="middle">Read reviews</text><circle class="pele-actor" cx="260" cy="127" r="5" fill="var(--pele-series-2,#f58518)" stroke="var(--_s)"><title>Shopper</title></circle></g></g><g class="pele-cluster pele-section" data-id="Buy"><rect x="344" y="48" width="300" height="33" fill="var(--_a)" style="rx:var(--_r)"/><text font-size="14" font-weight="var(--_hw)" text-anchor="middle" xml:space="preserve"><tspan x="494" y="69.4">Buy</tspan></text><g class="pele-node pele-task journey-fx-rise" data-id="Pay" style="animation-delay:0.20s"><rect x="344" y="87" width="144" height="53" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text font-size="14" x="416" y="110.4" text-anchor="middle">Pay</text><circle class="pele-actor" cx="409.5" cy="127" r="5" fill="var(--pele-series-2,#f58518)" stroke="var(--_s)"><title>Shopper</title></circle><circle class="pele-actor" cx="422.5" cy="127" r="5" fill="var(--pele-series-1,#4c78a8)" stroke="var(--_s)"><title>Shop</title></circle></g><g class="pele-node pele-task journey-fx-rise" data-id="Get receipt" style="animation-delay:0.30s"><rect x="500" y="87" width="144" height="53" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text font-size="14" x="572" y="110.4" text-anchor="middle">Get receipt</text><circle class="pele-actor" cx="572" cy="127" r="5" fill="var(--pele-series-1,#4c78a8)" stroke="var(--_s)"><title>Shop</title></circle></g></g><g class="pele-legend" font-size="14"><g class="pele-legend-item" data-id="Shop"><circle cx="274.2" cy="308.5" r="5" fill="var(--pele-series-1,#4c78a8)"/><text x="301.54" y="313.4" text-anchor="middle">Shop</text></g><g class="pele-legend-item" data-id="Shopper"><circle cx="342.89" cy="308.5" r="5" fill="var(--pele-series-2,#f58518)"/><text x="380.35" y="313.4" text-anchor="middle">Shopper</text></g></g>
+  </g>
+
+  <rect x="214" y="427" width="329" height="30" rx="15" class="journey-card"/>
+  <text x="378" y="446" text-anchor="middle" class="journey-footer">a marker walks the satisfaction line</text>
+</svg>

@@ -1,0 +1,8 @@
+stateDiagram-v2
+  direction LR
+  [*] --> Idle
+  Idle --> Planning: prompt
+  Planning --> Executing: plan_ready
+  Executing --> Verifying: tool_done
+  Verifying --> Executing: retry
+  Verifying --> Idle: complete

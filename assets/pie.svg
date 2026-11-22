@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="pie-root" viewBox="0 0 475 448" width="475" height="448" role="img" aria-label="Pie · slices bloom once">
+  <defs>
+    <style>
+      .pie-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .pie-bg { fill: var(--mv-bg); }
+      .pie-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .pie-dot { fill: var(--mv-dot); }
+      .pie-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .pie-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .pie-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .pie-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .pie-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .pie-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: pie-dash 1.80s linear infinite; }
+      .pie-pulse { transform-box: fill-box; transform-origin: center; animation: pie-ring 3.20s ease-in-out infinite; }
+      @keyframes pie-dash { to { stroke-dashoffset: -40; } }
+      @keyframes pie-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      .pie-flash { opacity: 0.15; animation: pie-flash 4s linear infinite; }
+      @keyframes pie-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .pie-working > rect { animation: pie-working 3.20s ease-in-out infinite; }
+      @keyframes pie-working { 50% { fill-opacity: 0.55; } }
+      @media (prefers-reduced-motion: reduce) {
+        .pie-flow, .pie-pulse, .pie-flash, .pie-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .pie-packets, .pie-smil { display: none; }
+      }
+      .pie-fx-fade {  animation: pie-in-fade 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-fade { from { opacity: 0; } }
+      .pie-fx-pop { transform-box: fill-box; transform-origin: center; animation: pie-in-pop 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-pop { from { opacity: 0; scale: 0.6; } }
+      .pie-fx-bloom { transform-box: view-box; transform-origin: 0 0; animation: pie-in-bloom 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-bloom { from { opacity: 0; scale: 0; } }
+      .pie-fx-rise {  animation: pie-in-rise 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-rise { from { opacity: 0; translate: 0 12px; } }
+      .pie-fx-grow-y { transform-box: fill-box; transform-origin: bottom; animation: pie-in-grow-y 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-grow-y { from { scale: 1 0; } }
+      .pie-fx-grow-x { transform-box: fill-box; transform-origin: left; animation: pie-in-grow-x 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-grow-x { from { scale: 0 1; } }
+      .pie-fx-draw { stroke-dasharray: 1; animation: pie-in-draw 0.60s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+      @keyframes pie-in-draw { from { stroke-dashoffset: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        .pie-fx-fade, .pie-fx-pop, .pie-fx-bloom, .pie-fx-rise, .pie-fx-grow-y, .pie-fx-grow-x, .pie-fx-draw { animation: none; }
+      }
+    </style>
+    <pattern id="pie-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="pie-dot"/>
+    </pattern>
+    <radialGradient id="pie-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="pie-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="pie-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="475" height="448" rx="18" class="pie-bg"/>
+  <rect width="475" height="448" rx="18" fill="url(#pie-dots)"/>
+  <circle cx="124" cy="161" r="133" fill="url(#pie-glow-l)"/>
+  <circle cx="352" cy="287" r="133" fill="url(#pie-glow-r)"/>
+  <text x="237.5" y="42" text-anchor="middle" class="pie-title">Pie · slices bloom once</text>
+
+  <g class="pie-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <text class="pele-title" font-weight="var(--_tw)" text-anchor="middle" xml:space="preserve"><tspan x="185.5" y="25.6">Where the time goes</tspan></text><g class="pele-slices" transform="translate(128,168)" stroke="var(--_bg)" stroke-width="1" stroke-linejoin="round"><path class="pele-slice pie-fx-bloom" data-id="Layout" d="M0,0L0,-120A120,120 0 0 1 57.81,105.16Z" fill="var(--pele-series-1,#4c78a8)" style="animation-delay:0.00s"/><path class="pele-slice pie-fx-bloom" data-id="Animation" d="M0,0L57.81,105.16A120,120 0 0 1 -114.13,37.08Z" fill="var(--pele-series-2,#f58518)" style="animation-delay:0.16s"/><path class="pele-slice pie-fx-bloom" data-id="Theming" d="M0,0L-114.13,37.08A120,120 0 0 1 -82.15,-87.48Z" fill="var(--pele-series-3,#54a24b)" style="animation-delay:0.32s"/><path class="pele-slice pie-fx-bloom" data-id="Docs" d="M0,0L-82.15,-87.48A120,120 0 0 1 0,-120Z" fill="var(--pele-series-4,#e45756)" style="animation-delay:0.48s"/></g><g class="pele-slice-labels pie-fx-fade" transform="translate(128,168)" font-size="14" text-anchor="middle" fill="var(--_bg)" style="animation-delay:0.80s"><text x="87.17" y="-17.48">42%</text><text x="-33.13" y="88.58">28%</text><text x="-87.17" y="-17.48">18%</text><text x="-33.13" y="-78.78">12%</text></g><g class="pele-legend" font-size="14"><g class="pele-legend-item pie-fx-fade" data-id="Layout" style="animation-delay:0.30s"><rect x="280" y="123" width="12" height="12" rx="2" fill="var(--pele-series-1,#4c78a8)"/><text x="321.01" y="133.9" text-anchor="middle">Layout</text></g><g class="pele-legend-item pie-fx-fade" data-id="Animation" style="animation-delay:0.42s"><rect x="280" y="149" width="12" height="12" rx="2" fill="var(--pele-series-2,#f58518)"/><text x="331.12" y="159.9" text-anchor="middle">Animation</text></g><g class="pele-legend-item pie-fx-fade" data-id="Theming" style="animation-delay:0.54s"><rect x="280" y="175" width="12" height="12" rx="2" fill="var(--pele-series-3,#54a24b)"/><text x="327.23" y="185.9" text-anchor="middle">Theming</text></g><g class="pele-legend-item pie-fx-fade" data-id="Docs" style="animation-delay:0.66s"><rect x="280" y="201" width="12" height="12" rx="2" fill="var(--pele-series-4,#e45756)"/><text x="315.95" y="211.9" text-anchor="middle">Docs</text></g></g>
+  </g>
+
+  <rect x="32" y="396" width="411" height="30" rx="15" class="pie-card"/>
+  <text x="237.5" y="415" text-anchor="middle" class="pie-footer">charts and structure build up, then stand still</text>
+</svg>

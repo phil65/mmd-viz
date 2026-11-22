@@ -8,6 +8,23 @@ export interface Preset {
 
 export const PRESETS: Preset[] = [
   {
+    name: "Subgraphs (flowchart, click a frame to fold)",
+    title: "FLOWCHART · FOLDABLE SUBGRAPHS",
+    footer: "click a subgraph to fold it, the folded node to open it",
+    source: `flowchart LR
+  user[User]:::cyan --> gw
+  subgraph backend [Backend]
+    gw[Gateway] --> api[API]
+    subgraph store [Storage]
+      db[(Postgres)]
+      cache[(Redis)]
+    end
+    api --> db
+    api --> cache
+  end
+  api --> mail[Mail]:::amber`,
+  },
+  {
     name: "Architecture Hub (Flowchart)",
     title: "AGENTPOOL · UNIFIED ORCHESTRATION",
     footer: "define once in YAML · planner | (coder & goose)",

@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 736 340" width="736" height="340" role="img" aria-label="TOKYO NIGHT · THICK &amp; DOTTED EDGES">
+<svg xmlns="http://www.w3.org/2000/svg" class="tokyonight-root" viewBox="0 0 574 304" width="574" height="304" role="img" aria-label="Tokyo Night · thick &amp; dotted edges">
   <defs>
     <style>
-      .mmd-root {
+      .tokyonight-root {
         --mv-bg: #1A1B26;
         --mv-card: #24283B;
         --mv-border: rgba(122,162,247,0.28);
@@ -17,12 +17,12 @@
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
       }
-      .mmd-bg { fill: var(--mv-bg); }
-      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
-      .mmd-dot { fill: var(--mv-dot); }
-      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
-      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
-      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .tokyonight-bg { fill: var(--mv-bg); }
+      .tokyonight-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .tokyonight-dot { fill: var(--mv-dot); }
+      .tokyonight-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .tokyonight-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .tokyonight-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
       .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
       .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
       .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
@@ -30,47 +30,55 @@
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
       .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
-      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
-      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.50s linear infinite; }
-      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 2.67s ease-in-out infinite; }
-      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
-      @keyframes mmd-ring {
+      .tokyonight-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .tokyonight-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .tokyonight-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: tokyonight-dash 1.50s linear infinite; }
+      .tokyonight-pulse { transform-box: fill-box; transform-origin: center; animation: tokyonight-ring 2.67s ease-in-out infinite; }
+      @keyframes tokyonight-dash { to { stroke-dashoffset: -40; } }
+      @keyframes tokyonight-ring {
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
         50% { opacity: 0.65; transform: scale(1.03); }
       }
+      .tokyonight-flash { opacity: 0.15; animation: tokyonight-flash 4s linear infinite; }
+      @keyframes tokyonight-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .tokyonight-working > rect { animation: tokyonight-working 2.67s ease-in-out infinite; }
+      @keyframes tokyonight-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
-        .mmd-flow, .mmd-pulse { animation: none; }
+        .tokyonight-flow, .tokyonight-pulse, .tokyonight-flash, .tokyonight-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .tokyonight-packets, .tokyonight-smil { display: none; }
       }
     </style>
-    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    <pattern id="tokyonight-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="tokyonight-dot"/>
     </pattern>
-    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+    <radialGradient id="tokyonight-glow-l" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#7AA2F7" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#7AA2F7" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+    <radialGradient id="tokyonight-glow-r" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="#BB9AF7" stop-opacity="0.16"/>
       <stop offset="100%" stop-color="#BB9AF7" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="tokyonight-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="var(--mv-hub-start)"/>
       <stop offset="100%" stop-color="var(--mv-hub-end)"/>
     </linearGradient>
   </defs>
 
-  <rect width="736" height="340" rx="18" class="mmd-bg"/>
-  <rect width="736" height="340" rx="18" fill="url(#mmd-dots)"/>
-  <circle cx="191" cy="122" r="206" fill="url(#mmd-glow-l)"/>
-  <circle cx="545" cy="218" r="206" fill="url(#mmd-glow-r)"/>
-  <text x="368" y="42" text-anchor="middle" class="mmd-title">TOKYO NIGHT · THICK &amp; DOTTED EDGES</text>
+  <rect width="574" height="304" rx="18" class="tokyonight-bg"/>
+  <rect width="574" height="304" rx="18" fill="url(#tokyonight-dots)"/>
+  <circle cx="149" cy="109" r="161" fill="url(#tokyonight-glow-l)"/>
+  <circle cx="425" cy="195" r="161" fill="url(#tokyonight-glow-r)"/>
+  <text x="287" y="42" text-anchor="middle" class="tokyonight-title">Tokyo Night · thick &amp; dotted edges</text>
 
-  <g class="mmd-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px">
-    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_src_engine_0"><path id="mmd-edge-0" d="M161.36,94L202.36,94" stroke="#38BDF8" stroke-width="3" stroke-opacity="0.55" fill="none"/><path d="M161.36,94L202.36,94" stroke="#38BDF8" stroke-width="3.2" fill="none" class="mmd-flow"/><path class="pele-marker" d="M209.36,94L201.36,97.36L201.36,90.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_engine_svg_0"><path id="mmd-edge-1" d="M377.42,86C395.42,86 395.42,41 413.41,41L419.41,41" stroke="#34D399" stroke-width="3" stroke-opacity="0.55" fill="none"/><path d="M377.42,86C395.42,86 395.42,41 413.41,41L419.41,41" stroke="#34D399" stroke-width="3.2" fill="none" class="mmd-flow"/><path class="pele-marker" d="M426.41,41L418.41,44.36L418.41,37.64Z" fill="#34D399" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_engine_auto_0"><path id="mmd-edge-2" d="M377.42,102C395.42,102 395.42,147 413.41,147L419.41,147" stroke="#818CF8" stroke-width="2" stroke-opacity="0.34" stroke-dasharray="5 5" fill="none"/><path class="pele-marker" d="M426.41,147L418.41,150.36L418.41,143.64Z" fill="#818CF8" fill-opacity="0.88" stroke="none"/></g></g><g class="mmd-packets"><circle r="4.6" fill="#38BDF8"><animateMotion dur="1.21s" begin="-0.17s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle><circle r="4.6" fill="#34D399"><animateMotion dur="1.21s" begin="-0.53s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle><circle r="3.2" fill="#818CF8"><animateMotion dur="2.50s" begin="-0.88s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="src" transform="translate(84.68,94)"><rect x="-76.68" y="-33" width="153.36" height="66" rx="12" class="mmd-card"/><rect x="-66.7" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">diagram.mmd</tspan><tspan x="0" y="16.1">Mermaid Source</tspan></text></g><g class="pele-node pele-shape-stadium hub mmd-hub-node" data-id="engine" transform="translate(293.88,94)"><rect x="-91.5" y="-40.0" width="183.1" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="mmd-pulse"/><rect x="-84.52" y="-33" width="169.05" height="66" rx="18" fill="url(#mmd-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">mmd-viz</tspan><tspan x="0" y="16.1">Pele + Themes</tspan></text></g><g class="pele-node pele-shape-rect emerald" data-id="svg" transform="translate(525.08,41)"><rect x="-98.67" y="-33" width="197.34" height="66" rx="12" class="mmd-card"/><rect x="-88.7" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Animated SVG</tspan><tspan x="0" y="16.1">Zero JS · GitHub Safe</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="auto" transform="translate(519.98,147)"><rect x="-93.57" y="-33" width="187.14" height="66" rx="12" class="mmd-card"/><rect x="-83.6" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Auto Dark/Light</tspan><tspan x="0" y="16.1">prefers-color-scheme</tspan></text></g></g>
+  <g class="tokyonight-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_src_build_0"><path id="tokyonight-edge-0" d="M94.69,76L135.69,76" stroke="#38BDF8" stroke-width="3" stroke-opacity="0.55" fill="none"/><path d="M94.69,76L135.69,76" stroke="#38BDF8" stroke-width="3.2" fill="none" class="tokyonight-flow"/><path class="pele-marker" d="M142.69,76L134.69,79.36L134.69,72.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_build_test_0"><path id="tokyonight-edge-1" d="M214.26,76L255.26,76" stroke="#38BDF8" stroke-width="3" stroke-opacity="0.55" fill="none"/><path d="M214.26,76L255.26,76" stroke="#38BDF8" stroke-width="3.2" fill="none" class="tokyonight-flow"/><path class="pele-marker" d="M262.26,76L254.26,79.36L254.26,72.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_test_docs_0"><path id="tokyonight-edge-2" d="M329.38,68C346.88,68 346.88,32 364.38,32L370.38,32" stroke="#34D399" stroke-width="2" stroke-opacity="0.34" stroke-dasharray="5 5" fill="none"/><path class="pele-marker" d="M377.38,32L369.38,35.36L369.38,28.64Z" fill="#34D399" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="L_test_ship_0"><path id="tokyonight-edge-3" d="M329.38,84C346.88,84 346.88,120 364.38,120L370.38,120" stroke="#34D399" stroke-width="3" stroke-opacity="0.55" fill="none"/><path d="M329.38,84C346.88,84 346.88,120 364.38,120L370.38,120" stroke="#34D399" stroke-width="3.2" fill="none" class="tokyonight-flow"/><path class="pele-marker" d="M377.38,120L369.38,123.36L369.38,116.64Z" fill="#34D399" fill-opacity="0.88" stroke="none"/></g></g><g class="tokyonight-packets"><circle r="4.6" fill="#38BDF8"><animateMotion dur="1.21s" begin="-0.17s" repeatCount="indefinite"><mpath href="#tokyonight-edge-0"/></animateMotion></circle><circle r="4.6" fill="#38BDF8"><animateMotion dur="1.21s" begin="-0.53s" repeatCount="indefinite"><mpath href="#tokyonight-edge-1"/></animateMotion></circle><circle r="3.2" fill="#34D399"><animateMotion dur="2.50s" begin="-0.88s" repeatCount="indefinite"><mpath href="#tokyonight-edge-2"/></animateMotion></circle><circle r="4.6" fill="#34D399"><animateMotion dur="1.21s" begin="-1.24s" repeatCount="indefinite"><mpath href="#tokyonight-edge-3"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-shape-rect violet" data-id="src" transform="translate(51.34,76)"><rect x="-43.34" y="-24" width="86.69" height="48" rx="12" class="tokyonight-card"/><rect x="-33.3" y="-11.0" width="5" height="22.0" rx="2.5" fill="#A78BFA"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Source</text></g><g class="pele-node pele-shape-rect cyan" data-id="build" transform="translate(178.47,76)"><rect x="-35.78" y="-24" width="71.57" height="48" rx="12" class="tokyonight-card"/><rect x="-25.8" y="-11.0" width="5" height="22.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Build</text></g><g class="pele-node pele-shape-rect emerald" data-id="test" transform="translate(295.82,76)"><rect x="-33.56" y="-24" width="67.12" height="48" rx="12" class="tokyonight-card"/><rect x="-23.6" y="-11.0" width="5" height="22.0" rx="2.5" fill="#34D399"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Test</text></g><g class="pele-node pele-shape-rect amber" data-id="docs" transform="translate(413.6,32)"><rect x="-36.22" y="-24" width="72.45" height="48" rx="12" class="tokyonight-card"/><rect x="-26.2" y="-11.0" width="5" height="22.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Docs</text></g><g class="pele-node pele-shape-stadium hub tokyonight-hub-node" data-id="ship" transform="translate(419.38,120)"><rect x="-49.0" y="-31.0" width="98.0" height="62.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="tokyonight-pulse"/><rect x="-42.01" y="-24" width="84.02" height="48" rx="18" fill="url(#tokyonight-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Ship</text></g></g>
   </g>
 
-  <rect x="192" y="288" width="352" height="30" rx="15" class="mmd-card"/>
-  <text x="368" y="307" text-anchor="middle" class="mmd-footer">mmd-viz --theme tokyo-night --speed 1.2</text>
+  <rect x="111" y="252" width="352" height="30" rx="15" class="tokyonight-card"/>
+  <text x="287" y="271" text-anchor="middle" class="tokyonight-footer">mmd-viz --theme tokyo-night --speed 1.2</text>
 </svg>
