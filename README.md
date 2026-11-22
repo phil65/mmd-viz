@@ -16,9 +16,13 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![Light theme top-down architecture](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/light-td.svg)
 
-**Sequence diagrams (and other Pele diagram types):**
+**Sequence diagrams (chronological message relay):**
 
 ![Sequence diagram](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/sequence.svg)
+
+**State machines (`stateDiagram-v2`):**
+
+![State machine](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/state.svg)
 
 ## Features
 

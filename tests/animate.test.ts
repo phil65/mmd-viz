@@ -51,7 +51,7 @@ describe("renderAnimatedSvg", () => {
     expect(svg).toContain('id="custom-edge-0"');
   });
 
-  it("renders non-flowchart Mermaid diagrams cleanly (e.g. sequenceDiagram)", () => {
+  it("animates sequenceDiagram messages as a chronological relay", () => {
     const seq = `sequenceDiagram
       Client->>AgentPool: prompt
       AgentPool-->>Client: stream
@@ -59,5 +59,19 @@ describe("renderAnimatedSvg", () => {
     const svg = renderAnimatedSvg(seq, { title: "Sequence" });
     expect(svg).toContain("<svg");
     expect(svg).toContain("AgentPool");
+    expect(svg).toContain('keyPoints="0;1;1"');
+    expect(svg).toContain('keyPoints="0;0;1;1"');
+    expect(svg).toContain('attributeName="opacity"');
+  });
+
+  it("animates stateDiagram-v2 transitions", () => {
+    const state = `stateDiagram-v2
+      [*] --> Idle
+      Idle --> Running: start
+      Running --> Idle: done
+    `;
+    const svg = renderAnimatedSvg(state, { title: "State Machine" });
+    const motions = [...svg.matchAll(/<animateMotion/g)];
+    expect(motions.length).toBe(3);
   });
 });

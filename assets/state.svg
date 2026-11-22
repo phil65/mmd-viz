@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 432 609" width="432" height="609" role="img" aria-label="STATE MACHINE · ANIMATED TRANSITIONS">
+  <defs>
+    <style>
+      .mmd-bg { fill: #070B14; }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #38BDF8; text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #94A3B8; }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: #F8FAFC; }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #F8FAFC; }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #94A3B8; }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: #94A3B8; }
+      .pele-edge-label rect { fill: #0F172A; stroke: rgba(148,163,184,0.24); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #38BDF8; }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="rgba(148,163,184,0.14)"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="432" height="609" rx="18" class="mmd-bg"/>
+  <rect width="432" height="609" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="112" cy="219" r="121" fill="url(#mmd-glow-l)"/>
+  <circle cx="320" cy="390" r="121" fill="url(#mmd-glow-r)"/>
+
+  <text x="216" y="42" text-anchor="middle" class="mmd-title">STATE MACHINE · ANIMATED TRANSITIONS</text>
+
+  <g class="mmd-stage" transform="translate(101,76)" style="--_bg:#070B14;--_fg:#F8FAFC;--_m:#94A3B8;--_l:#38BDF8;--_s:#0F172A;--_a:#1E293B;--_b:rgba(148,163,184,0.24);--_c:#38BDF8;--_r:12px">
+    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge pele-transition" data-id="edge0"><path id="mmd-edge-0" d="M131.49,22L131.49,59" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M131.49,22L131.49,59" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M131.49,66L128.13,58L134.85,58Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge pele-transition" data-id="edge1"><path id="mmd-edge-1" d="M123.49,110L123.49,118.09C123.49,123.3 74.72,123.3 74.72,128.5L74.72,172" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M123.49,110L123.49,118.09C123.49,123.3 74.72,123.3 74.72,128.5L74.72,172" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M74.72,179L71.36,171L78.08,171Z" fill="#818CF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge pele-transition" data-id="edge2"><path id="mmd-edge-2" d="M74.72,223L74.72,285" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M74.72,223L74.72,285" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M74.72,292L71.36,284L78.08,284Z" fill="#FBBF24" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge pele-transition" data-id="edge3"><path id="mmd-edge-3" d="M44.74,336L44.74,383C44.74,388.63 101.49,388.63 101.49,394.25L101.49,398" stroke="#34D399" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M44.74,336L44.74,383C44.74,388.63 101.49,388.63 101.49,394.25L101.49,398" stroke="#34D399" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M101.49,405L98.13,397L104.85,397Z" fill="#34D399" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge pele-transition" data-id="edge4"><path id="mmd-edge-4" d="M117.49,405L117.49,358C117.49,352.38 74.72,352.38 74.72,346.75L74.72,343" stroke="#F472B6" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M117.49,405L117.49,358C117.49,352.38 74.72,352.38 74.72,346.75L74.72,343" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M74.72,336L78.08,344L71.36,344Z" fill="#F472B6" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge pele-transition" data-id="edge5"><path id="mmd-edge-5" d="M133.49,405L133.49,392.69C133.49,384.72 188.25,384.72 188.25,376.75L188.25,179C188.25,151 139.49,151 139.49,123L139.49,117" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M133.49,405L133.49,392.69C133.49,384.72 188.25,384.72 188.25,376.75L188.25,179C188.25,151 139.49,151 139.49,123L139.49,117" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M139.49,110L142.85,118L136.13,118Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g></g><g class="mmd-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle><circle r="3.8" fill="#FBBF24"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle><circle r="3.8" fill="#34D399"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle><circle r="3.8" fill="#F472B6"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#mmd-edge-4"/></animateMotion></circle><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.32s" begin="-0.35s" repeatCount="indefinite"><mpath href="#mmd-edge-5"/></animateMotion></circle></g><g class="pele-edge-labels" font-size="14"><g class="pele-edge-label" data-id="edge1"><rect x="48.94" y="130.5" width="51.57" height="21" rx="3" fill="var(--_bg)"/><text x="74.72" y="145.9" text-anchor="middle">prompt</text></g><g class="pele-edge-label" data-id="edge2"><rect x="36.1" y="243.5" width="77.26" height="21" rx="3" fill="var(--_bg)"/><text x="74.72" y="258.9" text-anchor="middle">plan_ready</text></g><g class="pele-edge-label" data-id="edge3"><rect x="10" y="360" width="69.49" height="21" rx="3" fill="var(--_bg)"/><text x="44.74" y="375.4" text-anchor="middle">tool_done</text></g><g class="pele-edge-label" data-id="edge4"><rect x="99.49" y="360" width="36" height="21" rx="3" fill="var(--_bg)"/><text x="117.49" y="375.4" text-anchor="middle">retry</text></g><g class="pele-edge-label" data-id="edge5"><rect x="155.85" y="303.5" width="64.8" height="21" rx="3" fill="var(--_bg)"/><text x="188.25" y="318.9" text-anchor="middle">complete</text></g></g><g class="pele-nodes"><g class="pele-node pele-state-start" data-id="root_start" transform="translate(131.49,15)"><circle r="7" fill="var(--_l)"/></g><g class="pele-node pele-state" data-id="Idle" transform="translate(131.49,88)"><rect x="-28.9" y="-22" width="57.79" height="44" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-18.9" y="-10.0" width="5" height="20.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Idle</text></g><g class="pele-node pele-state" data-id="Planning" transform="translate(74.72,201)"><rect x="-47.13" y="-22" width="94.26" height="44" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-37.1" y="-10.0" width="5" height="20.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Planning</text></g><g class="pele-node pele-state" data-id="Executing" transform="translate(74.72,314)"><rect x="-51.13" y="-22" width="102.26" height="44" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-41.1" y="-10.0" width="5" height="20.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Executing</text></g><g class="pele-node pele-state" data-id="Verifying" transform="translate(117.49,427)"><rect x="-47.12" y="-22" width="94.24" height="44" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-37.1" y="-10.0" width="5" height="20.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Verifying</text></g></g>
+  </g>
+
+  <rect x="66" y="557" width="300" height="30" rx="15" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/>
+  <text x="216" y="576" text-anchor="middle" class="mmd-footer">stateDiagram-v2 via Pele</text>
+</svg>

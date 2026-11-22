@@ -2,6 +2,7 @@ import { render } from "pele";
 import { ACCENT_PALETTE, THEMES, type AnimateOptions } from "./themes.js";
 
 const DEFAULT_ACCENT = "#38BDF8";
+const CYCLE_ACCENTS = ["#38BDF8", "#818CF8", "#FBBF24", "#34D399", "#F472B6"] as const;
 
 /**
  * Render a Mermaid diagram via Pele and upgrade it into a self-contained,
@@ -25,7 +26,7 @@ export function renderAnimatedSvg(
   const padBottom = options.footer ? 76 : 48;
   const pfx = sanitizeIdPrefix(options.idPrefix ?? "mmd");
 
-  const { svg: rawSvg, width, height } = render(mermaidSource);
+  const { svg: rawSvg, width, height, type: diagramType } = render(mermaidSource);
 
   const innerMatch = rawSvg.match(/^<svg[^>]*>([\s\S]*)<\/svg>$/);
   if (!innerMatch || innerMatch[1] === undefined) {
@@ -80,53 +81,103 @@ export function renderAnimatedSvg(
   );
 
   // 2. Upgrade edges: color-match, add animated dashed flow and <animateMotion> packets
+  // Works for flowchart (`pele-edge`), sequence (`pele-edge pele-message`), and state (`pele-edge pele-transition`)
   const packets: string[] = [];
-  let edgeIndex = 0;
-  const sortedNodes = [...nodeColor.entries()].sort((a, b) => b[0].length - a[0].length);
-
   const edgeRegex =
-    /<g class="pele-edge" data-id="([^"]+)">\s*<path d="([^"]+)"\/>([\s\S]*?)<\/g>/g;
+    /<g class="(pele-edge[^"]*)" data-id="([^"]+)">\s*<path d="([^"]+)"([^>]*)\/>([\s\S]*?)<\/g>/g;
 
-  inner = inner.replace(edgeRegex, (_full, edgeId: string, d: string, rest: string) => {
-    const idx = edgeIndex++;
-    const pathId = `${pfx}-edge-${idx}`;
+  // Count edges upfront so sequence diagrams can schedule a chronological relay cycle
+  const totalEdges = [...inner.matchAll(edgeRegex)].length;
+  const isSequence = diagramType === "sequence";
+  const isState = diagramType === "state";
+  const sortedNodes = [...nodeColor.entries()].sort((a, b) => b[0].length - a[0].length);
+  let edgeIndex = 0;
 
-    let color = DEFAULT_ACCENT;
-    const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
-    for (const [nid, ncolor] of sortedNodes) {
-      if (nodeIsHub.has(nid)) continue;
-      if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
-        color = ncolor;
-        break;
+  inner = inner.replace(
+    edgeRegex,
+    (_full, edgeClass: string, edgeId: string, d: string, pathAttrs: string, rest: string) => {
+      const idx = edgeIndex++;
+      const pathId = `${pfx}-edge-${idx}`;
+
+      let color = DEFAULT_ACCENT;
+      if (isSequence || isState) {
+        color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+      } else {
+        const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
+        for (const [nid, ncolor] of sortedNodes) {
+          if (nodeIsHub.has(nid)) continue;
+          if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
+            color = ncolor;
+            break;
+          }
+        }
       }
+
+      const styledRest = rest.replace(/fill="var\(--_l\)"/g, `fill="${color}" fill-opacity="0.88"`);
+      const preserveDash = pathAttrs.includes("stroke-dasharray") ? ' stroke-dasharray="5 5"' : "";
+
+      if (animate) {
+        if (isSequence && totalEdges > 0) {
+          // Chronological relay: message 0 fires, then message 1, then message 2, ...
+          const stepDur = 1.15;
+          const cycleDur = totalEdges * stepDur;
+          const t0 = idx / totalEdges;
+          const t1 = (idx + 0.88) / totalEdges;
+          const fadeIn = Math.min(t0 + 0.02, t1);
+          const fadeOut = Math.min(t1 + 0.04, 1);
+          // Negative begin so message 0 is already mid-flight at t = 0
+          const begin = -(stepDur * 0.35);
+
+          const ktMotion =
+            t0 === 0
+              ? `0;${t1.toFixed(4)};1`
+              : `0;${t0.toFixed(4)};${t1.toFixed(4)};1`;
+          const kpMotion = t0 === 0 ? "0;1;1" : "0;0;1;1";
+
+          const ktOpacity =
+            t0 === 0
+              ? `0;${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`
+              : `0;${t0.toFixed(4)};${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`;
+          const valOpacity = t0 === 0 ? "1;1;1;0;0" : "0;0;1;1;0;0";
+
+          packets.push(
+            `<circle r="4" fill="${color}">` +
+              `<animateMotion dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" calcMode="linear" keyPoints="${kpMotion}" keyTimes="${ktMotion}"><mpath href="#${pathId}"/></animateMotion>` +
+              `<animate attributeName="opacity" dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" keyTimes="${ktOpacity}" values="${valOpacity}"/>` +
+              `</circle>`
+          );
+        } else {
+          const dur = (2.1 + (idx % 4) * 0.22).toFixed(2);
+          const begin = (-((idx * 0.43) % 2.0 + 0.2)).toFixed(2);
+          packets.push(
+            `<circle r="3.8" fill="${color}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
+          );
+        }
+      }
+
+      const flowLayer =
+        animate && !isSequence
+          ? `<path d="${d}" stroke="${color}" stroke-width="2.1" fill="none" class="${pfx}-flow"/>`
+          : "";
+      const baseOpacity = isSequence ? 0.8 : palette.wireBaseOpacity;
+
+      return [
+        `<g class="${edgeClass}" data-id="${edgeId}">`,
+        `<path id="${pathId}" d="${d}" stroke="${color}" stroke-width="2" stroke-opacity="${baseOpacity}"${preserveDash} fill="none"/>`,
+        flowLayer,
+        styledRest,
+        `</g>`,
+      ].join("");
     }
-
-    const styledRest = rest.replace(/fill="var\(--_l\)"/g, `fill="${color}" fill-opacity="0.85"`);
-
-    if (animate) {
-      const dur = (2.1 + (idx % 4) * 0.22).toFixed(2);
-      const begin = (-((idx * 0.43) % 2.0 + 0.2)).toFixed(2);
-      packets.push(
-        `<circle r="3.8" fill="${color}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
-      );
-    }
-
-    const flowLayer = animate
-      ? `<path d="${d}" stroke="${color}" stroke-width="2.1" fill="none" class="${pfx}-flow"/>`
-      : "";
-
-    return [
-      `<g class="pele-edge" data-id="${edgeId}">`,
-      `<path id="${pathId}" d="${d}" stroke="${color}" stroke-width="2" stroke-opacity="${palette.wireBaseOpacity}" fill="none"/>`,
-      flowLayer,
-      styledRest,
-      `</g>`,
-    ].join("");
-  });
+  );
 
   // 3. Wrap into final padded canvas with theme styles
-  const totalW = Math.round(width + padX * 2);
+  // Ensure narrow vertical diagrams expand cleanly to fit title/footer text
+  const minTitleW = options.title ? Math.ceil(options.title.length * 10.2 + 64) : 0;
+  const minFooterW = options.footer ? Math.ceil(options.footer.length * 7.8 + 96) : 0;
+  const totalW = Math.round(Math.max(width + padX * 2, minTitleW, minFooterW));
   const totalH = Math.round(height + padTop + padBottom);
+  const offsetX = Math.round((totalW - width) / 2);
   const label = options.ariaLabel ?? options.title ?? "Animated Mermaid Diagram";
 
   const titleEl = options.title
@@ -221,7 +272,7 @@ export function renderAnimatedSvg(
 
   ${titleEl}
 
-  <g class="${pfx}-stage" transform="translate(${padX},${padTop})" style="--_bg:${palette.bg};--_fg:${palette.textPrimary};--_m:${palette.textMuted};--_l:${DEFAULT_ACCENT};--_s:${palette.cardFill};--_a:${palette.hubBgStart};--_b:${palette.cardStroke};--_c:${DEFAULT_ACCENT};--_r:12px">
+  <g class="${pfx}-stage" transform="translate(${offsetX},${padTop})" style="--_bg:${palette.bg};--_fg:${palette.textPrimary};--_m:${palette.textMuted};--_l:${DEFAULT_ACCENT};--_s:${palette.cardFill};--_a:${palette.hubBgStart};--_b:${palette.cardStroke};--_c:${DEFAULT_ACCENT};--_r:12px">
     ${innerWithPackets}
   </g>
 
