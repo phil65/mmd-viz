@@ -128,8 +128,10 @@ describe("renderAnimatedSvg", () => {
       Prompt,Direct,40
     `;
     const svg = renderAnimatedSvg(sankey, { title: "Sankey" });
-    const motions = [...svg.matchAll(/<animateMotion/g)];
-    expect(motions.length).toBe(4);
+    // Particles in proportion to each ribbon's value: 60 carries more than 40
+    const along = (id: string) => svg.split(`href="#mmd-sankey-${id}"`).length - 1;
+    expect(along("0")).toBeGreaterThan(along("1"));
+    expect(along("1")).toBeGreaterThanOrEqual(1);
     expect(svg).toContain('id="mmd-sankey-0"');
   });
 

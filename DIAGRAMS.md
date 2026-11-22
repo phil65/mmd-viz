@@ -1,50 +1,68 @@
 # Diagram Type Support
 
-All **32** diagram types supported by [`pele`](https://github.com/obsidianmd/pele) automatically receive `mmd-viz`'s self-contained SVG canvas, typography, `--pele-series-1..5` color palette, 8 themes (including `--theme auto`), `--title` / `--footer`, `--transparent`, `--static`, and `prefers-reduced-motion` support.
+All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get `mmd-viz`'s self-contained SVG canvas, typography, color palette, 8 themes (including `--theme auto`), `--title` / `--footer`, `--transparent` and `--static`. **Every type is animated**, zero-JS (CSS `@keyframes` + SMIL), in the way that suits what it shows, and every animation stops for `prefers-reduced-motion`:
 
-On top of that base styling, **time- and flow-oriented** diagrams receive tailored zero-JS animations (CSS `@keyframes` + SMIL `<animateMotion>` / `<animateTransform>`).
+- **Flow**: packets keep traveling the edges, for diagrams about traffic and data moving.
+- **Relay**: one packet at a time, edge after edge, looping, for diagrams whose edges are steps taken in order.
+- **Build-up**: the diagram assembles once (parts appear, relations draw, values grow) and then stays still, for structure and data, where constant motion would only distract.
+- **Own motion**: a few types get a motion that is about their meaning.
 
----
+## Flow
 
-## Animated (11)
-
-| Pele Type | Mermaid Syntax | Animation Behavior | Notes / Conventions |
-| :--- | :--- | :--- | :--- |
-| `flowchart` | `flowchart LR` / `TD`, `graph` | Two-layer dashed wires + traveling packets along Bézier edges; pulsing `:::hub` ring | Supports `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet`, `:::hub`, `<br/>` title/subtitle, `==>` thick & `-.->` dotted weights, subgraphs, edge labels |
-| `sequence` | `sequenceDiagram` | **Chronological relay** — packets fire sequentially in order (`1 → 2 → 3 → …`) with synchronized opacity | Preserves dashed return arrows (`-->>`) |
-| `state` | `stateDiagram-v2` | Cycling accent transition arrows + dashed flow + traveling packets | Auto-expands narrow vertical canvases to fit titles/footers |
-| `gitGraph` | `gitGraph` | Cycling branch/merge colors + animated branch/merge packets + staggered pulsing commit halos | Uses `--pele-series-1..5` for branch badges & lanes |
-| `architecture` | `architecture-beta` | Cycling accent service-to-service traffic wires + traveling packets | Preserves Pele service & group icons |
-| `agentflow` | `agentflow-beta` | Animated agent handoff & tool-call packets along edges | Supports `:::accent` classes or automatic cycling accents |
-| `c4` | `C4Context` / `C4Container` / `C4Component` | Cycling accent traffic wires & packets along relationship arrows | Preserves C4 person/system shapes |
-| `swimlane` | `swimlane-beta` | Animated cross-lane handoff wires & packets | Preserves horizontal/vertical lane headers |
-| `sankey` | `sankey-beta` | Dual staggered particles streaming along the exact mathematical centerline Bézier of each weighted ribbon | Color-matched to each ribbon's series accent |
-| `gantt` | `gantt` | Cycling accent task bars + sweeping vertical playhead line across the timeline grid | Respects `--speed` multiplier |
-| `timeline` | `timeline` | Glowing dashed axis + traveling pulse + staggered pulsing rings on milestone dots | Uses `--pele-series-1..5` for period cards |
-
----
-
-## Planned Animation Candidates (4)
-
-Temporal, flow, or execution-oriented diagrams that currently receive full theme/canvas styling and are candidates for dedicated animations:
-
-| Pele Type | Mermaid Syntax | Proposed Animation |
+| Pele Type | Mermaid Syntax | Animation |
 | :--- | :--- | :--- |
-| `block` | `block-beta` | Directional connector pulses between blocks |
-| `eventmodeling` | `eventmodeling` | Chronological left-to-right command → event → view flow |
-| `journey` | `journey` | Subtle left-to-right step highlight across user journey stages |
-| `railroad` | `railroad-beta` / `railroad-ebnf-beta` | Glowing parser token gliding along the grammar track |
+| `flowchart` | `flowchart LR` / `TD`, `graph` | Dashed wires + traveling packets; pulsing `:::hub` ring. `:::cyan` … `:::violet`, `<br/>` title/subtitle, `==>` thick and `-.->` dotted weights |
+| `architecture` | `architecture-beta` | Service-to-service traffic packets |
+| `c4` | `C4Context` / `C4Container` / `C4Component` | Packets along relationship arrows |
+| `block` | `block-beta` | Packets between blocks |
+| `swimlane` | `swimlane-beta` | Cross-lane handoff packets |
+| `usecase` | `usecase-beta` | Packets from actors to their use cases |
+| `sankey` | `sankey-beta` | Particles along each ribbon's centerline, **as many as it carries** (the widest ribbon gets six, the others in proportion) |
 
----
+## Relay (steps in order)
 
-## Styled Static by Design (17)
+| Pele Type | Mermaid Syntax | Animation |
+| :--- | :--- | :--- |
+| `sequence` | `sequenceDiagram` | Messages fire one after another (`1 → 2 → 3 → …`); dashed returns stay dashed |
+| `state` | `stateDiagram-v2` | One token walks the transitions in order: the machine is in one state at a time |
+| `agentflow` | `agentflow-beta` | Handoffs and tool calls one after another |
+| `eventmodeling` | `eventmodeling` | Command → event → view, through the time frames |
+| `gitGraph` | `gitGraph` | History replays commit by commit, each commit flashing as the replay reaches it |
 
-Structural, hierarchical, or analytical diagrams where continuous motion would be distracting rather than informative. All of these receive full `mmd-viz` theming, framed canvas, typography, and `--theme auto` support:
+## Time
 
-| Category | Pele Types |
-| :--- | :--- |
-| **Software / Data Modeling** | `class`, `er`, `requirement`, `usecase`, `packet` |
-| **Charts & Data Viz** | `pie`, `xychart`, `radar`, `treemap`, `quadrantChart`, `venn` |
-| **Thinking / Planning** | `mindmap`, `kanban`, `wardley`, `cynefin`, `ishikawa`, `treeView`, `info` |
+| Pele Type | Mermaid Syntax | Animation |
+| :--- | :--- | :--- |
+| `gantt` | `gantt` | A playhead sweeps the timeline; tasks in cycling accents, done ones faded, the active one glowing, critical ones red |
+| `timeline` | `timeline` | A pulse travels the axis, milestone dots pulse in turn |
+| `journey` | `journey` | Tasks and faces appear, the satisfaction line draws, then a marker keeps walking it: the experience over time |
 
-`mindmap` is the exception: drawn from a Markdown outline (`renderMindmapSvg`, `*.mindmap.md`), it grows once from the root when animated.
+## Own motion
+
+| Pele Type | Mermaid Syntax | Animation |
+| :--- | :--- | :--- |
+| `railroad` | `railroad-beta` / `railroad-ebnf-beta` / … | Dashes flow along the tracks and a token reads each rule from start to end |
+| `ishikawa` | `ishikawa-beta` | Every cause flows down its bone and the spine into the effect, which beats as they arrive |
+| `mindmap` | Markdown outline (`renderMindmapSvg`, `*.mindmap.md`) or `mindmap` | Branches grow out of the root, edge before node |
+
+## Build-up (once)
+
+| Pele Type | Mermaid Syntax | Animation |
+| :--- | :--- | :--- |
+| `class` | `classDiagram` | Classes rise in, then their relations draw (no packets: inheritance isn't traffic) |
+| `er` | `erDiagram` | Entities, then relationships, then labels |
+| `requirement` | `requirementDiagram` | Requirements and elements, then their relations |
+| `wardley` | `wardley-beta` | Components, then the value chain draws |
+| `pie` | `pie` | Slices bloom from the center one after another, then labels and legend |
+| `xychart` | `xychart-beta` | Bars grow from the axis, lines draw, points pop |
+| `radar` | `radar-beta` | Curves bloom from the center, series after series |
+| `quadrantChart` | `quadrantChart` | Quadrants fade in, points pop in |
+| `treemap` | `treemap-beta` | Sections, then their tiles |
+| `venn` | `venn-beta` | Sets pop in, then the regions' labels |
+| `kanban` | `kanban` | Cards drop into their columns, column by column |
+| `packet` | `packet-beta` | Fields fill in bit order |
+| `treeView` | `treeView-beta` | Entries appear top-down, guides fade in |
+| `cynefin` | `cynefin-beta` | Domains fade in, the cliff draws, items rise in |
+| `info` | `info` | Fades in |
+
+Compartment nodes (class members, ER attributes, requirement fields) keep pele's look; the flowchart card with its accent bar is only for nodes without compartments.

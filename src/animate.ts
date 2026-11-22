@@ -1,6 +1,15 @@
 import type { DiagramModel } from "pele";
 import { render } from "pele/core";
 import "./diagrams.js";
+import {
+  animateIshikawa,
+  animateJourney,
+  animateRailroad,
+  beatCss,
+  buildUp,
+  type EffectContext,
+  entranceCss,
+} from "./effects.js";
 import { ACCENT_PALETTE, THEMES, type AnimateOptions, type ThemePalette } from "./themes.js";
 
 const DEFAULT_ACCENT = "#38BDF8";
@@ -53,6 +62,10 @@ export function renderAnimatedSvg(
   const isGantt = diagramType === "gantt";
   const isTimeline = diagramType === "timeline";
   const isMindmap = diagramType === "mindmap";
+  // Steps that happen one after another: one packet at a time, in order
+  const isRelay = RELAY_TYPES.has(diagramType);
+  // Relations, not traffic: drawn once, no packets
+  const isStructure = STRUCTURE_TYPES.has(diagramType);
 
   // 1. Inspect and upgrade flowchart/state nodes
   const nodeColor = new Map<string, string>();
@@ -61,7 +74,8 @@ export function renderAnimatedSvg(
     /<g class="pele-node([^"]*)" data-id="([^"]+)" transform="translate\(([^,]+),([^)]+)\)">([\s\S]*?)<\/g>/g;
 
   // Mind map nodes keep pele's shapes (pills colored by branch)
-  if (!isMindmap) inner = inner.replace(
+  // Nodes with compartments (class members, ER attributes, requirement fields) keep theirs
+  if (!isMindmap && !COMPARTMENT_TYPES.has(diagramType)) inner = inner.replace(
     nodeRegex,
     (_full, classes: string, nodeId: string, tx: string, ty: string, body: string) => {
       const classList = classes.trim().split(/\s+/).filter(Boolean);
@@ -131,9 +145,13 @@ export function renderAnimatedSvg(
   } else if (isSankey) {
     // Compute exact centerline Bezier for each Sankey flow ribbon and stream particles through it
     let linkIdx = 0;
+    let widest = 1;
     const sankeyRegex =
       /<path class="pele-sankey-link" data-id="([^"]+)" d="M([^,]+),([^C]+)C([^,]+),([^ ]+) ([^,]+),([^ ]+) ([^,]+),([^L]+)L([^,]+),([^C]+)C([^,]+),([^ ]+) ([^,]+),([^ ]+) ([^,]+),([^Z]+)Z" fill="([^"]+)"/g;
 
+    for (const link of inner.matchAll(sankeyRegex)) {
+      widest = Math.max(widest, Math.abs(Number.parseFloat(link[17] ?? "0") - Number.parseFloat(link[3] ?? "0")));
+    }
     inner = inner.replace(
       sankeyRegex,
       (
@@ -173,25 +191,40 @@ export function renderAnimatedSvg(
           const pathId = `${pfx}-sankey-${idx}`;
           const centerD = `M${x0.toFixed(1)},${y0.toFixed(1)}C${cx1.toFixed(1)},${y0.toFixed(1)} ${cx2.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
           extraDefs.push(`<path id="${pathId}" d="${centerD}"/>`);
-          const dur = (2.6 + (idx % 3) * 0.35) / speed;
-          const b1 = -(((idx * 0.45) % 2.2 + 0.2) / speed);
-          const b2 = b1 - dur / 2;
-          packets.push(
-            `<circle r="3.6" fill="${color}" fill-opacity="0.92"><animateMotion dur="${dur.toFixed(2)}s" begin="${b1.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`,
-            `<circle r="2.8" fill="${color}" fill-opacity="0.65"><animateMotion dur="${dur.toFixed(2)}s" begin="${b2.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
-          );
+          // As many particles as the ribbon carries: its thickness is its value
+          const thickness = Math.abs(Number.parseFloat(y0bs) - Number.parseFloat(y0ts));
+          const count = Math.max(1, Math.round((MAX_SANKEY_PARTICLES * thickness) / widest));
+          const radius = Math.min(4, 2.4 + thickness / 60).toFixed(1);
+          const dur = 3 / speed;
+          const offset = ((idx * 0.37) % 1) * dur;
+          for (let k = 0; k < count; k++) {
+            const begin = -(offset + (k * dur) / count);
+            packets.push(
+              `<circle r="${radius}" fill="${color}" fill-opacity="${k % 2 ? 0.65 : 0.92}"><animateMotion dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
+            );
+          }
         }
         return full;
       }
     );
   } else if (isGantt) {
-    // Color each task bar with cycling series accents & add a sweeping playhead across the grid
+    // Color each task with cycling series accents (done ones faded, critical ones stay
+    // red), let the task in progress glow, and sweep a playhead across the grid
     let taskIdx = 0;
     inner = inner.replace(
-      /<g class="pele-task" data-id="([^"]+)"><rect ([^>]*?)fill="var\(--_c\)" stroke="var\(--_c\)"/g,
-      (_full, tid: string, rectAttrs: string) => {
+      /<g class="pele-task([^"]*)" data-id="([^"]+)"><(rect|path) ([^>]*?)fill="([^"]+)"( fill-opacity="[^"]*")? stroke="([^"]+)"/g,
+      (full, cls: string, tid: string, tag: string, attrs: string) => {
+        if (cls.includes("pele-crit")) return full;
         const color = CYCLE_ACCENTS[taskIdx++ % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
-        return `<g class="pele-task" data-id="${tid}"><rect ${rectAttrs}fill="${color}" stroke="${color}"`;
+        const done = cls.includes("pele-done");
+        const active = cls.includes("pele-active");
+        const paint = done
+          ? `fill="${color}" fill-opacity="0.18" stroke="${color}" stroke-opacity="0.55"`
+          : active
+            ? `fill="${color}" fill-opacity="0.25" stroke="${color}"`
+            : `fill="${color}" stroke="${color}"`;
+        const working = active && animate ? ` ${pfx}-working` : "";
+        return `<g class="pele-task${cls}${working}" data-id="${tid}"><${tag} ${attrs}${paint}`;
       }
     );
 
@@ -250,8 +283,10 @@ export function renderAnimatedSvg(
     }
   } else if (isGitGraph) {
     // Pele gitGraph emits <path class="pele-edge..." d="..." stroke="var(--pele-series-N,...)"/>
+    // History replays in order: one packet per edge, edge after edge
     let gitEdgeIdx = 0;
     const gitEdgeRegex = /<path class="(pele-edge[^"]*)" d="([^"]+)" stroke="([^"]+)"\/>/g;
+    const gitEdges = [...inner.matchAll(gitEdgeRegex)].length;
     inner = inner.replace(
       gitEdgeRegex,
       (_full, cls: string, d: string, strokeVal: string) => {
@@ -261,13 +296,7 @@ export function renderAnimatedSvg(
         const seriesNum = seriesMatch && seriesMatch[1] ? Number.parseInt(seriesMatch[1], 10) - 1 : idx;
         const color = CYCLE_ACCENTS[seriesNum % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
 
-        if (animate) {
-          const dur = (2.4 + (idx % 3) * 0.35) / speed;
-          const begin = -(((idx * 0.55) % 2.0 + 0.2) / speed);
-          packets.push(
-            `<circle r="3.4" fill="${color}"><animateMotion dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
-          );
-        }
+        if (animate) packets.push(relayPacket(pathId, idx, gitEdges, color, speed, 3.4));
 
         const flowLayer = animate
           ? `<path d="${d}" stroke="${color}" stroke-width="2.2" fill="none" class="${pfx}-flow"/>`
@@ -280,6 +309,7 @@ export function renderAnimatedSvg(
     // Add subtle pulsing halos to git commits
     if (animate) {
       let commitIdx = 0;
+      const gitCommits = (inner.match(/<g class="pele-commit\b/g) ?? []).length;
       inner = inner.replace(
         /<g class="(pele-commit[^"]*)" data-id="([^"]+)">\s*<circle cx="([^"]+)" cy="([^"]+)" r="([^"]+)"([^>]*)\/>/g,
         (full, _cls: string, _cid: string, cx: string, cy: string, r: string, attrs: string) => {
@@ -289,12 +319,15 @@ export function renderAnimatedSvg(
             seriesMatch && seriesMatch[1] ? Number.parseInt(seriesMatch[1], 10) - 1 : idx;
           const color = CYCLE_ACCENTS[seriesNum % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
           const haloR = (Number.parseFloat(r) + 4.5).toFixed(1);
-          const delay = (idx * 0.35 / speed).toFixed(2);
-          return `${full}<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="none" stroke="${color}" stroke-width="1.3" class="${pfx}-pulse" style="animation-delay:-${delay}s"/>`;
+          // Each commit flashes as the replay reaches it
+          const cycle = Math.max(gitEdges, 1) * RELAY_STEP;
+          const arrival = idx === 0 ? 0 : (idx - 1 + 0.88 - RELAY_LEAD) * RELAY_STEP;
+          const delay = ((arrival - 0.06 * cycle) / speed).toFixed(2);
+          return `${full}<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="none" stroke="${color}" stroke-width="1.6" class="${pfx}-flash" style="animation-duration:${(cycle / speed).toFixed(2)}s;animation-delay:${delay}s"/>`;
         }
       );
     }
-  } else {
+  } else if (!isStructure) {
     // Flowchart (`pele-edge`), sequence (`pele-edge pele-message`), state (`pele-edge pele-transition`)
     const edgeRegex =
       /<g class="(pele-edge[^"]*)" data-id="([^"]+)">\s*<path d="([^"]+)"([^>]*)\/>([\s\S]*?)<\/g>/g;
@@ -310,7 +343,7 @@ export function renderAnimatedSvg(
         const pathId = `${pfx}-edge-${idx}`;
 
         let color = DEFAULT_ACCENT;
-        if (isSequence || isState || isArchitecture || isC4) {
+        if (isRelay || isArchitecture || isC4) {
           color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
         } else {
           const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
@@ -334,33 +367,8 @@ export function renderAnimatedSvg(
         const preserveDash = isDotted ? ' stroke-dasharray="5 5"' : "";
 
         if (animate) {
-          if (isSequence && totalEdges > 0) {
-            const stepDur = 1.15 / speed;
-            const cycleDur = totalEdges * stepDur;
-            const t0 = idx / totalEdges;
-            const t1 = (idx + 0.88) / totalEdges;
-            const fadeIn = Math.min(t0 + 0.02, t1);
-            const fadeOut = Math.min(t1 + 0.04, 1);
-            const begin = -(stepDur * 0.35);
-
-            const ktMotion =
-              t0 === 0
-                ? `0;${t1.toFixed(4)};1`
-                : `0;${t0.toFixed(4)};${t1.toFixed(4)};1`;
-            const kpMotion = t0 === 0 ? "0;1;1" : "0;0;1;1";
-
-            const ktOpacity =
-              t0 === 0
-                ? `0;${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`
-                : `0;${t0.toFixed(4)};${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`;
-            const valOpacity = t0 === 0 ? "1;1;1;0;0" : "0;0;1;1;0;0";
-
-            packets.push(
-              `<circle r="4" fill="${color}">` +
-                `<animateMotion dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" calcMode="linear" keyPoints="${kpMotion}" keyTimes="${ktMotion}"><mpath href="#${pathId}"/></animateMotion>` +
-                `<animate attributeName="opacity" dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" keyTimes="${ktOpacity}" values="${valOpacity}"/>` +
-                `</circle>`
-            );
+          if (isRelay && totalEdges > 0) {
+            packets.push(relayPacket(pathId, idx, totalEdges, color, speed, 4));
           } else {
             const baseDur = isThick ? 1.45 : isDotted ? 3.0 : 2.1 + (idx % 4) * 0.22;
             const dur = baseDur / speed;
@@ -374,10 +382,10 @@ export function renderAnimatedSvg(
 
         const wireWidth = isThick ? 3 : 2;
         const flowLayer =
-          animate && !isSequence && !isDotted
+          animate && !isRelay && !isDotted
             ? `<path d="${d}" stroke="${color}" stroke-width="${(wireWidth + 0.2).toFixed(1)}" fill="none" class="${pfx}-flow"/>`
             : "";
-        const baseOpacity = isSequence ? 0.8 : isThick ? 0.55 : palette.wireBaseOpacity;
+        const baseOpacity = isRelay ? 0.8 : isThick ? 0.55 : palette.wireBaseOpacity;
 
         return [
           `<g class="${edgeClass}" data-id="${edgeId}">`,
@@ -388,6 +396,28 @@ export function renderAnimatedSvg(
         ].join("");
       }
     );
+  }
+
+  // 2b. Types that aren't about flow: a one-time build-up, or a motion of their own
+  const fx: EffectContext = { pfx, speed, defs: extraDefs };
+  let entrances = false;
+  let beat = false;
+  if (animate) {
+    if (diagramType === "journey") {
+      inner = animateJourney(inner, fx, DEFAULT_ACCENT);
+      entrances = true;
+    } else if (diagramType === "railroad") {
+      inner = animateRailroad(inner, fx, DEFAULT_ACCENT);
+    } else if (diagramType === "ishikawa") {
+      inner = animateIshikawa(inner, fx, CYCLE_ACCENTS);
+      beat = true;
+    } else {
+      const built = buildUp(diagramType, inner, fx);
+      if (built !== null) {
+        inner = built;
+        entrances = true;
+      }
+    }
   }
 
   // 3. Wrap into final padded canvas with CSS-variable themes
@@ -450,9 +480,13 @@ export function renderAnimatedSvg(
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
         50% { opacity: 0.65; transform: scale(1.03); }
       }
+      .${pfx}-flash { opacity: 0.15; animation: ${pfx}-flash 4s linear infinite; }
+      @keyframes ${pfx}-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .${pfx}-working > rect { animation: ${pfx}-working ${pulseDur}s ease-in-out infinite; }
+      @keyframes ${pfx}-working { 50% { fill-opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) {
-        .${pfx}-flow, .${pfx}-pulse { animation: none; }
-      }`
+        .${pfx}-flow, .${pfx}-pulse, .${pfx}-flash, .${pfx}-working > rect { animation: none; }
+      }${entrances ? entranceCss(pfx, speed) : ""}${beat ? beatCss(pfx, speed) : ""}`
     : "";
 
   const autoLightCss = isAuto
@@ -543,7 +577,8 @@ export function renderAnimatedSvg(
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
 ${branchCss}
-      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
       .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${animationCss}${growCss}
@@ -583,6 +618,54 @@ function mindmapDepth(nodeId: string): number {
 
 function mindmapDelay(depth: number, speed: number): string {
   return (Math.max(0, depth) * 0.32 / speed).toFixed(2);
+}
+
+/** Particles on the widest sankey ribbon; narrower ones get proportionally fewer. */
+const MAX_SANKEY_PARTICLES = 6;
+
+/** The relay types: their edges are steps taken one after another. */
+const RELAY_TYPES = new Set<string>(["sequence", "state", "agentflow", "eventmodeling"]);
+/** Edges that are relations or dependencies: drawn once, never streamed. */
+const STRUCTURE_TYPES = new Set<string>(["class", "er", "requirement", "wardley"]);
+/** Nodes made of compartments, which the flowchart card and accent bar would cover. */
+const COMPARTMENT_TYPES = new Set<string>(["class", "er", "requirement"]);
+
+/** Seconds per relay step, and how far into the first step the loop starts. */
+const RELAY_STEP = 1.15;
+const RELAY_LEAD = 0.35;
+
+/**
+ * The `index`-th of `total` steps: a packet that travels its path while the
+ * others wait, so the loop replays the steps in order.
+ */
+function relayPacket(
+  pathId: string,
+  index: number,
+  total: number,
+  color: string,
+  speed: number,
+  radius: number
+): string {
+  const stepDur = RELAY_STEP / speed;
+  const cycleDur = total * stepDur;
+  const t0 = index / total;
+  const t1 = (index + 0.88) / total;
+  const fadeIn = Math.min(t0 + 0.02, t1);
+  const fadeOut = Math.min(t1 + 0.04, 1);
+  const begin = -(stepDur * RELAY_LEAD);
+  const ktMotion = t0 === 0 ? `0;${t1.toFixed(4)};1` : `0;${t0.toFixed(4)};${t1.toFixed(4)};1`;
+  const kpMotion = t0 === 0 ? "0;1;1" : "0;0;1;1";
+  const ktOpacity =
+    t0 === 0
+      ? `0;${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`
+      : `0;${t0.toFixed(4)};${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`;
+  const valOpacity = t0 === 0 ? "1;1;1;0;0" : "0;0;1;1;0;0";
+  return (
+    `<circle r="${radius}" fill="${color}">` +
+    `<animateMotion dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" calcMode="linear" keyPoints="${kpMotion}" keyTimes="${ktMotion}"><mpath href="#${pathId}"/></animateMotion>` +
+    `<animate attributeName="opacity" dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" keyTimes="${ktOpacity}" values="${valOpacity}"/>` +
+    `</circle>`
+  );
 }
 
 function clampSpeed(speed: number): number {
