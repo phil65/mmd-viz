@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 804 446" width="804" height="446" role="img" aria-label="MMD-SVG · MERMAID TO ANIMATED SVG">
+  <defs>
+    <style>
+      .mmd-bg { fill: #070B14; }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #38BDF8; text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #94A3B8; }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #F8FAFC; }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #94A3B8; }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #38BDF8; }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="rgba(148,163,184,0.14)"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="804" height="446" rx="18" class="mmd-bg"/>
+  <rect width="804" height="446" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="209" cy="161" r="225" fill="url(#mmd-glow-l)"/>
+  <circle cx="595" cy="285" r="225" fill="url(#mmd-glow-r)"/>
+
+  <text x="402" y="42" text-anchor="middle" class="mmd-title">MMD-SVG · MERMAID TO ANIMATED SVG</text>
+
+  <g transform="translate(52,76)" style="--_bg:#070B14;--_fg:#F8FAFC;--_m:#94A3B8;--_l:#38BDF8;--_s:#0F172A;--_a:#1E293B;--_b:rgba(148,163,184,0.24);--_c:#38BDF8;--_r:12px">
+    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_mmd_core_0"><path id="mmd-edge-0" d="M196.05,41C215.62,41 215.62,131 235.19,131L241.19,131" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,41C215.62,41 215.62,131 235.19,131L241.19,131" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M248.19,131L240.19,134.36L240.19,127.64Z" fill="#38BDF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_cli_core_0"><path id="mmd-edge-1" d="M196.05,147L237.05,147" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,147L237.05,147" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M244.05,147L236.05,150.36L236.05,143.64Z" fill="#818CF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_api_core_0"><path id="mmd-edge-2" d="M196.05,253C215.62,253 215.62,163 235.19,163L241.19,163" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M196.05,253C215.62,253 215.62,163 235.19,163L241.19,163" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M248.19,163L240.19,166.36L240.19,159.64Z" fill="#FBBF24" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_core_gh_0"><path id="mmd-edge-3" d="M456.58,139C474.57,139 474.57,94 492.56,94L498.56,94" stroke="#34D399" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M456.58,139C474.57,139 474.57,94 492.56,94L498.56,94" stroke="#34D399" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M505.56,94L497.56,97.36L497.56,90.64Z" fill="#34D399" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_core_docs_0"><path id="mmd-edge-4" d="M456.58,155C474.57,155 474.57,200 492.56,200L498.56,200" stroke="#F472B6" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M456.58,155C474.57,155 474.57,200 492.56,200L498.56,200" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M505.56,200L497.56,203.36L497.56,196.64Z" fill="#F472B6" fill-opacity="0.85" stroke="none"/></g></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="mmd" transform="translate(102.26,41)"><rect x="-93.78" y="-33" width="187.57" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-83.8" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Mermaid Source</tspan><tspan x="0" y="16.1">flowchart · sequence</tspan></text></g><g class="pele-node pele-shape-stadium hub mmd-hub-node" data-id="core" transform="translate(350.8,147)"><rect x="-113.8" y="-40.0" width="227.5" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="mmd-pulse"/><rect x="-106.76" y="-33" width="213.51" height="66" rx="18" fill="url(#mmd-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">mmd-svg</tspan><tspan x="0" y="16.1">Pele + SVG Animator</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="cli" transform="translate(130.04,147)"><rect x="-66.01" y="-33" width="132.02" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-56.0" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">CLI / Stdin</tspan><tspan x="0" y="16.1">npx mmd-svg</tspan></text></g><g class="pele-node pele-shape-rect amber" data-id="api" transform="translate(102.02,253)"><rect x="-94.02" y="-33" width="188.05" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-84.0" y="-20.0" width="5" height="40.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">TypeScript API</tspan><tspan x="0" y="16.1">renderAnimatedSvg()</tspan></text></g><g class="pele-node pele-shape-rect emerald" data-id="gh" transform="translate(584.9,94)"><rect x="-79.34" y="-33" width="158.69" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-69.3" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">GitHub README</tspan><tspan x="0" y="16.1">Zero JS ·  Safe</tspan></text></g><g class="pele-node pele-shape-rect pink" data-id="docs" transform="translate(598.7,200)"><rect x="-93.14" y="-33" width="186.27" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-83.1" y="-20.0" width="5" height="40.0" rx="2.5" fill="#F472B6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Static Docs</tspan><tspan x="0" y="16.1">Dark &amp; Light Themes</tspan></text></g></g>
+    <g class="mmd-packets">
+      <circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle>
+      <circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle>
+      <circle r="3.8" fill="#FBBF24"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle>
+      <circle r="3.8" fill="#34D399"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle>
+      <circle r="3.8" fill="#F472B6"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#mmd-edge-4"/></animateMotion></circle>
+    </g>
+  </g>
+
+  <rect x="245" y="394" width="313" height="30" rx="15" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/>
+  <text x="402" y="413" text-anchor="middle" class="mmd-footer">npx mmd-svg diagram.mmd -o out.svg</text>
+</svg>
