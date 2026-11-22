@@ -3,6 +3,7 @@ import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "n
 import { dirname, join, relative, resolve } from "node:path";
 import { parseArgs } from "node:util";
 import { renderAnimatedSvg } from "./animate.js";
+import { renderMindmapSvg } from "./mindmap-svg.js";
 import { THEME_NAMES, type AnimateOptions, type ThemeName } from "./themes.js";
 
 import { basename } from "node:path";
@@ -11,8 +12,9 @@ const HELP = `mmd-viz — Turn Mermaid diagrams into zero-JS styled & animated S
 
 Usage:
   mmd-viz <input.mmd> [options]
-  mmd-viz <directory> [-o <outDir>] [options]       Batch-render all *.mmd files
-  mmd-viz extract <file.md> [-o <outDir>] [options] Extract & render \`\`\`mermaid blocks
+  mmd-viz <notes.mindmap.md> [options]              Markdown outline as a mind map
+  mmd-viz <directory> [-o <outDir>] [options]       Batch-render all *.mmd and *.mindmap.md files
+  mmd-viz extract <file.md> [-o <outDir>] [options] Extract & render \`\`\`mermaid and \`\`\`markmap blocks
   cat diagram.mmd | mmd-viz [options] > out.svg
 
 Options:
@@ -24,18 +26,31 @@ Options:
   --transparent           Omit background card, dot grid, and ambient glows
   --static                Disable animations (styled static SVG)
   --prefix <id>           Prefix for internal SVG IDs (default: mmd)
+  --mindmap               Read the input as a Markdown outline (headings, lists) and draw a mind map
+  --expand-level <n>      Mind maps: show nodes down to this depth (root is 0)
   -h, --help              Show this help
 `;
 
-function extractMermaidBlocks(markdown: string): string[] {
-  const blocks: string[] = [];
-  const regex = /^```mermaid[^\n]*\n([\s\S]*?)^```/gm;
+interface Block {
+  kind: "mermaid" | "mindmap";
+  source: string;
+}
+
+function extractBlocks(markdown: string): Block[] {
+  const blocks: Block[] = [];
+  const regex = /^```(mermaid|markmap)[^\n]*\n([\s\S]*?)^```/gm;
   for (const match of markdown.matchAll(regex)) {
-    if (match[1]?.trim()) {
-      blocks.push(match[1].trim());
+    if (match[2]?.trim()) {
+      blocks.push({ kind: match[1] === "markmap" ? "mindmap" : "mermaid", source: match[2].trim() });
     }
   }
   return blocks;
+}
+
+const MINDMAP_SUFFIX = ".mindmap.md";
+
+function isMindmapFile(path: string): boolean {
+  return path.toLowerCase().endsWith(MINDMAP_SUFFIX);
 }
 
 function collectMmdFiles(dir: string): string[] {
@@ -44,7 +59,7 @@ function collectMmdFiles(dir: string): string[] {
     const full = join(dir, entry.name);
     if (entry.isDirectory()) {
       results.push(...collectMmdFiles(full));
-    } else if (entry.isFile() && entry.name.endsWith(".mmd")) {
+    } else if (entry.isFile() && (entry.name.endsWith(".mmd") || isMindmapFile(entry.name))) {
       results.push(full);
     }
   }
@@ -63,6 +78,8 @@ function main(): void {
       transparent: { type: "boolean", default: false },
       static: { type: "boolean", default: false },
       prefix: { type: "string" },
+      mindmap: { type: "boolean", default: false },
+      "expand-level": { type: "string" },
       help: { type: "boolean", short: "h", default: false },
     },
   });
@@ -91,6 +108,18 @@ function main(): void {
     }
   }
 
+  let expandLevel: number | undefined;
+  if (values["expand-level"] !== undefined) {
+    expandLevel = Number.parseInt(values["expand-level"], 10);
+    if (!Number.isInteger(expandLevel) || expandLevel < 0) {
+      process.stderr.write(
+        `Error: Invalid --expand-level "${values["expand-level"]}". Expected a whole number >= 0.\n`
+      );
+      process.exitCode = 1;
+      return;
+    }
+  }
+
   const opts: AnimateOptions = {
     theme,
     animate: !values.static,
@@ -100,6 +129,11 @@ function main(): void {
   if (values.title !== undefined) opts.title = values.title;
   if (values.footer !== undefined) opts.footer = values.footer;
   if (values.prefix !== undefined) opts.idPrefix = values.prefix;
+
+  const render = (source: string, mindmap: boolean, options: AnimateOptions = opts) =>
+    mindmap
+      ? renderMindmapSvg(source, expandLevel === undefined ? options : { ...options, expandLevel })
+      : renderAnimatedSvg(source, options);
 
   const inputPath = positionals[0];
 
@@ -112,9 +146,9 @@ function main(): void {
       return;
     }
     const mdContent = readFileSync(mdPath, "utf8");
-    const blocks = extractMermaidBlocks(mdContent);
+    const blocks = extractBlocks(mdContent);
     if (blocks.length === 0) {
-      process.stderr.write(`No \`\`\`mermaid blocks found in ${mdPath}\n`);
+      process.stderr.write(`No \`\`\`mermaid or \`\`\`markmap blocks found in ${mdPath}\n`);
       return;
     }
     const outDir = values.output ? resolve(values.output) : dirname(resolve(mdPath));
@@ -122,7 +156,10 @@ function main(): void {
     const stem = basename(mdPath).replace(/\.[^.]+$/, "");
     blocks.forEach((block, idx) => {
       const outFile = join(outDir, `${stem}-${idx + 1}.svg`);
-      const svg = renderAnimatedSvg(block, { ...opts, idPrefix: `${opts.idPrefix ?? "mmd"}-${idx + 1}` });
+      const svg = render(block.source, block.kind === "mindmap", {
+        ...opts,
+        idPrefix: `${opts.idPrefix ?? "mmd"}-${idx + 1}`,
+      });
       writeFileSync(outFile, svg, "utf8");
       process.stdout.write(`${mdPath}[${idx + 1}] -> ${outFile}\n`);
     });
@@ -135,14 +172,14 @@ function main(): void {
     const outRoot = values.output ? resolve(values.output) : rootDir;
     const files = collectMmdFiles(rootDir);
     if (files.length === 0) {
-      process.stderr.write(`No .mmd files found in ${inputPath}\n`);
+      process.stderr.write(`No .mmd or ${MINDMAP_SUFFIX} files found in ${inputPath}\n`);
       return;
     }
     for (const file of files) {
-      const rel = relative(rootDir, file).replace(/\.mmd$/, ".svg");
+      const rel = relative(rootDir, file).replace(/(\.mindmap\.md|\.mmd)$/i, ".svg");
       const outFile = join(outRoot, rel);
       mkdirSync(dirname(outFile), { recursive: true });
-      const svg = renderAnimatedSvg(readFileSync(file, "utf8"), opts);
+      const svg = render(readFileSync(file, "utf8"), isMindmapFile(file));
       writeFileSync(outFile, svg, "utf8");
       process.stdout.write(`${file} -> ${outFile}\n`);
     }
@@ -161,7 +198,7 @@ function main(): void {
     return;
   }
 
-  const svg = renderAnimatedSvg(source, opts);
+  const svg = render(source, values.mindmap || (inputPath !== undefined && isMindmapFile(inputPath)));
 
   if (values.output) {
     mkdirSync(dirname(resolve(values.output)), { recursive: true });

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 930 326" width="930" height="326" role="img" aria-label="Animated Mermaid Diagram">
+  <defs>
+    <style>
+      .mmd-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .mmd-bg { fill: var(--mv-bg); }
+      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .mmd-dot { fill: var(--mv-dot); }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .mmd-stage { --pele-series-1: #38BDF8; --pele-series-2: #818CF8; --pele-series-3: #FBBF24; --pele-series-4: #34D399; --pele-series-5: #F472B6; --pele-series-6: #FB7185; --pele-series-7: #A78BFA; --pele-series-8: #2DD4BF; }
+      .pele-root .pele-label { font-weight: 600; }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.80s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.20s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+      .mmd-grow { opacity: 0; animation: mmd-fade 0.45s ease-out forwards; }
+      .mmd-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mmd-stroke 0.45s ease-in-out forwards; }
+      @keyframes mmd-fade { to { opacity: 1; } }
+      @keyframes mmd-stroke { to { stroke-dashoffset: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-grow, .mmd-draw { opacity: 1; stroke-dashoffset: 0; animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="930" height="326" rx="18" class="mmd-bg"/>
+  <rect width="930" height="326" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="242" cy="117" r="260" fill="url(#mmd-glow-l)"/>
+  <circle cx="688" cy="209" r="260" fill="url(#mmd-glow-r)"/>
+  
+
+  <g class="mmd-stage" transform="translate(52,48)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g transform="translate(378.56,116.5)"><g class="pele-branch pele-section-0"><g class="pele-edges" fill="none" stroke="var(--pele-series-1,#4c78a8)" stroke-width="1.5"><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.13s" d="M79.36,0C105.36,0 105.36,-64.5 131.36,-64.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M223.82,-64.5C241.82,-64.5 241.82,-96.5 259.82,-96.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M223.82,-64.5C241.82,-64.5 241.82,-64.5 259.82,-64.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M223.82,-64.5C241.82,-64.5 241.82,-32.5 259.82,-32.5"/></g><g class="pele-node pele-shape-branch mmd-grow" data-id="0.0" style="animation-delay:0.32s" transform="translate(177.59,-64.5)"><rect x="-46.23" y="-15" width="92.46" height="30" rx="15" fill="var(--pele-series-1,#4c78a8)" fill-opacity="0.22" stroke="var(--pele-series-1,#4c78a8)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Research</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.0.0" style="animation-delay:0.64s" transform="translate(320.5,-96.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">User interviews</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.0.1" style="animation-delay:0.64s" transform="translate(324.06,-64.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Competitor scan</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.0.2" style="animation-delay:0.64s" transform="translate(311.62,-32.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Pricing study</text></g></g><g class="pele-branch pele-section-1"><g class="pele-edges" fill="none" stroke="var(--pele-series-2,#f58518)" stroke-width="1.5"><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.13s" d="M79.36,0C105.36,0 105.36,64.5 131.36,64.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M190.93,64.5C208.93,64.5 208.93,35.5 226.93,35.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.77s" d="M349.63,35.5C367.63,35.5 367.63,19.5 385.63,19.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.77s" d="M349.63,35.5C367.63,35.5 367.63,51.5 385.63,51.5"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M190.93,64.5C208.93,64.5 208.93,93.5 226.93,93.5"/></g><g class="pele-node pele-shape-branch mmd-grow" data-id="0.1" style="animation-delay:0.32s" transform="translate(161.14,64.5)"><rect x="-29.78" y="-15" width="59.57" height="30" rx="15" fill="var(--pele-series-2,#f58518)" fill-opacity="0.22" stroke="var(--pele-series-2,#f58518)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Build</text></g><g class="pele-node pele-shape-branch mmd-grow" data-id="0.1.0" style="animation-delay:0.64s" transform="translate(288.28,35.5)"><rect x="-61.35" y="-15" width="122.7" height="30" rx="15" fill="var(--pele-series-2,#f58518)" fill-opacity="0.22" stroke="var(--pele-series-2,#f58518)"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="5.6" font-weight="var(--_w)">Core</tspan><tspan> features</tspan></text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.1.0.0" style="animation-delay:0.96s" transform="translate(412.53,19.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Editor</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.1.0.1" style="animation-delay:0.96s" transform="translate(409.42,51.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Sync</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.1.1" style="animation-delay:0.64s" transform="translate(281.39,93.5)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Beta program</text></g></g><g class="pele-branch pele-section-2"><g class="pele-edges" fill="none" stroke="var(--pele-series-3,#54a24b)" stroke-width="1.5"><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.13s" d="M-79.36,0C-105.36,0 -105.36,-50 -131.36,-50"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M-225.6,-50C-243.6,-50 -243.6,-82 -261.6,-82"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M-225.6,-50C-243.6,-50 -243.6,-50 -261.6,-50"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M-225.6,-50C-243.6,-50 -243.6,-18 -261.6,-18"/></g><g class="pele-node pele-shape-branch mmd-grow" data-id="0.2" style="animation-delay:0.32s" transform="translate(-178.48,-50)"><rect x="-47.12" y="-15" width="94.24" height="30" rx="15" fill="var(--pele-series-3,#54a24b)" fill-opacity="0.22" stroke="var(--pele-series-3,#54a24b)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Marketing</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.2.0" style="animation-delay:0.64s" transform="translate(-316.08,-82)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Landing page</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.2.1" style="animation-delay:0.64s" transform="translate(-311.18,-50)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Launch post</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.2.2" style="animation-delay:0.64s" transform="translate(-307.61,-18)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">Social clips</text></g></g><g class="pele-branch pele-section-3"><g class="pele-edges" fill="none" stroke="var(--pele-series-4,#e45756)" stroke-width="1.5"><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.13s" d="M-79.36,0C-105.36,0 -105.36,50 -131.36,50"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M-187.38,50C-205.38,50 -205.38,34 -223.38,34"/><path class="pele-edge mmd-draw" pathLength="1" style="animation-delay:0.45s" d="M-187.38,50C-205.38,50 -205.38,66 -223.38,66"/></g><g class="pele-node pele-shape-branch mmd-grow" data-id="0.3" style="animation-delay:0.32s" transform="translate(-159.37,50)"><rect x="-28.01" y="-15" width="56.02" height="30" rx="15" fill="var(--pele-series-4,#e45756)" fill-opacity="0.22" stroke="var(--pele-series-4,#e45756)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Ship</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.3.0" style="animation-delay:0.64s" transform="translate(-287.38,34)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">☑ Release notes</text></g><g class="pele-node pele-shape-text mmd-grow" data-id="0.3.1" style="animation-delay:0.64s" transform="translate(-274.48,66)"><text class="pele-label" x="0" y="5.6" text-anchor="middle">☐ App stores</text></g></g><g class="pele-node pele-shape-stadium pele-root" data-id="0" transform="translate(0,0)"><rect x="-79.36" y="-24" width="158.72" height="48" rx="24" fill="var(--_s)" stroke="var(--_b)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Product launch</text></g></g>
+  </g>
+
+  
+</svg>

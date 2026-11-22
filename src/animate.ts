@@ -1,4 +1,6 @@
-import { render } from "pele";
+import type { DiagramModel } from "pele";
+import { render } from "pele/core";
+import "./diagrams.js";
 import { ACCENT_PALETTE, THEMES, type AnimateOptions, type ThemePalette } from "./themes.js";
 
 const DEFAULT_ACCENT = "#38BDF8";
@@ -16,7 +18,7 @@ const CYCLE_ACCENTS = ["#38BDF8", "#818CF8", "#FBBF24", "#34D399", "#F472B6"] as
  * - `==>` (thick) and `-.->` (dotted) edges adjust wire weight and packet speed.
  */
 export function renderAnimatedSvg(
-  mermaidSource: string,
+  mermaidSource: string | DiagramModel,
   options: AnimateOptions = {}
 ): string {
   const themeName = options.theme ?? "dark";
@@ -50,6 +52,7 @@ export function renderAnimatedSvg(
   const isSankey = diagramType === "sankey";
   const isGantt = diagramType === "gantt";
   const isTimeline = diagramType === "timeline";
+  const isMindmap = diagramType === "mindmap";
 
   // 1. Inspect and upgrade flowchart/state nodes
   const nodeColor = new Map<string, string>();
@@ -57,7 +60,8 @@ export function renderAnimatedSvg(
   const nodeRegex =
     /<g class="pele-node([^"]*)" data-id="([^"]+)" transform="translate\(([^,]+),([^)]+)\)">([\s\S]*?)<\/g>/g;
 
-  inner = inner.replace(
+  // Mind map nodes keep pele's shapes (pills colored by branch)
+  if (!isMindmap) inner = inner.replace(
     nodeRegex,
     (_full, classes: string, nodeId: string, tx: string, ty: string, body: string) => {
       const classList = classes.trim().split(/\s+/).filter(Boolean);
@@ -101,7 +105,30 @@ export function renderAnimatedSvg(
   const packets: string[] = [];
   const extraDefs: string[] = [];
 
-  if (isSankey) {
+  if (isMindmap) {
+    if (animate) {
+      // Grow once from the root: each node fades in after its parent, and the edge
+      // leading to it draws itself first. Edges and non-root nodes come in the same
+      // (depth-first) order, so the n-th edge leads to the n-th node.
+      const depths: number[] = [];
+      inner = inner.replace(
+        /<g class="pele-node([^"]*)" data-id="([^"]*)"/g,
+        (full, classes: string, nodeId: string) => {
+          if (classes.includes("pele-root")) return full;
+          const depth = mindmapDepth(nodeId);
+          depths.push(depth);
+          const delay = mindmapDelay(depth, speed);
+          return `<g class="pele-node${classes} ${pfx}-grow" data-id="${nodeId}" style="animation-delay:${delay}s"`;
+        }
+      );
+      let edgeIndex = 0;
+      inner = inner.replace(/<path class="pele-edge" d="/g, () => {
+        const depth = depths[edgeIndex++] ?? 1;
+        const delay = mindmapDelay(depth - 0.6, speed);
+        return `<path class="pele-edge ${pfx}-draw" pathLength="1" style="animation-delay:${delay}s" d="`;
+      });
+    }
+  } else if (isSankey) {
     // Compute exact centerline Bezier for each Sankey flow ribbon and stream particles through it
     let linkIdx = 0;
     const sankeyRegex =
@@ -386,6 +413,32 @@ export function renderAnimatedSvg(
       ].join("\n  ")
     : "";
 
+  // Flowcharts: a bold title line over a muted subtitle. Mind maps: pele's Markdown labels
+  // as they are, and eight branch colors.
+  const labelCss = isMindmap
+    ? `
+      .${pfx}-stage { --pele-series-1: #38BDF8; --pele-series-2: #818CF8; --pele-series-3: #FBBF24; --pele-series-4: #34D399; --pele-series-5: #F472B6; --pele-series-6: #FB7185; --pele-series-7: #A78BFA; --pele-series-8: #2DD4BF; }
+      .pele-root .pele-label { font-weight: 600; }`
+    : `
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }`;
+  // gitGraph branch labels sit on colored pills; mind maps use pele-branch for whole branches
+  const branchCss = isMindmap
+    ? ""
+    : `      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }`;
+  const growDur = (0.45 / speed).toFixed(2);
+  const growCss =
+    isMindmap && animate
+      ? `
+      .${pfx}-grow { opacity: 0; animation: ${pfx}-fade ${growDur}s ease-out forwards; }
+      .${pfx}-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ${pfx}-stroke ${growDur}s ease-in-out forwards; }
+      @keyframes ${pfx}-fade { to { opacity: 1; } }
+      @keyframes ${pfx}-stroke { to { stroke-dashoffset: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .${pfx}-grow, .${pfx}-draw { opacity: 1; stroke-dashoffset: 0; animation: none; }
+      }`
+      : "";
+
   const dashDur = (1.8 / speed).toFixed(2);
   const pulseDur = (3.2 / speed).toFixed(2);
   const animationCss = animate
@@ -485,17 +538,15 @@ export function renderAnimatedSvg(
       .${pfx}-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
       .${pfx}-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
       .${pfx}-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
-      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
-      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
-      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }${labelCss}
       .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
-      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+${branchCss}
       .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${animationCss}
+      .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${animationCss}${growCss}
     </style>
     <pattern id="${pfx}-dots" width="28" height="28" patternUnits="userSpaceOnUse">
       <circle cx="1.5" cy="1.5" r="1" class="${pfx}-dot"/>
@@ -516,13 +567,22 @@ export function renderAnimatedSvg(
 ${backgroundEls}
   ${titleEl}
 
-  <g class="${pfx}-stage" transform="translate(${offsetX},${padTop})" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:${DEFAULT_ACCENT};--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:${DEFAULT_ACCENT};--_r:12px">
+  <g class="${pfx}-stage" transform="translate(${offsetX},${padTop})" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:${DEFAULT_ACCENT};--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:${DEFAULT_ACCENT};--_r:12px;--_w:700;--_hw:700;--_tw:700">
     ${innerWithPackets}
   </g>
 
   ${footerEl}
 </svg>
 `;
+}
+
+/** Depth of a mind map node: from its outline id ("0.2.1" is 2), else 1. */
+function mindmapDepth(nodeId: string): number {
+  return /^0(\.\d+)+$/.test(nodeId) ? nodeId.split(".").length - 1 : 1;
+}
+
+function mindmapDelay(depth: number, speed: number): string {
+  return (Math.max(0, depth) * 0.32 / speed).toFixed(2);
 }
 
 function clampSpeed(speed: number): number {

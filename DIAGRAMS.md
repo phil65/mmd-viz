@@ -46,3 +46,5 @@ Structural, hierarchical, or analytical diagrams where continuous motion would b
 | **Software / Data Modeling** | `class`, `er`, `requirement`, `usecase`, `packet` |
 | **Charts & Data Viz** | `pie`, `xychart`, `radar`, `treemap`, `quadrantChart`, `venn` |
 | **Thinking / Planning** | `mindmap`, `kanban`, `wardley`, `cynefin`, `ishikawa`, `treeView`, `info` |
+
+`mindmap` is the exception: drawn from a Markdown outline (`renderMindmapSvg`, `*.mindmap.md`), it grows once from the root when animated.
