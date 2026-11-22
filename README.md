@@ -185,6 +185,25 @@ controls.reset();
 - Nothing is drawn again: it sets classes and adds a small stylesheet; `destroy()` removes both.
   The [playground](https://phil65.github.io/mmd-viz/) uses it (arrow keys step).
 
+### Folding (tree views and class diagrams)
+
+`mmd-viz/fold` folds a `treeView-beta` folder (its entries) or a `classDiagram` class (its
+members) by rewriting the Mermaid source; draw the result again and map clicks back with `keyAt`:
+
+```ts
+import { canFold, fold } from "mmd-viz/fold";
+
+const folds = new Set<string>();
+const folded = fold(source, type, folds); // { source, foldable, keyAt }
+draw(folded.source);
+// on a click on the n-th g.pele-node with data-id `id`:
+const key = folded.keyAt(n, id); // "L4" (tree entry on line 4) or "Animal" (class), null if it can't fold
+```
+
+A folded folder reads `src (+3)`, a folded class keeps its name and annotations with
+`⋯ 3 members`. Mind maps fold through their outline (`markdownToMindmap`'s `folds`). The
+playground folds on click.
+
 ### Mind maps
 
 ```ts

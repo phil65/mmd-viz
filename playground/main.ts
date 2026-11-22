@@ -1,5 +1,6 @@
 import { detectType } from "pele/core";
 import { renderAnimatedSvg, renderMindmapSvg, THEME_NAMES, type ThemeName } from "../src/index.js";
+import { canFold, fold } from "../src/fold.js";
 import { type Interactive, interactive } from "../src/interactive.js";
 import { PRESETS } from "./presets.js";
 
@@ -24,6 +25,9 @@ const stepLabelEl = document.getElementById("stepLabel") as HTMLSpanElement;
 
 // Hover highlights, and stepping through sequence and state diagrams
 let controls: Interactive | null = null;
+// Folded tree folders and classes (mmd-viz/fold), until the source changes
+let folds = new Set<string>();
+let keyAt: ((index: number, id: string) => string | null) | null = null;
 function showStep(): void {
   const steps = controls?.steps ?? 0;
   stepperEl.hidden = steps === 0;
@@ -68,14 +72,21 @@ function update(): void {
     if (titleEl.value.trim()) opts.title = titleEl.value.trim();
     if (footerEl.value.trim()) opts.footer = footerEl.value.trim();
 
+    const diagramType = detectType(sourceEl.value) ?? "";
+    const folded = canFold(diagramType) ? fold(sourceEl.value, diagramType, folds) : null;
+    keyAt = folded?.keyAt ?? null;
     currentSvg = isOutline(sourceEl.value)
       ? renderMindmapSvg(sourceEl.value, opts)
-      : renderAnimatedSvg(sourceEl.value, opts);
+      : renderAnimatedSvg(folded?.source ?? sourceEl.value, opts);
     previewEl.innerHTML = currentSvg;
     controls?.destroy();
     const svg = previewEl.querySelector("svg");
     const type = isOutline(sourceEl.value) ? "mindmap" : (detectType(sourceEl.value) ?? undefined);
     controls = svg ? interactive(svg, { ...(type ? { type } : {}), onChange: showStep }) : null;
+    // What can fold shows a pointer
+    [...previewEl.querySelectorAll<SVGGElement>("g.pele-node[data-id]")].forEach((node, index) => {
+      if (keyAt?.(index, node.dataset.id ?? "")) node.style.cursor = "pointer";
+    });
     showStep();
     const ms = (performance.now() - t0).toFixed(1);
     const kb = (new Blob([currentSvg]).size / 1024).toFixed(1);
@@ -90,6 +101,7 @@ function update(): void {
 
 function loadPreset(index: number): void {
   const preset = PRESETS[index] ?? PRESETS[0]!;
+  folds = new Set();
   titleEl.value = preset.title;
   footerEl.value = preset.footer;
   sourceEl.value = preset.source;
@@ -97,6 +109,20 @@ function loadPreset(index: number): void {
 }
 
 presetEl.addEventListener("change", () => loadPreset(Number(presetEl.value)));
+sourceEl.addEventListener("input", () => {
+  folds = new Set();
+});
+// Click a folder (tree view) or class to fold it
+previewEl.addEventListener("click", (event) => {
+  const node = (event.target as Element).closest<SVGGElement>("g.pele-node[data-id]");
+  if (!node || !keyAt) return;
+  const index = [...previewEl.querySelectorAll("g.pele-node[data-id]")].indexOf(node);
+  const key = keyAt(index, node.dataset.id ?? "");
+  if (!key) return;
+  if (folds.has(key)) folds.delete(key);
+  else folds.add(key);
+  update();
+});
 for (const el of [themeEl, speedEl, animateEl, transparentEl, titleEl, footerEl, sourceEl]) {
   el.addEventListener("input", update);
   el.addEventListener("change", update);
