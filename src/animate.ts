@@ -1,26 +1,32 @@
 import { render } from "pele";
-import { ACCENT_PALETTE, THEMES, type AnimateOptions } from "./themes.js";
+import { ACCENT_PALETTE, THEMES, type AnimateOptions, type ThemePalette } from "./themes.js";
 
 const DEFAULT_ACCENT = "#38BDF8";
 const CYCLE_ACCENTS = ["#38BDF8", "#818CF8", "#FBBF24", "#34D399", "#F472B6"] as const;
 
 /**
  * Render a Mermaid diagram via Pele and upgrade it into a self-contained,
- * zero-JS animated SVG (compatible with GitHub READMEs and static docs).
+ * zero-JS styled & animated SVG (compatible with GitHub READMEs and static docs).
  *
  * Supported standard Mermaid conventions:
  * - `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet`
  *   adds a colored accent bar to a node and color-matches its connected edges and packets.
  * - `:::hub` styles a node as a highlighted focal hub with a gradient fill and pulsing ring.
  * - `<br/>` in node labels creates a bold primary title + muted secondary subtitle.
+ * - `==>` (thick) and `-.->` (dotted) edges adjust wire weight and packet speed.
  */
 export function renderAnimatedSvg(
   mermaidSource: string,
   options: AnimateOptions = {}
 ): string {
   const themeName = options.theme ?? "dark";
-  const palette = THEMES[themeName];
+  const isAuto = themeName === "auto";
+  const palette: ThemePalette = isAuto ? THEMES.dark : THEMES[themeName];
+  const lightPalette: ThemePalette = THEMES.light;
+
   const animate = options.animate ?? true;
+  const transparent = options.transparent ?? false;
+  const speed = clampSpeed(options.speed ?? 1);
   const padX = options.padding ?? 52;
   const padTop = options.title ? 76 : 48;
   const padBottom = options.footer ? 76 : 48;
@@ -34,7 +40,11 @@ export function renderAnimatedSvg(
   }
   let inner = innerMatch[1];
 
-  // 1. Inspect and upgrade flowchart/graph nodes
+  const isSequence = diagramType === "sequence";
+  const isState = diagramType === "state";
+  const isGitGraph = diagramType === "gitGraph";
+
+  // 1. Inspect and upgrade flowchart/state nodes
   const nodeColor = new Map<string, string>();
   const nodeIsHub = new Set<string>();
   const nodeRegex =
@@ -67,7 +77,7 @@ export function renderAnimatedSvg(
           const hubRect = `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="18" fill="url(#${pfx}-hub-bg)" stroke="${color}" stroke-opacity="0.65" stroke-width="1.6"/>`;
           upgradedBody = upgradedBody.replace(rectMatch[0], `${pulseRect}${hubRect}`);
         } else {
-          const cardRect = `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="12" fill="${palette.cardFill}" stroke="${palette.cardStroke}" stroke-width="1.2"/>`;
+          const cardRect = `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="12" class="${pfx}-card"/>`;
           const barH = Math.max(20, rh - 26);
           const barY = ry + (rh - barH) / 2;
           const accentBar = `<rect x="${(rx + 10).toFixed(1)}" y="${barY.toFixed(1)}" width="5" height="${barH.toFixed(1)}" rx="2.5" fill="${color}"/>`;
@@ -80,99 +90,147 @@ export function renderAnimatedSvg(
     }
   );
 
-  // 2. Upgrade edges: color-match, add animated dashed flow and <animateMotion> packets
-  // Works for flowchart (`pele-edge`), sequence (`pele-edge pele-message`), and state (`pele-edge pele-transition`)
+  // 2. Upgrade edges & build animated packets
   const packets: string[] = [];
-  const edgeRegex =
-    /<g class="(pele-edge[^"]*)" data-id="([^"]+)">\s*<path d="([^"]+)"([^>]*)\/>([\s\S]*?)<\/g>/g;
 
-  // Count edges upfront so sequence diagrams can schedule a chronological relay cycle
-  const totalEdges = [...inner.matchAll(edgeRegex)].length;
-  const isSequence = diagramType === "sequence";
-  const isState = diagramType === "state";
-  const sortedNodes = [...nodeColor.entries()].sort((a, b) => b[0].length - a[0].length);
-  let edgeIndex = 0;
+  if (isGitGraph) {
+    // Pele gitGraph emits <path class="pele-edge..." d="..." stroke="var(--pele-series-N,...)"/>
+    let gitEdgeIdx = 0;
+    const gitEdgeRegex = /<path class="(pele-edge[^"]*)" d="([^"]+)" stroke="([^"]+)"\/>/g;
+    inner = inner.replace(
+      gitEdgeRegex,
+      (_full, cls: string, d: string, strokeVal: string) => {
+        const idx = gitEdgeIdx++;
+        const pathId = `${pfx}-edge-${idx}`;
+        const seriesMatch = strokeVal.match(/--pele-series-(\d+)/);
+        const seriesNum = seriesMatch && seriesMatch[1] ? Number.parseInt(seriesMatch[1], 10) - 1 : idx;
+        const color = CYCLE_ACCENTS[seriesNum % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
 
-  inner = inner.replace(
-    edgeRegex,
-    (_full, edgeClass: string, edgeId: string, d: string, pathAttrs: string, rest: string) => {
-      const idx = edgeIndex++;
-      const pathId = `${pfx}-edge-${idx}`;
+        if (animate) {
+          const dur = (2.4 + (idx % 3) * 0.35) / speed;
+          const begin = -(((idx * 0.55) % 2.0 + 0.2) / speed);
+          packets.push(
+            `<circle r="3.4" fill="${color}"><animateMotion dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
+          );
+        }
 
-      let color = DEFAULT_ACCENT;
-      if (isSequence || isState) {
-        color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
-      } else {
-        const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
-        for (const [nid, ncolor] of sortedNodes) {
-          if (nodeIsHub.has(nid)) continue;
-          if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
-            color = ncolor;
-            break;
+        const flowLayer = animate
+          ? `<path d="${d}" stroke="${color}" stroke-width="2.2" fill="none" class="${pfx}-flow"/>`
+          : "";
+
+        return `<path id="${pathId}" class="${cls}" d="${d}" stroke="${color}" stroke-opacity="0.45" stroke-width="2.2" fill="none"/>${flowLayer}`;
+      }
+    );
+
+    // Add subtle pulsing halos to git commits
+    if (animate) {
+      let commitIdx = 0;
+      inner = inner.replace(
+        /<g class="(pele-commit[^"]*)" data-id="([^"]+)">\s*<circle cx="([^"]+)" cy="([^"]+)" r="([^"]+)"([^>]*)\/>/g,
+        (full, _cls: string, _cid: string, cx: string, cy: string, r: string, attrs: string) => {
+          const idx = commitIdx++;
+          const seriesMatch = attrs.match(/--pele-series-(\d+)/);
+          const seriesNum =
+            seriesMatch && seriesMatch[1] ? Number.parseInt(seriesMatch[1], 10) - 1 : idx;
+          const color = CYCLE_ACCENTS[seriesNum % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+          const haloR = (Number.parseFloat(r) + 4.5).toFixed(1);
+          const delay = (idx * 0.35 / speed).toFixed(2);
+          return `${full}<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="none" stroke="${color}" stroke-width="1.3" class="${pfx}-pulse" style="animation-delay:-${delay}s"/>`;
+        }
+      );
+    }
+  } else {
+    // Flowchart (`pele-edge`), sequence (`pele-edge pele-message`), state (`pele-edge pele-transition`)
+    const edgeRegex =
+      /<g class="(pele-edge[^"]*)" data-id="([^"]+)">\s*<path d="([^"]+)"([^>]*)\/>([\s\S]*?)<\/g>/g;
+
+    const totalEdges = [...inner.matchAll(edgeRegex)].length;
+    const sortedNodes = [...nodeColor.entries()].sort((a, b) => b[0].length - a[0].length);
+    let edgeIndex = 0;
+
+    inner = inner.replace(
+      edgeRegex,
+      (_full, edgeClass: string, edgeId: string, d: string, pathAttrs: string, rest: string) => {
+        const idx = edgeIndex++;
+        const pathId = `${pfx}-edge-${idx}`;
+
+        let color = DEFAULT_ACCENT;
+        if (isSequence || isState) {
+          color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+        } else {
+          const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
+          for (const [nid, ncolor] of sortedNodes) {
+            if (nodeIsHub.has(nid)) continue;
+            if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
+              color = ncolor;
+              break;
+            }
           }
         }
-      }
 
-      const styledRest = rest.replace(/fill="var\(--_l\)"/g, `fill="${color}" fill-opacity="0.88"`);
-      const preserveDash = pathAttrs.includes("stroke-dasharray") ? ' stroke-dasharray="5 5"' : "";
+        const isThick = /stroke-width="2\.5"|stroke-width="3"/.test(pathAttrs);
+        const isDotted = pathAttrs.includes("stroke-dasharray");
+        const styledRest = rest.replace(/fill="var\(--_l\)"/g, `fill="${color}" fill-opacity="0.88"`);
+        const preserveDash = isDotted ? ' stroke-dasharray="5 5"' : "";
 
-      if (animate) {
-        if (isSequence && totalEdges > 0) {
-          // Chronological relay: message 0 fires, then message 1, then message 2, ...
-          const stepDur = 1.15;
-          const cycleDur = totalEdges * stepDur;
-          const t0 = idx / totalEdges;
-          const t1 = (idx + 0.88) / totalEdges;
-          const fadeIn = Math.min(t0 + 0.02, t1);
-          const fadeOut = Math.min(t1 + 0.04, 1);
-          // Negative begin so message 0 is already mid-flight at t = 0
-          const begin = -(stepDur * 0.35);
+        if (animate) {
+          if (isSequence && totalEdges > 0) {
+            const stepDur = 1.15 / speed;
+            const cycleDur = totalEdges * stepDur;
+            const t0 = idx / totalEdges;
+            const t1 = (idx + 0.88) / totalEdges;
+            const fadeIn = Math.min(t0 + 0.02, t1);
+            const fadeOut = Math.min(t1 + 0.04, 1);
+            const begin = -(stepDur * 0.35);
 
-          const ktMotion =
-            t0 === 0
-              ? `0;${t1.toFixed(4)};1`
-              : `0;${t0.toFixed(4)};${t1.toFixed(4)};1`;
-          const kpMotion = t0 === 0 ? "0;1;1" : "0;0;1;1";
+            const ktMotion =
+              t0 === 0
+                ? `0;${t1.toFixed(4)};1`
+                : `0;${t0.toFixed(4)};${t1.toFixed(4)};1`;
+            const kpMotion = t0 === 0 ? "0;1;1" : "0;0;1;1";
 
-          const ktOpacity =
-            t0 === 0
-              ? `0;${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`
-              : `0;${t0.toFixed(4)};${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`;
-          const valOpacity = t0 === 0 ? "1;1;1;0;0" : "0;0;1;1;0;0";
+            const ktOpacity =
+              t0 === 0
+                ? `0;${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`
+                : `0;${t0.toFixed(4)};${fadeIn.toFixed(4)};${t1.toFixed(4)};${fadeOut.toFixed(4)};1`;
+            const valOpacity = t0 === 0 ? "1;1;1;0;0" : "0;0;1;1;0;0";
 
-          packets.push(
-            `<circle r="4" fill="${color}">` +
-              `<animateMotion dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" calcMode="linear" keyPoints="${kpMotion}" keyTimes="${ktMotion}"><mpath href="#${pathId}"/></animateMotion>` +
-              `<animate attributeName="opacity" dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" keyTimes="${ktOpacity}" values="${valOpacity}"/>` +
-              `</circle>`
-          );
-        } else {
-          const dur = (2.1 + (idx % 4) * 0.22).toFixed(2);
-          const begin = (-((idx * 0.43) % 2.0 + 0.2)).toFixed(2);
-          packets.push(
-            `<circle r="3.8" fill="${color}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
-          );
+            packets.push(
+              `<circle r="4" fill="${color}">` +
+                `<animateMotion dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" calcMode="linear" keyPoints="${kpMotion}" keyTimes="${ktMotion}"><mpath href="#${pathId}"/></animateMotion>` +
+                `<animate attributeName="opacity" dur="${cycleDur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite" keyTimes="${ktOpacity}" values="${valOpacity}"/>` +
+                `</circle>`
+            );
+          } else {
+            const baseDur = isThick ? 1.45 : isDotted ? 3.0 : 2.1 + (idx % 4) * 0.22;
+            const dur = baseDur / speed;
+            const begin = -(((idx * 0.43) % 2.0 + 0.2) / speed);
+            const radius = isThick ? "4.6" : isDotted ? "3.2" : "3.8";
+            packets.push(
+              `<circle r="${radius}" fill="${color}"><animateMotion dur="${dur.toFixed(2)}s" begin="${begin.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
+            );
+          }
         }
+
+        const wireWidth = isThick ? 3 : 2;
+        const flowLayer =
+          animate && !isSequence && !isDotted
+            ? `<path d="${d}" stroke="${color}" stroke-width="${(wireWidth + 0.2).toFixed(1)}" fill="none" class="${pfx}-flow"/>`
+            : "";
+        const baseOpacity = isSequence ? 0.8 : isThick ? 0.55 : palette.wireBaseOpacity;
+
+        return [
+          `<g class="${edgeClass}" data-id="${edgeId}">`,
+          `<path id="${pathId}" d="${d}" stroke="${color}" stroke-width="${wireWidth}" stroke-opacity="${baseOpacity}"${preserveDash} fill="none"/>`,
+          flowLayer,
+          styledRest,
+          `</g>`,
+        ].join("");
       }
+    );
+  }
 
-      const flowLayer =
-        animate && !isSequence
-          ? `<path d="${d}" stroke="${color}" stroke-width="2.1" fill="none" class="${pfx}-flow"/>`
-          : "";
-      const baseOpacity = isSequence ? 0.8 : palette.wireBaseOpacity;
-
-      return [
-        `<g class="${edgeClass}" data-id="${edgeId}">`,
-        `<path id="${pathId}" d="${d}" stroke="${color}" stroke-width="2" stroke-opacity="${baseOpacity}"${preserveDash} fill="none"/>`,
-        flowLayer,
-        styledRest,
-        `</g>`,
-      ].join("");
-    }
-  );
-
-  // 3. Wrap into final padded canvas with theme styles
-  // Ensure narrow vertical diagrams expand cleanly to fit title/footer text
+  // 3. Wrap into final padded canvas with CSS-variable themes
   const minTitleW = options.title ? Math.ceil(options.title.length * 10.2 + 64) : 0;
   const minFooterW = options.footer ? Math.ceil(options.footer.length * 7.8 + 96) : 0;
   const totalW = Math.round(Math.max(width + padX * 2, minTitleW, minFooterW));
@@ -190,15 +248,17 @@ export function renderAnimatedSvg(
 
   const footerEl = options.footer
     ? [
-        `<rect x="${Math.round(totalW / 2 - footerPillWidth / 2)}" y="${totalH - 52}" width="${Math.round(footerPillWidth)}" height="30" rx="15" fill="${palette.cardFill}" stroke="${palette.cardStroke}" stroke-width="1.2"/>`,
+        `<rect x="${Math.round(totalW / 2 - footerPillWidth / 2)}" y="${totalH - 52}" width="${Math.round(footerPillWidth)}" height="30" rx="15" class="${pfx}-card"/>`,
         `<text x="${totalW / 2}" y="${totalH - 33}" text-anchor="middle" class="${pfx}-footer">${escapeXml(options.footer)}</text>`,
       ].join("\n  ")
     : "";
 
+  const dashDur = (1.8 / speed).toFixed(2);
+  const pulseDur = (3.2 / speed).toFixed(2);
   const animationCss = animate
     ? `
-      .${pfx}-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: ${pfx}-dash 1.8s linear infinite; }
-      .${pfx}-pulse { transform-box: fill-box; transform-origin: center; animation: ${pfx}-ring 3.2s ease-in-out infinite; }
+      .${pfx}-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: ${pfx}-dash ${dashDur}s linear infinite; }
+      .${pfx}-pulse { transform-box: fill-box; transform-origin: center; animation: ${pfx}-ring ${pulseDur}s ease-in-out infinite; }
       @keyframes ${pfx}-dash { to { stroke-dashoffset: -40; } }
       @keyframes ${pfx}-ring {
         0%, 100% { opacity: 0.25; transform: scale(0.97); }
@@ -209,18 +269,40 @@ export function renderAnimatedSvg(
       }`
     : "";
 
+  const autoLightCss = isAuto
+    ? `
+      @media (prefers-color-scheme: light) {
+        .${pfx}-root {
+          --mv-bg: ${lightPalette.bg};
+          --mv-card: ${lightPalette.cardFill};
+          --mv-border: ${lightPalette.cardStroke};
+          --mv-fg: ${lightPalette.textPrimary};
+          --mv-muted: ${lightPalette.textMuted};
+          --mv-title: ${lightPalette.titleColor};
+          --mv-dot: ${lightPalette.dotColor};
+          --mv-hub-start: ${lightPalette.hubBgStart};
+          --mv-hub-end: ${lightPalette.hubBgEnd};
+        }
+      }`
+    : "";
+
   const packetsGroup =
     animate && packets.length > 0
       ? `<g class="${pfx}-packets">${packets.join("")}</g>`
       : "";
 
-  // Place packets right after pele-edges (so they pass underneath edge labels and nodes)
+  // Place packets beneath labels/nodes/commits so dots never obscure text
   let innerWithPackets = inner;
   if (packetsGroup) {
     if (inner.includes('<g class="pele-edge-labels"')) {
       innerWithPackets = inner.replace(
         '<g class="pele-edge-labels"',
         `${packetsGroup}<g class="pele-edge-labels"`
+      );
+    } else if (inner.includes('<g class="pele-commits"')) {
+      innerWithPackets = inner.replace(
+        '<g class="pele-commits"',
+        `${packetsGroup}<g class="pele-commits"`
       );
     } else if (inner.includes('<g class="pele-nodes"')) {
       innerWithPackets = inner.replace(
@@ -232,24 +314,52 @@ export function renderAnimatedSvg(
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}" height="${totalH}" role="img" aria-label="${escapeXml(label)}">
+  const backgroundEls = transparent
+    ? ""
+    : `
+  <rect width="${totalW}" height="${totalH}" rx="18" class="${pfx}-bg"/>
+  <rect width="${totalW}" height="${totalH}" rx="18" fill="url(#${pfx}-dots)"/>
+  <circle cx="${Math.round(totalW * 0.26)}" cy="${Math.round(totalH * 0.36)}" r="${Math.round(totalW * 0.28)}" fill="url(#${pfx}-glow-l)"/>
+  <circle cx="${Math.round(totalW * 0.74)}" cy="${Math.round(totalH * 0.64)}" r="${Math.round(totalW * 0.28)}" fill="url(#${pfx}-glow-r)"/>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="${pfx}-root" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}" height="${totalH}" role="img" aria-label="${escapeXml(label)}">
   <defs>
     <style>
-      .${pfx}-bg { fill: ${palette.bg}; }
-      .${pfx}-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: ${palette.titleColor}; text-transform: uppercase; }
-      .${pfx}-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: ${palette.textMuted}; }
-      .${pfx}-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: ${palette.textPrimary}; }
-      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: ${palette.textPrimary}; }
-      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: ${palette.textPrimary}; }
-      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: ${palette.textMuted}; }
-      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: ${palette.textMuted}; }
-      .pele-edge-label rect { fill: ${palette.cardFill}; stroke: ${palette.cardStroke}; stroke-width: 1; rx: 6; }
-      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: ${palette.textPrimary}; }
-      .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: ${palette.textPrimary}; }
-      .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: ${palette.titleColor}; }${animationCss}
+      .${pfx}-root {
+        --mv-bg: ${palette.bg};
+        --mv-card: ${palette.cardFill};
+        --mv-border: ${palette.cardStroke};
+        --mv-fg: ${palette.textPrimary};
+        --mv-muted: ${palette.textMuted};
+        --mv-title: ${palette.titleColor};
+        --mv-dot: ${palette.dotColor};
+        --mv-hub-start: ${palette.hubBgStart};
+        --mv-hub-end: ${palette.hubBgEnd};
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }${autoLightCss}
+      .${pfx}-bg { fill: var(--mv-bg); }
+      .${pfx}-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .${pfx}-dot { fill: var(--mv-dot); }
+      .${pfx}-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .${pfx}-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .${pfx}-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${animationCss}
     </style>
     <pattern id="${pfx}-dots" width="28" height="28" patternUnits="userSpaceOnUse">
-      <circle cx="1.5" cy="1.5" r="1" fill="${palette.dotColor}"/>
+      <circle cx="1.5" cy="1.5" r="1" class="${pfx}-dot"/>
     </pattern>
     <radialGradient id="${pfx}-glow-l" cx="50%" cy="50%" r="50%">
       <stop offset="0%" stop-color="${palette.glowLeft}" stop-opacity="${palette.glowOpacity}"/>
@@ -260,25 +370,25 @@ export function renderAnimatedSvg(
       <stop offset="100%" stop-color="${palette.glowRight}" stop-opacity="0"/>
     </radialGradient>
     <linearGradient id="${pfx}-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="${palette.hubBgStart}"/>
-      <stop offset="100%" stop-color="${palette.hubBgEnd}"/>
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
     </linearGradient>
   </defs>
-
-  <rect width="${totalW}" height="${totalH}" rx="18" class="${pfx}-bg"/>
-  <rect width="${totalW}" height="${totalH}" rx="18" fill="url(#${pfx}-dots)"/>
-  <circle cx="${Math.round(totalW * 0.26)}" cy="${Math.round(totalH * 0.36)}" r="${Math.round(totalW * 0.28)}" fill="url(#${pfx}-glow-l)"/>
-  <circle cx="${Math.round(totalW * 0.74)}" cy="${Math.round(totalH * 0.64)}" r="${Math.round(totalW * 0.28)}" fill="url(#${pfx}-glow-r)"/>
-
+${backgroundEls}
   ${titleEl}
 
-  <g class="${pfx}-stage" transform="translate(${offsetX},${padTop})" style="--_bg:${palette.bg};--_fg:${palette.textPrimary};--_m:${palette.textMuted};--_l:${DEFAULT_ACCENT};--_s:${palette.cardFill};--_a:${palette.hubBgStart};--_b:${palette.cardStroke};--_c:${DEFAULT_ACCENT};--_r:12px">
+  <g class="${pfx}-stage" transform="translate(${offsetX},${padTop})" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:${DEFAULT_ACCENT};--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:${DEFAULT_ACCENT};--_r:12px">
     ${innerWithPackets}
   </g>
 
   ${footerEl}
 </svg>
 `;
+}
+
+function clampSpeed(speed: number): number {
+  if (!Number.isFinite(speed) || speed <= 0) return 1;
+  return Math.min(10, Math.max(0.1, speed));
 }
 
 function sanitizeIdPrefix(prefix: string): string {

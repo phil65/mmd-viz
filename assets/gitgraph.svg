@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 471 301" width="471" height="301" role="img" aria-label="GITGRAPH · BRANCHES &amp; COMMIT PULSES">
+  <defs>
+    <style>
+      .mmd-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .mmd-bg { fill: var(--mv-bg); }
+      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .mmd-dot { fill: var(--mv-dot); }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.80s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.20s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="471" height="301" rx="18" class="mmd-bg"/>
+  <rect width="471" height="301" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="122" cy="108" r="132" fill="url(#mmd-glow-l)"/>
+  <circle cx="349" cy="193" r="132" fill="url(#mmd-glow-r)"/>
+  <text x="235.5" y="42" text-anchor="middle" class="mmd-title">GITGRAPH · BRANCHES &amp; COMMIT PULSES</text>
+
+  <g class="mmd-stage" transform="translate(84,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px">
+    <g transform="translate(142.06,20.5)"><g class="pele-branches" fill="none" font-size="14"><g class="pele-branch" data-id="main"><path class="pele-lane" d="M-20,0L152,0" stroke="var(--pele-series-1,#4c78a8)" stroke-dasharray="2 4"/><rect x="-66.34" y="-12.5" width="46.34" height="25" fill="var(--pele-series-1,#4c78a8)" style="rx:var(--_r)"/><text class="pele-label" fill="var(--_bg)" x="-43.17" y="4.9" text-anchor="middle">main</text></g><g class="pele-branch" data-id="feat/auto-theme"><path class="pele-lane" d="M-20,66.34L152,66.34" stroke="var(--pele-series-2,#f58518)" stroke-dasharray="2 4"/><rect x="-134.06" y="53.84" width="114.06" height="25" fill="var(--pele-series-2,#f58518)" style="rx:var(--_r)"/><text class="pele-label" fill="var(--_bg)" x="-77.03" y="71.24" text-anchor="middle">feat/auto-theme</text></g></g><g class="pele-edges" fill="none" stroke-width="2" stroke-linecap="round"><path id="mmd-edge-0" class="pele-edge" d="M0,0C18,0 18,66.34 36,66.34L44,66.34" stroke="#818CF8" stroke-opacity="0.45" stroke-width="2.2" fill="none"/><path d="M0,0C18,0 18,66.34 36,66.34L44,66.34" stroke="#818CF8" stroke-width="2.2" fill="none" class="mmd-flow"/><path id="mmd-edge-1" class="pele-edge pele-edge-merge" d="M88,66.34L96,66.34C114,66.34 114,0 132,0" stroke="#818CF8" stroke-opacity="0.45" stroke-width="2.2" fill="none"/><path d="M88,66.34L96,66.34C114,66.34 114,0 132,0" stroke="#818CF8" stroke-width="2.2" fill="none" class="mmd-flow"/><path id="mmd-edge-2" class="pele-edge" d="M44,66.34L88,66.34" stroke="#818CF8" stroke-opacity="0.45" stroke-width="2.2" fill="none"/><path d="M44,66.34L88,66.34" stroke="#818CF8" stroke-width="2.2" fill="none" class="mmd-flow"/><path id="mmd-edge-3" class="pele-edge" d="M0,0L132,0" stroke="#38BDF8" stroke-opacity="0.45" stroke-width="2.2" fill="none"/><path d="M0,0L132,0" stroke="#38BDF8" stroke-width="2.2" fill="none" class="mmd-flow"/></g><g class="mmd-packets"><circle r="3.4" fill="#818CF8"><animateMotion dur="2.40s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle><circle r="3.4" fill="#818CF8"><animateMotion dur="2.75s" begin="-0.75s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle><circle r="3.4" fill="#818CF8"><animateMotion dur="3.10s" begin="-1.30s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle><circle r="3.4" fill="#38BDF8"><animateMotion dur="2.40s" begin="-1.85s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle></g><g class="pele-commits" font-size="12" fill="var(--_m)"><g class="pele-commit pele-commit-normal" data-id="init"><circle cx="0" cy="0" r="7" fill="var(--pele-series-1,#4c78a8)"/><circle cx="0" cy="0" r="11.5" fill="none" stroke="#38BDF8" stroke-width="1.3" class="mmd-pulse" style="animation-delay:-0.00s"/><g class="pele-commit-label" transform="rotate(-45 3 16.36)"><rect x="-14.34" y="9.36" width="19.34" height="14" rx="3" fill="var(--_bg)"/><text x="-4.67" y="20.56" text-anchor="middle">init</text></g></g><g class="pele-commit pele-commit-normal" data-id="themes"><circle cx="44" cy="66.34" r="7" fill="var(--pele-series-2,#f58518)"/><circle cx="44" cy="66.34" r="11.5" fill="none" stroke="#818CF8" stroke-width="1.3" class="mmd-pulse" style="animation-delay:-0.35s"/><g class="pele-commit-label" transform="rotate(-45 47 82.71)"><rect x="5.65" y="75.71" width="43.35" height="14" rx="3" fill="var(--_bg)"/><text x="27.33" y="86.91" text-anchor="middle">themes</text></g></g><g class="pele-commit pele-commit-normal" data-id="gitgraph"><circle cx="88" cy="66.34" r="7" fill="var(--pele-series-2,#f58518)"/><circle cx="88" cy="66.34" r="11.5" fill="none" stroke="#818CF8" stroke-width="1.3" class="mmd-pulse" style="animation-delay:-0.70s"/><g class="pele-commit-label" transform="rotate(-45 91 82.71)"><rect x="45.64" y="75.71" width="47.36" height="14" rx="3" fill="var(--_bg)"/><text x="69.32" y="86.91" text-anchor="middle">gitgraph</text></g></g><g class="pele-commit pele-commit-merge" data-id="v0.2.0"><circle cx="132" cy="0" r="6" fill="var(--_bg)" stroke="var(--pele-series-1,#4c78a8)" stroke-width="2"/><circle cx="132" cy="0" r="10.5" fill="none" stroke="#38BDF8" stroke-width="1.3" class="mmd-pulse" style="animation-delay:-1.05s"/><circle cx="132" cy="0" r="2.5" fill="var(--pele-series-1,#4c78a8)"/><g class="pele-commit-label" transform="rotate(-45 135 16.36)"><rect x="100.31" y="9.36" width="36.69" height="14" rx="3" fill="var(--_bg)"/><text x="118.66" y="20.56" text-anchor="middle">v0.2.0</text></g></g></g></g>
+  </g>
+
+  <rect x="32" y="249" width="407" height="30" rx="15" class="mmd-card"/>
+  <text x="235.5" y="268" text-anchor="middle" class="mmd-footer">gitGraph with themed branches &amp; animated commits</text>
+</svg>
