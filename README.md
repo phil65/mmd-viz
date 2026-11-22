@@ -116,6 +116,32 @@ const svg = renderAnimatedSvg(
 );
 ```
 
+### Markdown pipelines (remark / rehype)
+
+Static sites and docs (Astro, Docusaurus, Next.js MDX, plain unified) can turn ```` ```mermaid ````
+and ```` ```markmap ```` blocks into animated diagrams at build time, with no headless browser:
+
+```ts
+import { rehypeMmdViz } from "mmd-viz/markdown";
+
+unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypeMmdViz, { theme: "auto" }) // before syntax highlighters
+  .use(rehypeStringify);
+```
+
+`remarkMmdViz` does the same for pipelines that stay in Markdown (it writes `html` nodes).
+
+- Each diagram becomes an `<img>` with the SVG as a data URL (its CSS stays its own, the animation
+  still plays); `as: "svg"` inlines the SVG instead (needs `allowDangerousHtml` / `rehype-raw`).
+- All `renderAnimatedSvg` options apply; a block can override them in its fence:
+  ```` ```mermaid theme=light title="Login flow" static ```` (also `footer=`, `speed=`, `alt=`,
+  `transparent`).
+- `mermaid` / `mindmap` set which fence languages are drawn (`["mermaid"]`, `["markmap"]`);
+  `onError: "keep" | "throw" | fn` decides what happens to a block that doesn't parse (kept as code
+  by default).
+
 ### Animating pele's SVGs inside an app
 
 `renderAnimatedSvg` frames a diagram for READMEs and docs (its own canvas, theme and fonts). An

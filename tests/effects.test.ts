@@ -86,3 +86,13 @@ describe("animations that fit the diagram type", () => {
     }
   });
 });
+
+describe("framed nodes", () => {
+  it("gives compact state nodes a card without the accent bar", () => {
+    const state = renderAnimatedSvg("stateDiagram-v2\n  [*] --> Idle\n  Idle --> Busy", { animate: false });
+    expect(state).toContain('class="mmd-card"');
+    expect(state).not.toMatch(/width="5" height="[^"]+" rx="2.5"/);
+    const flow = renderAnimatedSvg("flowchart LR\n  a[Alpha] --> b[Beta]", { animate: false });
+    expect(flow).toMatch(/width="5" height="[^"]+" rx="2.5"/);
+  });
+});

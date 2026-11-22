@@ -46,6 +46,8 @@ const RELAY_TYPES = new Set<string>(["sequence", "state", "agentflow", "eventmod
 const STRUCTURE_TYPES = new Set<string>(["class", "er", "requirement", "wardley"]);
 /** Nodes made of compartments, which the flowchart card and accent bar would cover. */
 const COMPARTMENT_TYPES = new Set<string>(["class", "er", "requirement"]);
+/** Compact nodes whose label the accent bar would touch. */
+const BARLESS_TYPES = new Set<string>(["state"]);
 /** Particles on the widest sankey ribbon; narrower ones get proportionally fewer. */
 const MAX_SANKEY_PARTICLES = 6;
 /** Seconds per relay step, and how far into the first step the loop starts. */
@@ -124,7 +126,10 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
             const cardRect = `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" rx="12" class="${pfx}-card"/>`;
             const barH = Math.max(20, rh - 26);
             const barY = ry + (rh - barH) / 2;
-            const accentBar = `<rect x="${(rx + 10).toFixed(1)}" y="${barY.toFixed(1)}" width="5" height="${barH.toFixed(1)}" rx="2.5" fill="${color}"/>`;
+            // States are compact, their label starts right at the edge: no bar for them
+            const accentBar = BARLESS_TYPES.has(diagramType)
+              ? ""
+              : `<rect x="${(rx + 10).toFixed(1)}" y="${barY.toFixed(1)}" width="5" height="${barH.toFixed(1)}" rx="2.5" fill="${color}"/>`;
             upgradedBody = upgradedBody.replace(rectMatch[0], `${cardRect}${accentBar}`);
           }
         }
