@@ -1,10 +1,10 @@
-# mmd-svg
+# mmd-viz
 
 Turn standard Mermaid diagrams into sleek, **zero-JS animated SVGs**—ready for GitHub READMEs, static docs, and light/dark themes.
 
 Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM Mermaid layout engine).
 
-![mmd-svg architecture](./assets/architecture.svg)
+![mmd-viz architecture](./assets/architecture.svg)
 
 ## Features
 
@@ -17,27 +17,27 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ```bash
 # From a file
-npx mmd-svg diagram.mmd -o diagram.svg
+npx mmd-viz diagram.mmd -o diagram.svg
 
 # From stdin with title, footer, and theme
-cat diagram.mmd | npx mmd-svg \
+cat diagram.mmd | npx mmd-viz \
   --title "Architecture" \
   --footer "define once in YAML" \
   --theme dark \
   -o diagram.svg
 
 # Styled static SVG (no animations)
-npx mmd-svg diagram.mmd --static -o diagram.svg
+npx mmd-viz diagram.mmd --static -o diagram.svg
 ```
 
 ## TypeScript / JavaScript API
 
 ```bash
-npm install mmd-svg
+npm install mmd-viz
 ```
 
 ```ts
-import { renderAnimatedSvg } from "mmd-svg";
+import { renderAnimatedSvg } from "mmd-viz";
 
 const svg = renderAnimatedSvg(
   `flowchart LR

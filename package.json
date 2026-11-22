@@ -1,16 +1,16 @@
 {
-  "name": "mmd-svg",
+  "name": "mmd-viz",
   "version": "0.1.0",
-  "description": "Turn Mermaid diagrams into sleek, zero-JS animated SVGs (GitHub & docs ready), powered by Pele.",
+  "description": "Turn Mermaid diagrams into sleek, zero-JS styled & animated SVGs (GitHub & docs ready), powered by Pele.",
   "license": "MIT",
   "author": "phil65",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/phil65/mmd-svg.git"
+    "url": "git+https://github.com/phil65/mmd-viz.git"
   },
-  "homepage": "https://github.com/phil65/mmd-svg#readme",
+  "homepage": "https://github.com/phil65/mmd-viz#readme",
   "bugs": {
-    "url": "https://github.com/phil65/mmd-svg/issues"
+    "url": "https://github.com/phil65/mmd-viz/issues"
   },
   "keywords": [
     "mermaid",
@@ -34,7 +34,7 @@
     }
   },
   "bin": {
-    "mmd-svg": "./dist/cli.js"
+    "mmd-viz": "./dist/cli.js"
   },
   "files": [
     "dist",

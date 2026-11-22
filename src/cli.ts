@@ -4,11 +4,11 @@ import { parseArgs } from "node:util";
 import { renderAnimatedSvg } from "./animate.js";
 import type { AnimateOptions, ThemeName } from "./themes.js";
 
-const HELP = `mmd-svg — Turn Mermaid diagrams into zero-JS animated SVGs
+const HELP = `mmd-viz — Turn Mermaid diagrams into zero-JS styled & animated SVGs
 
 Usage:
-  mmd-svg [input.mmd] [options]
-  cat diagram.mmd | mmd-svg [options] > out.svg
+  mmd-viz [input.mmd] [options]
+  cat diagram.mmd | mmd-viz [options] > out.svg
 
 Options:
   -o, --output <file>   Write SVG to file instead of stdout
