@@ -24,28 +24,42 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![State machine](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/state.svg)
 
+**Git graphs (`gitGraph`):**
+
+![Git graph](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/gitgraph.svg)
+
+**Tokyo Night theme + thick (`==>`) & dotted (`-.->`) edge weights:**
+
+![Tokyo Night theme](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/tokyo-night.svg)
+
 ## Features
 
 - **Zero JS in output** — pure CSS `@keyframes` + SMIL `<animateMotion>`, so animations work directly inside GitHub `<img>` tags.
 - **No browser / Puppeteer required** — synchronous rendering in milliseconds.
-- **Standard Mermaid conventions** — uses normal `:::class` accents and `<br/>` titles/subtitles (stays 100% valid in standard Mermaid viewers).
-- **Accessible & portable** — respects `prefers-reduced-motion`, uses negative `begin` offsets so no particles park at `(0, 0)` on frame 0, and supports `dark` / `light` themes.
+- **8 built-in themes + `--theme auto`** — `dark`, `light`, `auto` (OS `prefers-color-scheme`), `tokyo-night`, `catppuccin`, `nord`, `github-dark`, `github-light`.
+- **Temporal diagram animations** — flowcharts (with thick `==>` / dotted `-.->` edge weights), chronological `sequenceDiagram` relays, `stateDiagram-v2` transitions, and `gitGraph` branches & commits.
+- **Batch CLI mode** — pass a directory to recursively render all `*.mmd` files to `*.svg`.
+- **Accessible & portable** — respects `prefers-reduced-motion`, uses negative `begin` offsets so no particles park at `(0, 0)` on frame 0, and supports `--transparent`, `--speed`, and `--static`.
 
 ## CLI Usage
 
 ```bash
-# From a file
+# Single file
 npx mmd-viz diagram.mmd -o diagram.svg
 
-# From stdin with title, footer, and theme
+# Batch-render a directory of *.mmd files
+npx mmd-viz docs/diagrams -o docs/assets --theme auto
+
+# From stdin with theme, speed, title, and footer
 cat diagram.mmd | npx mmd-viz \
   --title "Architecture" \
   --footer "define once in YAML" \
-  --theme dark \
+  --theme tokyo-night \
+  --speed 1.2 \
   -o diagram.svg
 
-# Styled static SVG (no animations)
-npx mmd-viz diagram.mmd --static -o diagram.svg
+# Transparent background or static (no animations)
+npx mmd-viz diagram.mmd --transparent --static -o diagram.svg
 ```
 
 ## TypeScript / JavaScript API
