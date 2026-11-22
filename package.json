@@ -1,6 +1,6 @@
 {
   "name": "mmd-viz",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Turn Mermaid diagrams into sleek, zero-JS styled & animated SVGs (GitHub & docs ready), powered by Pele.",
   "license": "MIT",
   "author": "phil65",

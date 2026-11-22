@@ -155,4 +155,29 @@ describe("renderAnimatedSvg", () => {
     expect(svg).toContain("<animateMotion");
     expect(svg).toContain("mmd-pulse");
   });
+
+  it("animates agentflow-beta, C4Context, and swimlane-beta diagrams", () => {
+    const af = renderAnimatedSvg(`agentflow-beta LR
+      u["User"] --> p["Planner"] --> t["Tool"]
+    `);
+    expect(af).toContain("<animateMotion");
+
+    const c4 = renderAnimatedSvg(`C4Context
+      Person(u, "Dev")
+      System(ap, "AgentPool")
+      Rel(u, ap, "Prompts")
+    `);
+    expect(c4).toContain("<animateMotion");
+
+    const swim = renderAnimatedSvg(`swimlane-beta LR
+      subgraph Client
+        a["Prompt"]
+      end
+      subgraph Server
+        b["Stream"]
+      end
+      a --> b
+    `);
+    expect(swim).toContain("<animateMotion");
+  });
 });

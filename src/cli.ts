@@ -5,15 +5,18 @@ import { parseArgs } from "node:util";
 import { renderAnimatedSvg } from "./animate.js";
 import { THEME_NAMES, type AnimateOptions, type ThemeName } from "./themes.js";
 
+import { basename } from "node:path";
+
 const HELP = `mmd-viz — Turn Mermaid diagrams into zero-JS styled & animated SVGs
 
 Usage:
   mmd-viz <input.mmd> [options]
-  mmd-viz <directory> [-o <outDir>] [options]   Batch-render all *.mmd files
+  mmd-viz <directory> [-o <outDir>] [options]       Batch-render all *.mmd files
+  mmd-viz extract <file.md> [-o <outDir>] [options] Extract & render \`\`\`mermaid blocks
   cat diagram.mmd | mmd-viz [options] > out.svg
 
 Options:
-  -o, --output <path>     Output SVG file (or output directory in batch mode)
+  -o, --output <path>     Output SVG file (or output directory in batch/extract mode)
   --title <text>          Header badge above the diagram
   --footer <text>         Monospace footer pill below the diagram
   --theme <name>          Theme: ${THEME_NAMES.join(" | ")} (default: dark)
@@ -23,6 +26,17 @@ Options:
   --prefix <id>           Prefix for internal SVG IDs (default: mmd)
   -h, --help              Show this help
 `;
+
+function extractMermaidBlocks(markdown: string): string[] {
+  const blocks: string[] = [];
+  const regex = /^```mermaid[^\n]*\n([\s\S]*?)^```/gm;
+  for (const match of markdown.matchAll(regex)) {
+    if (match[1]?.trim()) {
+      blocks.push(match[1].trim());
+    }
+  }
+  return blocks;
+}
 
 function collectMmdFiles(dir: string): string[] {
   const results: string[] = [];
@@ -88,6 +102,32 @@ function main(): void {
   if (values.prefix !== undefined) opts.idPrefix = values.prefix;
 
   const inputPath = positionals[0];
+
+  // Markdown extract mode: mmd-viz extract README.md [-o outDir]
+  if (inputPath === "extract") {
+    const mdPath = positionals[1];
+    if (!mdPath) {
+      process.stderr.write("Error: Provide a Markdown file path: mmd-viz extract <file.md>\n");
+      process.exitCode = 1;
+      return;
+    }
+    const mdContent = readFileSync(mdPath, "utf8");
+    const blocks = extractMermaidBlocks(mdContent);
+    if (blocks.length === 0) {
+      process.stderr.write(`No \`\`\`mermaid blocks found in ${mdPath}\n`);
+      return;
+    }
+    const outDir = values.output ? resolve(values.output) : dirname(resolve(mdPath));
+    mkdirSync(outDir, { recursive: true });
+    const stem = basename(mdPath).replace(/\.[^.]+$/, "");
+    blocks.forEach((block, idx) => {
+      const outFile = join(outDir, `${stem}-${idx + 1}.svg`);
+      const svg = renderAnimatedSvg(block, { ...opts, idPrefix: `${opts.idPrefix ?? "mmd"}-${idx + 1}` });
+      writeFileSync(outFile, svg, "utf8");
+      process.stdout.write(`${mdPath}[${idx + 1}] -> ${outFile}\n`);
+    });
+    return;
+  }
 
   // Directory batch mode: convert all *.mmd recursively
   if (inputPath && inputPath !== "-" && statSync(inputPath).isDirectory()) {

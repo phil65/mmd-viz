@@ -4,6 +4,8 @@ Turn standard Mermaid diagrams into sleek, **zero-JS animated SVGs**—ready for
 
 Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM Mermaid layout engine).
 
+**[Try the Live Playground →](https://phil65.github.io/mmd-viz/)** · [Supported Diagrams Matrix](./DIAGRAMS.md)
+
 ![mmd-viz architecture](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/architecture.svg)
 
 ### More Examples
@@ -65,6 +67,9 @@ npx mmd-viz diagram.mmd -o diagram.svg
 
 # Batch-render a directory of *.mmd files
 npx mmd-viz docs/diagrams -o docs/assets --theme auto
+
+# Extract & render all ```mermaid blocks from a Markdown file
+npx mmd-viz extract README.md -o docs/assets --theme auto
 
 # From stdin with theme, speed, title, and footer
 cat diagram.mmd | npx mmd-viz \

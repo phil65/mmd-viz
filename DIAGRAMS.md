@@ -6,7 +6,7 @@ On top of that base styling, **time- and flow-oriented** diagrams receive tailor
 
 ---
 
-## Animated (8)
+## Animated (11)
 
 | Pele Type | Mermaid Syntax | Animation Behavior | Notes / Conventions |
 | :--- | :--- | :--- | :--- |
@@ -15,25 +15,25 @@ On top of that base styling, **time- and flow-oriented** diagrams receive tailor
 | `state` | `stateDiagram-v2` | Cycling accent transition arrows + dashed flow + traveling packets | Auto-expands narrow vertical canvases to fit titles/footers |
 | `gitGraph` | `gitGraph` | Cycling branch/merge colors + animated branch/merge packets + staggered pulsing commit halos | Uses `--pele-series-1..5` for branch badges & lanes |
 | `architecture` | `architecture-beta` | Cycling accent service-to-service traffic wires + traveling packets | Preserves Pele service & group icons |
+| `agentflow` | `agentflow-beta` | Animated agent handoff & tool-call packets along edges | Supports `:::accent` classes or automatic cycling accents |
+| `c4` | `C4Context` / `C4Container` / `C4Component` | Cycling accent traffic wires & packets along relationship arrows | Preserves C4 person/system shapes |
+| `swimlane` | `swimlane-beta` | Animated cross-lane handoff wires & packets | Preserves horizontal/vertical lane headers |
 | `sankey` | `sankey-beta` | Dual staggered particles streaming along the exact mathematical centerline Bézier of each weighted ribbon | Color-matched to each ribbon's series accent |
 | `gantt` | `gantt` | Cycling accent task bars + sweeping vertical playhead line across the timeline grid | Respects `--speed` multiplier |
 | `timeline` | `timeline` | Glowing dashed axis + traveling pulse + staggered pulsing rings on milestone dots | Uses `--pele-series-1..5` for period cards |
 
 ---
 
-## Planned Animation Candidates (7)
+## Planned Animation Candidates (4)
 
 Temporal, flow, or execution-oriented diagrams that currently receive full theme/canvas styling and are candidates for dedicated animations:
 
 | Pele Type | Mermaid Syntax | Proposed Animation |
 | :--- | :--- | :--- |
-| `agentflow` | `agentflow` | Agent handoff & tool-call packets along edges |
-| `c4` | `C4Context` / `C4Container` / `C4Component` | Service-to-service traffic packets along relationship arrows |
 | `block` | `block-beta` | Directional connector pulses between blocks |
-| `swimlane` | `swimlane` | Cross-lane handoff packets along process connectors |
 | `eventmodeling` | `eventmodeling` | Chronological left-to-right command → event → view flow |
 | `journey` | `journey` | Subtle left-to-right step highlight across user journey stages |
-| `railroad` | `railroad` | Glowing parser token gliding along the grammar track |
+| `railroad` | `railroad-beta` / `railroad-ebnf-beta` | Glowing parser token gliding along the grammar track |
 
 ---
 

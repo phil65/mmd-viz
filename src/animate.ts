@@ -44,6 +44,9 @@ export function renderAnimatedSvg(
   const isState = diagramType === "state";
   const isGitGraph = diagramType === "gitGraph";
   const isArchitecture = diagramType === "architecture";
+  const isAgentflow = diagramType === "agentflow";
+  const isC4 = diagramType === "c4";
+  const isSwimlane = diagramType === "swimlane";
   const isSankey = diagramType === "sankey";
   const isGantt = diagramType === "gantt";
   const isTimeline = diagramType === "timeline";
@@ -280,16 +283,21 @@ export function renderAnimatedSvg(
         const pathId = `${pfx}-edge-${idx}`;
 
         let color = DEFAULT_ACCENT;
-        if (isSequence || isState || isArchitecture) {
+        if (isSequence || isState || isArchitecture || isC4) {
           color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
         } else {
           const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
+          let matched = false;
           for (const [nid, ncolor] of sortedNodes) {
             if (nodeIsHub.has(nid)) continue;
             if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
               color = ncolor;
+              matched = true;
               break;
             }
+          }
+          if (!matched && (isAgentflow || isSwimlane)) {
+            color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
           }
         }
 
