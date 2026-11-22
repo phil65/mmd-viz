@@ -109,4 +109,50 @@ describe("renderAnimatedSvg", () => {
     expect(motions.length).toBeGreaterThanOrEqual(3);
     expect(svg).toContain("mmd-pulse");
   });
+
+  it("animates architecture-beta service edges", () => {
+    const arch = `architecture-beta
+      group api(cloud)[API Layer]
+      service gw(internet)[Gateway] in api
+      service pool(server)[AgentPool] in api
+      gw:R --> L:pool
+    `;
+    const svg = renderAnimatedSvg(arch, { title: "Arch" });
+    expect(svg).toContain("<animateMotion");
+    expect(svg).toContain("mmd-flow");
+  });
+
+  it("animates sankey-beta ribbons with centerline particles", () => {
+    const sankey = `sankey-beta
+      Prompt,Planner,60
+      Prompt,Direct,40
+    `;
+    const svg = renderAnimatedSvg(sankey, { title: "Sankey" });
+    const motions = [...svg.matchAll(/<animateMotion/g)];
+    expect(motions.length).toBe(4);
+    expect(svg).toContain('id="mmd-sankey-0"');
+  });
+
+  it("animates gantt with a sweeping playhead and colored task bars", () => {
+    const gantt = `gantt
+      dateFormat YYYY-MM-DD
+      section Core
+      Build :a1, 2026-01-01, 5d
+      Ship  :a2, after a1, 3d
+    `;
+    const svg = renderAnimatedSvg(gantt, { title: "Roadmap" });
+    expect(svg).toContain("mmd-playhead");
+    expect(svg).toContain("<animateTransform");
+  });
+
+  it("animates timeline axis and milestone dots", () => {
+    const tl = `timeline
+      2025 : Native Agents
+      2026 : ACP & OpenCode
+    `;
+    const svg = renderAnimatedSvg(tl, { title: "Timeline" });
+    expect(svg).toContain('id="mmd-axis"');
+    expect(svg).toContain("<animateMotion");
+    expect(svg).toContain("mmd-pulse");
+  });
 });

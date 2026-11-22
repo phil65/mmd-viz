@@ -43,6 +43,10 @@ export function renderAnimatedSvg(
   const isSequence = diagramType === "sequence";
   const isState = diagramType === "state";
   const isGitGraph = diagramType === "gitGraph";
+  const isArchitecture = diagramType === "architecture";
+  const isSankey = diagramType === "sankey";
+  const isGantt = diagramType === "gantt";
+  const isTimeline = diagramType === "timeline";
 
   // 1. Inspect and upgrade flowchart/state nodes
   const nodeColor = new Map<string, string>();
@@ -92,8 +96,129 @@ export function renderAnimatedSvg(
 
   // 2. Upgrade edges & build animated packets
   const packets: string[] = [];
+  const extraDefs: string[] = [];
 
-  if (isGitGraph) {
+  if (isSankey) {
+    // Compute exact centerline Bezier for each Sankey flow ribbon and stream particles through it
+    let linkIdx = 0;
+    const sankeyRegex =
+      /<path class="pele-sankey-link" data-id="([^"]+)" d="M([^,]+),([^C]+)C([^,]+),([^ ]+) ([^,]+),([^ ]+) ([^,]+),([^L]+)L([^,]+),([^C]+)C([^,]+),([^ ]+) ([^,]+),([^ ]+) ([^,]+),([^Z]+)Z" fill="([^"]+)"/g;
+
+    inner = inner.replace(
+      sankeyRegex,
+      (
+        full,
+        _id: string,
+        x0s: string,
+        y0ts: string,
+        cx1s: string,
+        _cy1ts: string,
+        cx2s: string,
+        _cy2ts: string,
+        x1s: string,
+        y1ts: string,
+        _x1bs: string,
+        y1bs: string,
+        _cx2bs: string,
+        _cy2bs: string,
+        _cx1bs: string,
+        _cy1bs: string,
+        _x0bs: string,
+        y0bs: string,
+        fillVal: string
+      ) => {
+        const idx = linkIdx++;
+        const x0 = Number.parseFloat(x0s);
+        const y0 = (Number.parseFloat(y0ts) + Number.parseFloat(y0bs)) / 2;
+        const cx1 = Number.parseFloat(cx1s);
+        const cx2 = Number.parseFloat(cx2s);
+        const x1 = Number.parseFloat(x1s);
+        const y1 = (Number.parseFloat(y1ts) + Number.parseFloat(y1bs)) / 2;
+        const seriesMatch = fillVal.match(/--pele-series-(\d+)/);
+        const seriesNum =
+          seriesMatch && seriesMatch[1] ? Number.parseInt(seriesMatch[1], 10) - 1 : idx;
+        const color = CYCLE_ACCENTS[seriesNum % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+
+        if (animate) {
+          const pathId = `${pfx}-sankey-${idx}`;
+          const centerD = `M${x0.toFixed(1)},${y0.toFixed(1)}C${cx1.toFixed(1)},${y0.toFixed(1)} ${cx2.toFixed(1)},${y1.toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+          extraDefs.push(`<path id="${pathId}" d="${centerD}"/>`);
+          const dur = (2.6 + (idx % 3) * 0.35) / speed;
+          const b1 = -(((idx * 0.45) % 2.2 + 0.2) / speed);
+          const b2 = b1 - dur / 2;
+          packets.push(
+            `<circle r="3.6" fill="${color}" fill-opacity="0.92"><animateMotion dur="${dur.toFixed(2)}s" begin="${b1.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`,
+            `<circle r="2.8" fill="${color}" fill-opacity="0.65"><animateMotion dur="${dur.toFixed(2)}s" begin="${b2.toFixed(2)}s" repeatCount="indefinite"><mpath href="#${pathId}"/></animateMotion></circle>`
+          );
+        }
+        return full;
+      }
+    );
+  } else if (isGantt) {
+    // Color each task bar with cycling series accents & add a sweeping playhead across the grid
+    let taskIdx = 0;
+    inner = inner.replace(
+      /<g class="pele-task" data-id="([^"]+)"><rect ([^>]*?)fill="var\(--_c\)" stroke="var\(--_c\)"/g,
+      (_full, tid: string, rectAttrs: string) => {
+        const color = CYCLE_ACCENTS[taskIdx++ % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+        return `<g class="pele-task" data-id="${tid}"><rect ${rectAttrs}fill="${color}" stroke="${color}"`;
+      }
+    );
+
+    if (animate) {
+      const axisMatch = inner.match(/<path d="M([0-9.]+),([0-9.]+)H([0-9.]+)" stroke="var\(--_b\)"\/>/);
+      const gridTopMatch = inner.match(/<path d="M[0-9.]+,([0-9.]+)V([0-9.]+)/);
+      if (axisMatch?.[1] && axisMatch[3] && gridTopMatch?.[1] && gridTopMatch[2]) {
+        const xStart = Number.parseFloat(axisMatch[1]);
+        const xEnd = Number.parseFloat(axisMatch[3]);
+        const yTop = Number.parseFloat(gridTopMatch[1]);
+        const yBot = Number.parseFloat(gridTopMatch[2]);
+        const sweepDur = (5.5 / speed).toFixed(2);
+        const begin = (-1.6 / speed).toFixed(2);
+        const span = (xEnd - xStart).toFixed(1);
+        packets.push(
+          `<g class="${pfx}-playhead">` +
+            `<line x1="${xStart}" y1="${yTop - 4}" x2="${xStart}" y2="${yBot + 2}" stroke="${DEFAULT_ACCENT}" stroke-width="2" stroke-opacity="0.75"/>` +
+            `<circle cx="${xStart}" cy="${yTop - 4}" r="3.5" fill="${DEFAULT_ACCENT}"/>` +
+            `<animateTransform attributeName="transform" type="translate" from="0 0" to="${span} 0" dur="${sweepDur}s" begin="${begin}s" repeatCount="indefinite"/>` +
+            `</g>`
+        );
+      }
+    }
+  } else if (isTimeline) {
+    // Stream a glowing packet along the timeline axis & pulse milestone dots
+    const axisMatch = inner.match(/<path class="pele-axis" d="([^"]+)"([^>]*)\/>/);
+    if (axisMatch?.[1]) {
+      const axisId = `${pfx}-axis`;
+      const d = axisMatch[1];
+      const flowLayer = animate
+        ? `<path d="${d}" stroke="${DEFAULT_ACCENT}" stroke-width="2.2" fill="none" class="${pfx}-flow"/>`
+        : "";
+      inner = inner.replace(
+        axisMatch[0],
+        `<path id="${axisId}" class="pele-axis" d="${d}" stroke="${DEFAULT_ACCENT}" stroke-opacity="0.4" stroke-width="2" fill="none"/>${flowLayer}`
+      );
+      if (animate) {
+        const dur = (3.2 / speed).toFixed(2);
+        const begin = (-0.9 / speed).toFixed(2);
+        packets.push(
+          `<circle r="4.2" fill="${DEFAULT_ACCENT}"><animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite"><mpath href="#${axisId}"/></animateMotion></circle>`
+        );
+      }
+    }
+    if (animate) {
+      let dotIdx = 0;
+      inner = inner.replace(
+        /<circle class="pele-dot" cx="([^"]+)" cy="([^"]+)" r="([^"]+)"([^>]*)\/>/g,
+        (full, cx: string, cy: string, r: string) => {
+          const color = CYCLE_ACCENTS[dotIdx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
+          const haloR = (Number.parseFloat(r) + 4.5).toFixed(1);
+          const delay = ((dotIdx++ * 0.45) / speed).toFixed(2);
+          return `${full}<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="none" stroke="${color}" stroke-width="1.4" class="${pfx}-pulse" style="animation-delay:-${delay}s"/>`;
+        }
+      );
+    }
+  } else if (isGitGraph) {
     // Pele gitGraph emits <path class="pele-edge..." d="..." stroke="var(--pele-series-N,...)"/>
     let gitEdgeIdx = 0;
     const gitEdgeRegex = /<path class="(pele-edge[^"]*)" d="([^"]+)" stroke="([^"]+)"\/>/g;
@@ -155,7 +280,7 @@ export function renderAnimatedSvg(
         const pathId = `${pfx}-edge-${idx}`;
 
         let color = DEFAULT_ACCENT;
-        if (isSequence || isState) {
+        if (isSequence || isState || isArchitecture) {
           color = CYCLE_ACCENTS[idx % CYCLE_ACCENTS.length] ?? DEFAULT_ACCENT;
         } else {
           const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
@@ -304,6 +429,11 @@ export function renderAnimatedSvg(
         '<g class="pele-commits"',
         `${packetsGroup}<g class="pele-commits"`
       );
+    } else if (inner.includes('<g class="pele-sankey-nodes"')) {
+      innerWithPackets = inner.replace(
+        '<g class="pele-sankey-nodes"',
+        `${packetsGroup}<g class="pele-sankey-nodes"`
+      );
     } else if (inner.includes('<g class="pele-nodes"')) {
       innerWithPackets = inner.replace(
         '<g class="pele-nodes"',
@@ -354,6 +484,7 @@ export function renderAnimatedSvg(
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
       .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
       .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
       .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${animationCss}
@@ -372,7 +503,7 @@ export function renderAnimatedSvg(
     <linearGradient id="${pfx}-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="var(--mv-hub-start)"/>
       <stop offset="100%" stop-color="var(--mv-hub-end)"/>
-    </linearGradient>
+    </linearGradient>${extraDefs.length > 0 ? `\n    ${extraDefs.join("\n    ")}` : ""}
   </defs>
 ${backgroundEls}
   ${titleEl}

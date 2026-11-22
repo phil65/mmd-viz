@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="mmd-root" viewBox="0 0 904 279" width="904" height="279" role="img" aria-label="GANTT · SWEEPING PLAYHEAD">
+  <defs>
+    <style>
+      .mmd-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+      }
+      .mmd-bg { fill: var(--mv-bg); }
+      .mmd-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .mmd-dot { fill: var(--mv-dot); }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.80s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.20s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="mmd-dot"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="904" height="279" rx="18" class="mmd-bg"/>
+  <rect width="904" height="279" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="235" cy="100" r="253" fill="url(#mmd-glow-l)"/>
+  <circle cx="669" cy="179" r="253" fill="url(#mmd-glow-r)"/>
+  <text x="452" y="42" text-anchor="middle" class="mmd-title">GANTT · SWEEPING PLAYHEAD</text>
+
+  <g class="mmd-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px">
+    <g class="pele-sections"><rect class="pele-section pele-section-0" x="0" y="8" width="800" height="60" fill="var(--_s)"/><rect class="pele-section pele-section-1" x="0" y="68" width="800" height="30" fill="none"/></g><g class="pele-grid" fill="none"><path d="M74.64,8V98M137.07,8V98M199.49,8V98M261.92,8V98M324.34,8V98M386.77,8V98M449.19,8V98M511.62,8V98M574.04,8V98M636.47,8V98M698.89,8V98M761.32,8V98" stroke="var(--_b)" stroke-dasharray="1 3"/><path d="M74.64,98H761.32" stroke="var(--_b)"/></g><g class="pele-tasks" font-size="13"><g class="pele-task" data-id="a1"><rect x="74.64" y="11" width="312.13" height="24" fill="#38BDF8" stroke="#38BDF8" style="rx:var(--_r)"/><text class="pele-label" fill="var(--_bg)" x="230.7" y="27.55" text-anchor="middle">Parser &amp; Layout</text></g><g class="pele-task" data-id="a2"><rect x="386.77" y="41" width="249.7" height="24" fill="#818CF8" stroke="#818CF8" style="rx:var(--_r)"/><text class="pele-label" fill="var(--_bg)" x="511.62" y="57.55" text-anchor="middle">SVG Animator</text></g><g class="pele-task" data-id="a3"><rect x="636.47" y="71" width="124.85" height="24" fill="#FBBF24" stroke="#FBBF24" style="rx:var(--_r)"/><text class="pele-label" fill="var(--_bg)" x="698.89" y="87.55" text-anchor="middle">npm v0.3.0</text></g></g><g class="pele-section-labels" font-size="13"><text class="pele-section-label" data-id="Core" x="30.09" y="42.55" text-anchor="middle">Core</text><text class="pele-section-label" data-id="Launch" x="37.32" y="87.55" text-anchor="middle">Launch</text></g><g class="pele-axis" font-size="12" fill="var(--_m)"><text x="74.64" y="114.7" text-anchor="middle">2026-01-01</text><text x="199.49" y="114.7" text-anchor="middle">2026-01-03</text><text x="324.34" y="114.7" text-anchor="middle">2026-01-05</text><text x="449.19" y="114.7" text-anchor="middle">2026-01-07</text><text x="574.04" y="114.7" text-anchor="middle">2026-01-09</text><text x="698.89" y="114.7" text-anchor="middle">2026-01-11</text></g>
+    <g class="mmd-packets"><g class="mmd-playhead"><line x1="74.64" y1="4" x2="74.64" y2="100" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.75"/><circle cx="74.64" cy="4" r="3.5" fill="#38BDF8"/><animateTransform attributeName="transform" type="translate" from="0 0" to="686.7 0" dur="5.50s" begin="-1.60s" repeatCount="indefinite"/></g></g>
+  </g>
+
+  <rect x="256" y="227" width="391" height="30" rx="15" class="mmd-card"/>
+  <text x="452" y="246" text-anchor="middle" class="mmd-footer">gantt with colored tasks &amp; animated playhead</text>
+</svg>

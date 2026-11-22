@@ -32,12 +32,28 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![Tokyo Night theme](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/tokyo-night.svg)
 
+**Architecture (`architecture-beta`):**
+
+![Architecture beta](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/arch-beta.svg)
+
+**Sankey (`sankey-beta` centerline particle streams):**
+
+![Sankey flow](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/sankey.svg)
+
+**Gantt (`gantt` with sweeping playhead):**
+
+![Gantt roadmap](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/gantt.svg)
+
+**Timeline (`timeline` axis & pulsing milestones):**
+
+![Timeline](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/timeline.svg)
+
 ## Features
 
 - **Zero JS in output** — pure CSS `@keyframes` + SMIL `<animateMotion>`, so animations work directly inside GitHub `<img>` tags.
 - **No browser / Puppeteer required** — synchronous rendering in milliseconds.
 - **8 built-in themes + `--theme auto`** — `dark`, `light`, `auto` (OS `prefers-color-scheme`), `tokyo-night`, `catppuccin`, `nord`, `github-dark`, `github-light`.
-- **Temporal diagram animations** — flowcharts (with thick `==>` / dotted `-.->` edge weights), chronological `sequenceDiagram` relays, `stateDiagram-v2` transitions, and `gitGraph` branches & commits.
+- **8 animated temporal/flow diagram types** — `flowchart` (with thick `==>` / dotted `-.->` edge weights), chronological `sequenceDiagram` relays, `stateDiagram-v2` transitions, `gitGraph` branches & commits, `architecture-beta` service traffic, `sankey-beta` centerline ribbon streams, `gantt` sweeping playhead, and `timeline` axis & milestone pulses.
 - **Batch CLI mode** — pass a directory to recursively render all `*.mmd` files to `*.svg`.
 - **Accessible & portable** — respects `prefers-reduced-motion`, uses negative `begin` offsets so no particles park at `(0, 0)` on frame 0, and supports `--transparent`, `--speed`, and `--static`.
 
