@@ -160,8 +160,26 @@ export function renderAnimatedSvg(
 
   const packetsGroup =
     animate && packets.length > 0
-      ? `\n    <g class="${pfx}-packets">\n      ${packets.join("\n      ")}\n    </g>`
+      ? `<g class="${pfx}-packets">${packets.join("")}</g>`
       : "";
+
+  // Place packets right after pele-edges (so they pass underneath edge labels and nodes)
+  let innerWithPackets = inner;
+  if (packetsGroup) {
+    if (inner.includes('<g class="pele-edge-labels"')) {
+      innerWithPackets = inner.replace(
+        '<g class="pele-edge-labels"',
+        `${packetsGroup}<g class="pele-edge-labels"`
+      );
+    } else if (inner.includes('<g class="pele-nodes"')) {
+      innerWithPackets = inner.replace(
+        '<g class="pele-nodes"',
+        `${packetsGroup}<g class="pele-nodes"`
+      );
+    } else {
+      innerWithPackets = `${inner}\n    ${packetsGroup}`;
+    }
+  }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalW} ${totalH}" width="${totalW}" height="${totalH}" role="img" aria-label="${escapeXml(label)}">
   <defs>
@@ -169,9 +187,13 @@ export function renderAnimatedSvg(
       .${pfx}-bg { fill: ${palette.bg}; }
       .${pfx}-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: ${palette.titleColor}; text-transform: uppercase; }
       .${pfx}-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: ${palette.textMuted}; }
+      .${pfx}-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: ${palette.textPrimary}; }
       .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: ${palette.textPrimary}; }
       .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: ${palette.textPrimary}; }
       .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: ${palette.textMuted}; }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: ${palette.textMuted}; }
+      .pele-edge-label rect { fill: ${palette.cardFill}; stroke: ${palette.cardStroke}; stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: ${palette.textPrimary}; }
       .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: ${palette.textPrimary}; }
       .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: ${palette.titleColor}; }${animationCss}
     </style>
@@ -199,8 +221,8 @@ export function renderAnimatedSvg(
 
   ${titleEl}
 
-  <g transform="translate(${padX},${padTop})" style="--_bg:${palette.bg};--_fg:${palette.textPrimary};--_m:${palette.textMuted};--_l:${DEFAULT_ACCENT};--_s:${palette.cardFill};--_a:${palette.hubBgStart};--_b:${palette.cardStroke};--_c:${DEFAULT_ACCENT};--_r:12px">
-    ${inner}${packetsGroup}
+  <g class="${pfx}-stage" transform="translate(${padX},${padTop})" style="--_bg:${palette.bg};--_fg:${palette.textPrimary};--_m:${palette.textMuted};--_l:${DEFAULT_ACCENT};--_s:${palette.cardFill};--_a:${palette.hubBgStart};--_b:${palette.cardStroke};--_c:${DEFAULT_ACCENT};--_r:12px">
+    ${innerWithPackets}
   </g>
 
   ${footerEl}

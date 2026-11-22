@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1437 326" width="1437" height="326" role="img" aria-label="AGENTIC LOOP · SUBGRAPHS + LABELS + FEEDBACK">
+  <defs>
+    <style>
+      .mmd-bg { fill: #070B14; }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #38BDF8; text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #94A3B8; }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: #F8FAFC; }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #F8FAFC; }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #94A3B8; }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: #94A3B8; }
+      .pele-edge-label rect { fill: #0F172A; stroke: rgba(148,163,184,0.24); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #38BDF8; }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="rgba(148,163,184,0.14)"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1437" height="326" rx="18" class="mmd-bg"/>
+  <rect width="1437" height="326" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="374" cy="117" r="402" fill="url(#mmd-glow-l)"/>
+  <circle cx="1063" cy="209" r="402" fill="url(#mmd-glow-r)"/>
+
+  <text x="718.5" y="42" text-anchor="middle" class="mmd-title">AGENTIC LOOP · SUBGRAPHS + LABELS + FEEDBACK</text>
+
+  <g class="mmd-stage" transform="translate(52,76)" style="--_bg:#070B14;--_fg:#F8FAFC;--_m:#94A3B8;--_l:#38BDF8;--_s:#0F172A;--_a:#1E293B;--_b:rgba(148,163,184,0.24);--_c:#38BDF8;--_r:12px">
+    <g class="pele-clusters"><g class="pele-cluster" data-id="execution"><rect x="414.86" y="8" width="676.11" height="157.02" fill="var(--_a)" fill-opacity="0.5" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-cluster-label" fill="var(--_m)" x="484" y="33.6" text-anchor="middle">Execution Loop</text></g></g><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_user_agent_0"><path id="mmd-edge-0" d="M168.94,96.51L209.94,96.51" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M168.94,96.51L209.94,96.51" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M216.94,96.51L208.94,99.87L208.94,93.15Z" fill="#38BDF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_plan_code_0"><path id="mmd-edge-1" d="M621.58,96.51L662.58,96.51" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M621.58,96.51L662.58,96.51" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M669.58,96.51L661.58,99.87L661.58,93.15Z" fill="#818CF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_code_test_0"><path id="mmd-edge-2" d="M813.18,88.51L901.53,88.51" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M813.18,88.51L901.53,88.51" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M908.53,88.51L900.53,91.87L900.53,85.15Z" fill="#FBBF24" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_test_code_0"><path id="mmd-edge-3" d="M915.73,109.01L820.18,109.01" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M915.73,109.01L820.18,109.01" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M813.18,109.01L821.18,105.65L821.18,112.37Z" fill="#FBBF24" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_agent_plan_0"><path id="mmd-edge-4" d="M366.86,96.51L447.86,96.51" stroke="#818CF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M366.86,96.51L447.86,96.51" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M454.86,96.51L446.86,99.87L446.86,93.15Z" fill="#818CF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_test_ship_0"><path id="mmd-edge-5" d="M1050.96,96.51L1175.08,96.51" stroke="#A78BFA" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M1050.96,96.51L1175.08,96.51" stroke="#A78BFA" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M1182.08,96.51L1174.08,99.87L1174.08,93.15Z" fill="#A78BFA" fill-opacity="0.85" stroke="none"/></g></g><g class="mmd-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle><circle r="3.8" fill="#FBBF24"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle><circle r="3.8" fill="#FBBF24"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle><circle r="3.8" fill="#818CF8"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#mmd-edge-4"/></animateMotion></circle><circle r="3.8" fill="#A78BFA"><animateMotion dur="2.32s" begin="-0.35s" repeatCount="indefinite"><mpath href="#mmd-edge-5"/></animateMotion></circle></g><g class="pele-edge-labels" font-size="14"><g class="pele-edge-label" data-id="L_test_code_0"><rect x="842.68" y="98.51" width="30.55" height="21" rx="3" fill="var(--_bg)"/><text x="857.95" y="113.91" text-anchor="middle">Fail</text></g><g class="pele-edge-label" data-id="L_test_ship_0"><rect x="1113.46" y="86.01" width="39.12" height="21" rx="3" fill="var(--_bg)"/><text x="1133.02" y="101.41" text-anchor="middle">Pass</text></g></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="user" transform="translate(88.47,96.51)"><rect x="-80.47" y="-33" width="160.94" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-70.5" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">User Task</tspan><tspan x="0" y="16.1">Prompt + Context</tspan></text></g><g class="pele-node pele-shape-stadium hub mmd-hub-node" data-id="agent" transform="translate(291.9,96.51)"><rect x="-82.0" y="-40.0" width="163.9" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="mmd-pulse"/><rect x="-74.96" y="-33" width="149.91" height="66" rx="18" fill="url(#mmd-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">AgentPool</tspan><tspan x="0" y="16.1">Orchestrator</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="plan" transform="translate(538.22,96.51)"><rect x="-83.36" y="-33" width="166.72" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-73.4" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Planner</tspan><tspan x="0" y="16.1">Decompose Steps</tspan></text></g><g class="pele-node pele-shape-rect amber" data-id="code" transform="translate(741.38,96.51)"><rect x="-71.8" y="-33" width="143.6" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-61.8" y="-20.0" width="5" height="40.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Coder</tspan><tspan x="0" y="16.1">Edit &amp; Refactor</tspan></text></g><g class="pele-node pele-shape-diam violet" data-id="test" transform="translate(973.35,96.51)"><polygon points="0,-48.51 77.62,0 0,48.51 -77.62,0" fill="var(--_s)" stroke="var(--_b)"/><text class="pele-label" x="0" y="5.6" text-anchor="middle">Tests Pass?</text></g><g class="pele-node pele-shape-rect emerald" data-id="ship" transform="translate(1253.44,96.51)"><rect x="-71.36" y="-33" width="142.72" height="66" rx="12" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/><rect x="-61.4" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">PR / Artifact</tspan><tspan x="0" y="16.1">Verified Output</tspan></text></g></g>
+  </g>
+
+  <rect x="468" y="274" width="500" height="30" rx="15" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/>
+  <text x="718.5" y="293" text-anchor="middle" class="mmd-footer">flowchart LR with subgraphs, diamond decision &amp; retry edge</text>
+</svg>

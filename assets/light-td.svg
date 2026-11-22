@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 598 576" width="598" height="576" role="img" aria-label="LIGHT THEME · TOP-DOWN ARCHITECTURE">
+  <defs>
+    <style>
+      .mmd-bg { fill: #F8FAFC; }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #0284C7; text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #475569; }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #0F172A; }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #0F172A; }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #475569; }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #0F172A; }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #0284C7; }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="rgba(100,116,139,0.18)"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="598" height="576" rx="18" class="mmd-bg"/>
+  <rect width="598" height="576" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="155" cy="207" r="167" fill="url(#mmd-glow-l)"/>
+  <circle cx="443" cy="369" r="167" fill="url(#mmd-glow-r)"/>
+
+  <text x="299" y="42" text-anchor="middle" class="mmd-title">LIGHT THEME · TOP-DOWN ARCHITECTURE</text>
+
+  <g transform="translate(52,76)" style="--_bg:#F8FAFC;--_fg:#0F172A;--_m:#475569;--_l:#38BDF8;--_s:#FFFFFF;--_a:#EFF6FF;--_b:rgba(148,163,184,0.45);--_c:#38BDF8;--_r:12px">
+    <g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="L_cfg_pool_0"><path id="mmd-edge-0" d="M231.84,74L231.84,115" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M231.84,74L231.84,115" stroke="#38BDF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M231.84,122L228.48,114L235.2,114Z" fill="#38BDF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_pool_n1_0"><path id="mmd-edge-1" d="M204.1,188C204.1,205.5 64.24,205.5 64.24,223L64.24,229" stroke="#818CF8" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M204.1,188C204.1,205.5 64.24,205.5 64.24,223L64.24,229" stroke="#818CF8" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M64.24,236L60.88,228L67.6,228Z" fill="#818CF8" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_pool_n2_0"><path id="mmd-edge-2" d="M231.84,188L231.84,229" stroke="#FBBF24" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M231.84,188L231.84,229" stroke="#FBBF24" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M231.84,236L228.48,228L235.2,228Z" fill="#FBBF24" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_pool_n3_0"><path id="mmd-edge-3" d="M259.58,188C259.58,205.5 414.12,205.5 414.12,223L414.12,229" stroke="#34D399" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M259.58,188C259.58,205.5 414.12,205.5 414.12,223L414.12,229" stroke="#34D399" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M414.12,236L410.76,228L417.48,228Z" fill="#34D399" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_n1_out_0"><path id="mmd-edge-4" d="M64.24,302C64.24,319.5 174.75,319.5 174.75,337L174.75,343" stroke="#F472B6" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M64.24,302C64.24,319.5 174.75,319.5 174.75,337L174.75,343" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M174.75,350L171.39,342L178.11,342Z" fill="#F472B6" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_n2_out_0"><path id="mmd-edge-5" d="M231.84,302L231.84,343" stroke="#F472B6" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M231.84,302L231.84,343" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M231.84,350L228.48,342L235.2,342Z" fill="#F472B6" fill-opacity="0.85" stroke="none"/></g><g class="pele-edge" data-id="L_n3_out_0"><path id="mmd-edge-6" d="M414.12,302C414.12,319.5 288.93,319.5 288.93,337L288.93,343" stroke="#F472B6" stroke-width="2" stroke-opacity="0.38" fill="none"/><path d="M414.12,302C414.12,319.5 288.93,319.5 288.93,337L288.93,343" stroke="#F472B6" stroke-width="2.1" fill="none" class="mmd-flow"/><path class="pele-marker" d="M288.93,350L285.57,342L292.29,342Z" fill="#F472B6" fill-opacity="0.85" stroke="none"/></g></g><g class="pele-nodes"><g class="pele-node pele-shape-rect cyan" data-id="cfg" transform="translate(231.84,41)"><rect x="-90.46" y="-33" width="180.93" height="66" rx="12" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/><rect x="-80.5" y="-20.0" width="5" height="40.0" rx="2.5" fill="#38BDF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">agents.yml</tspan><tspan x="0" y="16.1">Declarative Manifest</tspan></text></g><g class="pele-node pele-shape-stadium hub mmd-hub-node" data-id="pool" transform="translate(231.84,155)"><rect x="-107.7" y="-40.0" width="215.5" height="80.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="mmd-pulse"/><rect x="-100.74" y="-33" width="201.48" height="66" rx="18" fill="url(#mmd-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">AgentPool</tspan><tspan x="0" y="16.1">Registry &amp; Lifecycle</tspan></text></g><g class="pele-node pele-shape-rect indigo" data-id="n1" transform="translate(64.24,269)"><rect x="-56.24" y="-33" width="112.48" height="66" rx="12" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/><rect x="-46.2" y="-20.0" width="5" height="40.0" rx="2.5" fill="#818CF8"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Native</tspan><tspan x="0" y="16.1">PydanticAI</tspan></text></g><g class="pele-node pele-shape-rect amber" data-id="n2" transform="translate(231.84,269)"><rect x="-71.36" y="-33" width="142.72" height="66" rx="12" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/><rect x="-61.4" y="-20.0" width="5" height="40.0" rx="2.5" fill="#FBBF24"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">ACP</tspan><tspan x="0" y="16.1">Goose / Codex</tspan></text></g><g class="pele-node pele-shape-rect emerald" data-id="n3" transform="translate(414.12,269)"><rect x="-70.92" y="-33" width="141.84" height="66" rx="12" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/><rect x="-60.9" y="-20.0" width="5" height="40.0" rx="2.5" fill="#34D399"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Claude</tspan><tspan x="0" y="16.1">CLI Subagents</tspan></text></g><g class="pele-node pele-shape-rect pink" data-id="out" transform="translate(231.84,383)"><rect x="-109.09" y="-33" width="218.18" height="66" rx="12" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/><rect x="-99.1" y="-20.0" width="5" height="40.0" rx="2.5" fill="#F472B6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">Protocol Servers</tspan><tspan x="0" y="16.1">ACP · OpenCode · MCP</tspan></text></g></g>
+    <g class="mmd-packets">
+      <circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#mmd-edge-0"/></animateMotion></circle>
+      <circle r="3.8" fill="#818CF8"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#mmd-edge-1"/></animateMotion></circle>
+      <circle r="3.8" fill="#FBBF24"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#mmd-edge-2"/></animateMotion></circle>
+      <circle r="3.8" fill="#34D399"><animateMotion dur="2.76s" begin="-1.49s" repeatCount="indefinite"><mpath href="#mmd-edge-3"/></animateMotion></circle>
+      <circle r="3.8" fill="#F472B6"><animateMotion dur="2.10s" begin="-1.92s" repeatCount="indefinite"><mpath href="#mmd-edge-4"/></animateMotion></circle>
+      <circle r="3.8" fill="#F472B6"><animateMotion dur="2.32s" begin="-0.35s" repeatCount="indefinite"><mpath href="#mmd-edge-5"/></animateMotion></circle>
+      <circle r="3.8" fill="#F472B6"><animateMotion dur="2.54s" begin="-0.78s" repeatCount="indefinite"><mpath href="#mmd-edge-6"/></animateMotion></circle>
+    </g>
+  </g>
+
+  <rect x="149" y="524" width="300" height="30" rx="15" fill="#FFFFFF" stroke="rgba(148,163,184,0.45)" stroke-width="1.2"/>
+  <text x="299" y="543" text-anchor="middle" class="mmd-footer">mmd-viz --theme light</text>
+</svg>

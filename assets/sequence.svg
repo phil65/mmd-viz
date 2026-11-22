@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 563 430" width="563" height="430" role="img" aria-label="SEQUENCE DIAGRAM · STREAMING">
+  <defs>
+    <style>
+      .mmd-bg { fill: #070B14; }
+      .mmd-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: #38BDF8; text-transform: uppercase; }
+      .mmd-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: #94A3B8; }
+      .mmd-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: #F8FAFC; }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: #F8FAFC; }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: #F8FAFC; }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: #94A3B8; }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: #94A3B8; }
+      .pele-edge-label rect { fill: #0F172A; stroke: rgba(148,163,184,0.24); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: #F8FAFC; }
+      .mmd-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: #38BDF8; }
+      .mmd-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mmd-dash 1.8s linear infinite; }
+      .mmd-pulse { transform-box: fill-box; transform-origin: center; animation: mmd-ring 3.2s ease-in-out infinite; }
+      @keyframes mmd-dash { to { stroke-dashoffset: -40; } }
+      @keyframes mmd-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .mmd-flow, .mmd-pulse { animation: none; }
+      }
+    </style>
+    <pattern id="mmd-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="rgba(148,163,184,0.14)"/>
+    </pattern>
+    <radialGradient id="mmd-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mmd-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mmd-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="563" height="430" rx="18" class="mmd-bg"/>
+  <rect width="563" height="430" rx="18" fill="url(#mmd-dots)"/>
+  <circle cx="146" cy="155" r="158" fill="url(#mmd-glow-l)"/>
+  <circle cx="417" cy="275" r="158" fill="url(#mmd-glow-r)"/>
+
+  <text x="281.5" y="42" text-anchor="middle" class="mmd-title">SEQUENCE DIAGRAM · STREAMING</text>
+
+  <g class="mmd-stage" transform="translate(52,76)" style="--_bg:#070B14;--_fg:#F8FAFC;--_m:#94A3B8;--_l:#38BDF8;--_s:#0F172A;--_a:#1E293B;--_b:rgba(148,163,184,0.24);--_c:#38BDF8;--_r:12px">
+    <g transform="translate(76.47,8)"><g class="pele-lifelines" fill="none" stroke="var(--_b)"><path class="pele-lifeline" data-id="IDE" d="M0,44V218"/><path class="pele-lifeline" data-id="AP" d="M161.38,44V218"/><path class="pele-lifeline" data-id="LLM" d="M314.31,44V218"/></g><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge pele-message" data-id="i0"><path d="M0,87H154.38"/><path class="pele-marker" d="M161.38,87L153.38,90.36L153.38,83.64Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge pele-message" data-id="i1"><path d="M161.38,124H307.31"/><path class="pele-marker" d="M314.31,124L306.31,127.36L306.31,120.64Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge pele-message" data-id="i2"><path d="M314.31,161H168.38" stroke-dasharray="4 4"/><path class="pele-marker" d="M161.38,161L169.38,157.64L169.38,164.36Z" fill="var(--_l)" stroke="none"/></g><g class="pele-edge pele-message" data-id="i3"><path d="M161.38,198H7" stroke-dasharray="4 4"/><path class="pele-marker" d="M0,198L8,194.64L8,201.36Z" fill="var(--_l)" stroke="none"/></g></g><g class="pele-edge-labels" font-size="14"><g class="pele-edge-label" data-id="i0"><text x="80.69" y="77.4" text-anchor="middle">session/prompt</text></g><g class="pele-edge-label" data-id="i1"><text x="237.85" y="114.4" text-anchor="middle">stream request</text></g><g class="pele-edge-label" data-id="i2"><text x="237.85" y="151.4" text-anchor="middle">tool_call + deltas</text></g><g class="pele-edge-label" data-id="i3"><text x="80.69" y="188.4" text-anchor="middle">session/update</text></g></g><g class="pele-nodes"><g class="pele-node pele-actor pele-actor-participant pele-actor-footer" data-id="IDE"><rect x="-68.47" y="218" width="136.94" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="0" y="245.6" text-anchor="middle">Zed / VS Code</text></g><g class="pele-node pele-actor pele-actor-participant pele-actor-footer" data-id="AP"><rect x="108.47" y="218" width="105.82" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="161.38" y="245.6" text-anchor="middle">AgentPool</text></g><g class="pele-node pele-actor pele-actor-participant pele-actor-footer" data-id="LLM"><rect x="254.3" y="218" width="120.03" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="314.31" y="245.6" text-anchor="middle">Model / Tool</text></g><g class="pele-node pele-actor pele-actor-participant" data-id="IDE"><rect x="-68.47" y="0" width="136.94" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="0" y="27.6" text-anchor="middle">Zed / VS Code</text></g><g class="pele-node pele-actor pele-actor-participant" data-id="AP"><rect x="108.47" y="0" width="105.82" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="161.38" y="27.6" text-anchor="middle">AgentPool</text></g><g class="pele-node pele-actor pele-actor-participant" data-id="LLM"><rect x="254.3" y="0" width="120.03" height="44" fill="var(--_s)" stroke="var(--_b)" style="rx:var(--_r)"/><text class="pele-label" x="314.31" y="27.6" text-anchor="middle">Model / Tool</text></g></g></g>
+  </g>
+
+  <rect x="132" y="378" width="300" height="30" rx="15" fill="#0F172A" stroke="rgba(148,163,184,0.24)" stroke-width="1.2"/>
+  <text x="281.5" y="397" text-anchor="middle" class="mmd-footer">sequenceDiagram via Pele</text>
+</svg>

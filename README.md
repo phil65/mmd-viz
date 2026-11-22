@@ -4,7 +4,21 @@ Turn standard Mermaid diagrams into sleek, **zero-JS animated SVGs**—ready for
 
 Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM Mermaid layout engine).
 
-![mmd-viz architecture](./assets/architecture.svg)
+![mmd-viz architecture](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/architecture.svg)
+
+### More Examples
+
+**Subgraphs, decision diamonds, edge labels & feedback loops:**
+
+![Agentic loop with subgraphs and edge labels](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/complex-loop.svg)
+
+**Light theme (top-down flowchart):**
+
+![Light theme top-down architecture](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/light-td.svg)
+
+**Sequence diagrams (and other Pele diagram types):**
+
+![Sequence diagram](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/sequence.svg)
 
 ## Features
 
