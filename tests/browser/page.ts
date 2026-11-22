@@ -30,6 +30,16 @@ for (const [name, source] of Object.entries(SOURCES)) {
     api[box.id] = interactive(box.querySelector("svg")!, { type });
   }
 }
+// Set up while hidden (a host showing the drawing a moment later): measured once visible
+{
+  const box = document.createElement("div");
+  box.id = "hidden-flow";
+  box.hidden = true;
+  box.innerHTML = renderAnimatedSvg(SOURCES.flowchart!, { animate: false, idPrefix: "hid" });
+  document.body.append(box);
+  api["hidden-flow"] = interactive(box.querySelector("svg")!, { type: "flowchart" });
+  box.hidden = false;
+}
 (window as unknown as { api: unknown; foldFlow: unknown }).api = api;
 // Folding a subgraph: the redrawn chart has one node for it
 (window as unknown as { foldFlow: () => string[] }).foldFlow = () => {

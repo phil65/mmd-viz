@@ -23,7 +23,7 @@ const results = await page.evaluate(() => {
   for (const [id, controls] of Object.entries(window.api)) {
     const name = id.split("-")[0];
     const row = { steps: controls.steps };
-    if (name === "flowchart") {
+    if (name === "flowchart" || name === "hidden") {
       controls.focusOn("hub");
       row.hubOn = count(id, ".mmdi-on");
       row.dOn = document.querySelector(`#${id} g.pele-node[data-id="d"]`).classList.contains("mmdi-on");
@@ -67,6 +67,8 @@ for (const mode of ["framed", "embed"]) {
     expect(results[`${name}-${mode}`].clean, `${mode} ${name} reset leaves classes`);
   }
 }
+const hidden = results["hidden-flow"];
+expect(hidden.hubOn === 7 && !hidden.dOn, `set up while hidden, hovered once shown: ${JSON.stringify(hidden)}`);
 expect(results.folded.includes("backend") && !results.folded.includes("db"), `subgraph fold: ${results.folded}`);
 expect(errors.length === 0, `page errors: ${errors.join("; ")}`);
 await browser.close();

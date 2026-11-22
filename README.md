@@ -197,6 +197,8 @@ controls.reset();
   `prev()`, `setStep(n)`, `reset()`; past steps stay dimmed, the current one is bright, and where
   a step leads somewhere (a state, the agent work is handed to) that node lights up too. Packets
   hide while stepping.
+- The drawing is measured when first needed (a hover, a focus, a step), so it may be set up while
+  still hidden; after changing the layout yourself, call `refresh()`.
 - Nothing is drawn again: it sets classes and adds a small stylesheet; `destroy()` removes both.
   The [playground](https://phil65.github.io/mmd-viz/) uses it (arrow keys step).
 

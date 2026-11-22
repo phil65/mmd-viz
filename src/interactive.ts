@@ -42,6 +42,11 @@ export interface Interactive extends InteractiveState {
   reset(): void;
   /** Highlight a node (or sankey node or ribbon, git branch) by id; `null` drops it. */
   focusOn(id: string | null): void;
+  /**
+   * Measure the drawing again, e.g. after the host changed its layout (it's
+   * measured when first needed, and again while it had no geometry).
+   */
+  refresh(): void;
   /** Remove the listeners, classes and stylesheet. */
   destroy(): void;
 }
@@ -200,38 +205,60 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
   for (const el of svg.querySelectorAll<SVGGraphicsElement>("g.pele-node[data-id]")) {
     nodes.set(el.dataset.id ?? "", el);
   }
-  const boxes = new Map<string, Box>();
-  for (const [id, el] of nodes) {
-    const box = boxIn(svg, el);
-    if (box) boxes.set(id, box);
-  }
   const edges = [...svg.querySelectorAll<SVGGElement>("g.pele-edge")];
   const edgePaths = edges.map((edge) => edge.querySelector<SVGPathElement>("path:not(.pele-marker)"));
-  const edgeEnds = edgePaths.map((path) => {
-    const ends = path ? endsOf(svg, path) : null;
-    return ends
-      ? ([nearestBox(ends[0], boxes), nearestBox(ends[1], boxes)] as const)
-      : ([null, null] as const);
-  });
-  // Each label belongs to the edge whose middle is nearest (not every edge has one)
-  const labels = new Map<number, SVGGElement>();
-  const middles = edgePaths.map((path) => (path ? middleOf(svg, path) : null));
-  for (const label of svg.querySelectorAll<SVGGElement>("g.pele-edge-label")) {
-    const box = boxIn(svg, label);
-    if (!box) continue;
-    let best = -1;
-    let bestDistance = Number.POSITIVE_INFINITY;
-    middles.forEach((middle, index) => {
-      if (!middle || labels.has(index)) return;
-      const distance = distanceToBox(middle, box);
-      if (distance < bestDistance) {
-        best = index;
-        bestDistance = distance;
-      }
+
+  /**
+   * Which nodes each edge connects and which label is whose, measured when
+   * first needed (a hover, a focus, a step): a drawing still hidden or not
+   * yet laid out has no geometry. Measured again while it had none.
+   */
+  let measured: {
+    edgeEnds: (readonly [string | null, string | null])[];
+    labels: Map<number, SVGGElement>;
+  } | null = null;
+  const measure = () => {
+    const boxes = new Map<string, Box>();
+    for (const [id, el] of nodes) {
+      const box = boxIn(svg, el);
+      if (box && (box.width > 0 || box.height > 0)) boxes.set(id, box);
+    }
+    const edgeEnds = edgePaths.map((path) => {
+      const ends = path ? endsOf(svg, path) : null;
+      return ends
+        ? ([nearestBox(ends[0], boxes), nearestBox(ends[1], boxes)] as const)
+        : ([null, null] as const);
     });
-    if (best >= 0) labels.set(best, label);
-  }
-  const labelOf = (index: number) => labels.get(index);
+    // Each label belongs to the edge whose middle is nearest (not every edge has one)
+    const labels = new Map<number, SVGGElement>();
+    const middles = edgePaths.map((path) => (path ? middleOf(svg, path) : null));
+    for (const label of svg.querySelectorAll<SVGGElement>("g.pele-edge-label")) {
+      const box = boxIn(svg, label);
+      if (!box) continue;
+      let best = -1;
+      let bestDistance = Number.POSITIVE_INFINITY;
+      middles.forEach((middle, index) => {
+        if (!middle || labels.has(index)) return;
+        const distance = distanceToBox(middle, box);
+        if (distance < bestDistance) {
+          best = index;
+          bestDistance = distance;
+        }
+      });
+      if (best >= 0) labels.set(best, label);
+    }
+    // Nothing measurable yet (hidden): try again next time
+    return { edgeEnds, labels, empty: nodes.size > 0 && boxes.size === 0 };
+  };
+  const geometry = () => {
+    if (!measured) {
+      const result = measure();
+      if (result.empty) return result;
+      measured = result;
+    }
+    return measured;
+  };
+  const labelOf = (index: number) => geometry().labels.get(index);
 
   const state: InteractiveState = {
     steps: STEPPED.has(type) ? edges.length : 0,
@@ -276,7 +303,7 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
       }
     } else {
       mark([nodes.get(id)]);
-      edgeEnds.forEach(([from, to], index) => {
+      geometry().edgeEnds.forEach(([from, to], index) => {
         if (from !== id && to !== id) return;
         mark([edges[index], labelOf(index), nodes.get(from ?? ""), nodes.get(to ?? "")]);
       });
@@ -296,7 +323,7 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
       });
       // A state diagram is in the state the current transition leads to (agentflow: the
       // agent the work was handed to, event model: the box the step reaches)
-      if (REACHES.has(type)) mark([nodes.get(edgeEnds[state.step]?.[1] ?? "")], NOW);
+      if (REACHES.has(type)) mark([nodes.get(geometry().edgeEnds[state.step]?.[1] ?? "")], NOW);
     }
     changed();
   };
@@ -341,6 +368,9 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
       focusOn(null);
     },
     focusOn,
+    refresh: () => {
+      measured = null;
+    },
     destroy: () => {
       svg.removeEventListener("pointerover", onOver);
       svg.removeEventListener("pointerleave", onLeave);
