@@ -322,8 +322,11 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
       const flowLayer = animate
         ? `<path d="${d}" stroke="${color}" stroke-width="2.2" fill="none" class="${pfx}-flow"/>`
         : "";
+      // The branch's series stays readable where the line is recolored (mmd-viz/interactive)
+      const series = /--pele-series-\d+/.exec(strokeVal)?.[0];
+      const seriesAttr = series ? ` data-series="${series}"` : "";
       const edge = framed
-        ? `<path id="${pathId}" class="${cls}" d="${d}" stroke="${color}" stroke-opacity="0.45" stroke-width="2.2" fill="none"/>`
+        ? `<path id="${pathId}" class="${cls}" d="${d}" stroke="${color}" stroke-opacity="0.45" stroke-width="2.2" fill="none"${seriesAttr}/>`
         : `<path id="${pathId}" class="${cls}" d="${d}" stroke="${strokeVal}"/>`;
       return `${edge}${flowLayer}`;
     });

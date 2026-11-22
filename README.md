@@ -161,6 +161,30 @@ The drawing stays as pele made it, colors follow the page's `--pele-*` variables
 pele's accent `--_c` and `--pele-series-N`), and `mmd-viz/animate` imports nothing from pele, so
 diagram types still load on demand.
 
+### Interaction in a page (opt-in)
+
+The SVGs stay zero-JS; in a page, `mmd-viz/interactive` adds interaction to any of them (framed,
+animated with `animateSvg`, or plain pele output):
+
+```ts
+import { interactive } from "mmd-viz/interactive";
+
+const controls = interactive(container.querySelector("svg")!, {
+  onChange: ({ step, steps, focus }) => render(step, steps),
+});
+controls.next(); // sequence and state diagrams: step through messages / transitions
+controls.reset();
+```
+
+- **Hover** a node: it, its edges and its neighbors stay, the rest fades (flowchart, C4,
+  architecture, state, class, ER, …). **Sankey**: a node shows every flow through it, a ribbon its
+  two ends. **gitGraph**: a branch, commit or line shows that branch.
+- **Stepping** (`steps > 0` for sequence and state diagrams): `next()`, `prev()`, `setStep(n)`,
+  `reset()`; past steps stay dimmed, the current one is bright, a state diagram shows the state
+  it's in. Packets hide while stepping.
+- Nothing is drawn again: it sets classes and adds a small stylesheet; `destroy()` removes both.
+  The [playground](https://phil65.github.io/mmd-viz/) uses it (arrow keys step).
+
 ### Mind maps
 
 ```ts

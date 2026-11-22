@@ -93,6 +93,9 @@
         border-bottom: 1px solid var(--border);
         background: rgba(15, 23, 42, 0.6);
       }
+      #stepper { display: inline-flex; gap: 6px; align-items: center; }
+      #stepper[hidden] { display: none; }
+      #stepper button { padding: 2px 8px; }
       textarea {
         flex: 1;
         width: 100%;
@@ -185,7 +188,13 @@
         <div class="preview-stage" id="preview"></div>
         <div class="status-bar">
           <span id="stats">Ready</span>
-          <span>Zero-JS SVG · GitHub &amp; Docs Ready</span>
+          <span id="stepper" hidden>
+            <button id="prevStep" title="Previous step (←)">◀</button>
+            <span id="stepLabel"></span>
+            <button id="nextStep" title="Next step (→)">▶</button>
+            <button id="resetStep" title="Show all (Esc)">All</button>
+          </span>
+          <span>Zero-JS SVG · hover to highlight (mmd-viz/interactive)</span>
         </div>
       </section>
     </main>
