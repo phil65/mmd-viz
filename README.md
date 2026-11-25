@@ -34,6 +34,10 @@ Powered by [`pele`](https://github.com/obsidianmd/pele) (synchronous, zero-DOM M
 
 ![Tokyo Night theme](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/tokyo-night.svg)
 
+**Panels (`class <subgraph or block> emerald`: a container in its color, members as chips):**
+
+![Panels](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/panels.svg)
+
 **Architecture (`architecture-beta`):**
 
 ![Architecture beta](https://raw.githubusercontent.com/phil65/mmd-viz/main/assets/arch-beta.svg)
@@ -287,7 +291,8 @@ Everything is standard Mermaid syntax:
 
 | Convention | Effect |
 | :--- | :--- |
-| `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet` | Adds a colored card accent bar and color-matches connected wires, arrowheads, and animated packets. |
+| `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet`, `:::blue`, `:::orange`, `:::teal` | Adds a colored card accent bar and color-matches connected wires, arrowheads, and animated packets. |
+| `class backend emerald` on a flowchart `subgraph` or a `block-beta` block | The container becomes a panel in that color (header top left, tinted frame), its nodes chips with a dot, and wires leaving or entering it take the color. A nested container without a color of its own takes its parent's. Also `blue`, `orange`, `teal`. |
 | `:::hub` | Highlights a focal node with a gradient fill, monospace subtitle, and pulsing outer ring. |
 | `"Title<br/>Subtitle"` | Renders line 1 as bold title and line 2 as muted subtitle. |
 

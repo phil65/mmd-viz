@@ -30,6 +30,10 @@
     "theme": "tokyo-night",
     "speed": 1.2
   },
+  "panels": {
+    "title": "Panels · accented containers",
+    "footer": "class <block> emerald: a panel, its blocks chips"
+  },
   "arch-beta": {
     "title": "architecture-beta · service traffic",
     "footer": "architecture-beta via pele"

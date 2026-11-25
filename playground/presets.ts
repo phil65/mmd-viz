@@ -287,6 +287,38 @@ export const PRESETS: Preset[] = [
   b --> c`,
   },
   {
+    name: "Panels (block-beta, accented blocks)",
+    title: "PANELS · ACCENTED CONTAINERS",
+    footer: "class <block> emerald: a panel, its blocks chips",
+    source: `block-beta
+  columns 3
+  block:clients["Clients"]
+    columns 1
+    zed["Zed"] toad["Toad"]
+  end
+  hub["agentpool<br/>agents in one YAML"]
+  block:backends["Agent backends"]
+    columns 1
+    claude["Claude Code"] codex["Codex"]
+  end
+  block:tools["Tools"]:2
+    columns 3
+    exec["exxec"] search["searchly"] docs["docler"]
+  end
+  block:base["Foundation"]
+    columns 1
+    fs["upathtools"]
+  end
+  clients --> hub
+  hub --> backends
+  tools --> base
+  class hub hub
+  class clients cyan
+  class backends violet
+  class tools blue
+  class base emerald`,
+  },
+  {
     name: "Packet (packet-beta)",
     title: "PACKET · FIELDS IN BIT ORDER",
     footer: "",

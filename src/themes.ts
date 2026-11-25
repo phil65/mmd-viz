@@ -54,6 +54,9 @@ export const ACCENT_PALETTE: Readonly<Record<string, string>> = {
   pink: "#F472B6",
   rose: "#FB7185",
   violet: "#A78BFA",
+  blue: "#60A5FA",
+  orange: "#FB923C",
+  teal: "#2DD4BF",
   hub: "#38BDF8",
 };
 

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="panels-root" viewBox="0 0 685 440" width="685" height="440" role="img" aria-label="Panels · accented containers">
+  <defs>
+    <style>
+      .panels-root {
+        --mv-bg: #070B14;
+        --mv-card: #0F172A;
+        --mv-border: rgba(148,163,184,0.24);
+        --mv-fg: #F8FAFC;
+        --mv-muted: #94A3B8;
+        --mv-title: #38BDF8;
+        --mv-dot: rgba(148,163,184,0.14);
+        --mv-hub-start: #1E293B;
+        --mv-hub-end: #0F172A;
+        --pele-series-1: #38BDF8;
+        --pele-series-2: #818CF8;
+        --pele-series-3: #FBBF24;
+        --pele-series-4: #34D399;
+        --pele-series-5: #F472B6;
+        --pele-series-6: #FB7185;
+        --pele-series-7: #A78BFA;
+        --pele-series-8: #2DD4BF;
+      }
+      .panels-bg { fill: var(--mv-bg); }
+      .panels-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
+      .panels-dot { fill: var(--mv-dot); }
+      .panels-title { font: 700 13px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 2px; fill: var(--mv-title); text-transform: uppercase; }
+      .panels-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
+      .panels-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
+      .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
+      .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-label tspan:nth-child(n+2) { font-size: 11.5px; font-weight: 400; fill: var(--mv-muted); }
+      .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
+      .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
+      .pele-edge-label text { font-size: 12px; font-weight: 600; fill: var(--mv-fg); }
+      .pele-branch .pele-label { font-size: 12px; font-weight: 700; fill: #070B14; }
+      .pele-task .pele-label { font-size: 12px; font-weight: 700; fill: var(--mv-fg); }
+      .pele-task .pele-label[fill] { fill: #070B14; }
+      .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
+      .panels-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
+      .panels-hub-node .pele-label tspan:nth-child(n+2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .panels-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: panels-dash 1.80s linear infinite; }
+      .panels-pulse { transform-box: fill-box; transform-origin: center; animation: panels-ring 3.20s ease-in-out infinite; }
+      @keyframes panels-dash { to { stroke-dashoffset: -40; } }
+      @keyframes panels-ring {
+        0%, 100% { opacity: 0.25; transform: scale(0.97); }
+        50% { opacity: 0.65; transform: scale(1.03); }
+      }
+      .panels-flash { opacity: 0.15; animation: panels-flash 4s linear infinite; }
+      @keyframes panels-flash { 0% { opacity: 0.15; } 6% { opacity: 0.95; } 22%, 100% { opacity: 0.15; } }
+      .panels-working > rect { animation: panels-working 3.20s ease-in-out infinite; }
+      @keyframes panels-working { 50% { fill-opacity: 0.55; } }
+      @media (prefers-reduced-motion: reduce) {
+        .panels-flow, .panels-pulse, .panels-flash, .panels-working > rect { animation: none; }
+        /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
+        .panels-packets, .panels-smil { display: none; }
+      }
+      .panels-panel-frame { fill: var(--mv-card); fill-opacity: 0.72; stroke: var(--panels-accent); stroke-opacity: 0.38; stroke-width: 1.2; }
+      .pele-cluster-label.panels-panel-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+      .pele-label.mv-chip-label { font-size: 13px; font-weight: 500; fill: var(--mv-fg); }
+      .panels-period-card { fill: var(--mv-card); stroke-opacity: 0.4; stroke-width: 1.2; }
+      .pele-event text { font-size: 13px; fill: var(--mv-fg); }
+      .pele-section .pele-period > rect { fill: var(--mv-card); stroke-width: 1.4; }
+      .pele-section .pele-period > text { font-weight: 600; fill: var(--mv-fg); }
+    </style>
+    <pattern id="panels-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" class="panels-dot"/>
+    </pattern>
+    <radialGradient id="panels-glow-l" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#38BDF8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="panels-glow-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#818CF8" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panels-hub-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--mv-hub-start)"/>
+      <stop offset="100%" stop-color="var(--mv-hub-end)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="685" height="440" rx="18" class="panels-bg"/>
+  <rect width="685" height="440" rx="18" fill="url(#panels-dots)"/>
+  <circle cx="178" cy="158" r="192" fill="url(#panels-glow-l)"/>
+  <circle cx="507" cy="282" r="192" fill="url(#panels-glow-r)"/>
+  <text x="342.5" y="42" text-anchor="middle" class="panels-title">Panels · accented containers</text>
+
+  <g class="panels-stage" transform="translate(52,76)" style="--_bg:var(--mv-bg);--_fg:var(--mv-fg);--_m:var(--mv-muted);--_l:#38BDF8;--_s:var(--mv-card);--_a:var(--mv-hub-start);--_b:var(--mv-border);--_c:#38BDF8;--_r:12px;--_w:700;--_hw:700;--_tw:700">
+    <g class="pele-clusters"><g class="pele-cluster cyan panels-panel" data-id="clients" style="--panels-accent:#38BDF8"><rect x="8" y="8" width="180.08" height="160" rx="12" class="panels-panel-frame"/><rect x="22" y="7" width="24" height="3" rx="1.5" fill="#38BDF8"/><text class="pele-cluster-label panels-panel-label" x="22" y="32" text-anchor="start" style="fill:color-mix(in srgb,#38BDF8 75%,var(--mv-fg))">Clients</text></g><g class="pele-cluster violet panels-panel" data-id="backends" style="--panels-accent:#A78BFA"><rect x="392.16" y="8" width="180.08" height="160" rx="12" class="panels-panel-frame"/><rect x="406.16" y="7" width="24" height="3" rx="1.5" fill="#A78BFA"/><text class="pele-cluster-label panels-panel-label" x="406.16" y="32" text-anchor="start" style="fill:color-mix(in srgb,#A78BFA 75%,var(--mv-fg))">Agent backends</text></g><g class="pele-cluster blue panels-panel" data-id="tools" style="--panels-accent:#60A5FA"><rect x="8" y="180" width="372.16" height="100" rx="12" class="panels-panel-frame"/><rect x="22" y="179" width="24" height="3" rx="1.5" fill="#60A5FA"/><text class="pele-cluster-label panels-panel-label" x="22" y="204" text-anchor="start" style="fill:color-mix(in srgb,#60A5FA 75%,var(--mv-fg))">Tools</text></g><g class="pele-cluster emerald panels-panel" data-id="base" style="--panels-accent:#34D399"><rect x="392.16" y="180" width="180.08" height="100" rx="12" class="panels-panel-frame"/><rect x="406.16" y="179" width="24" height="3" rx="1.5" fill="#34D399"/><text class="pele-cluster-label panels-panel-label" x="406.16" y="204" text-anchor="start" style="fill:color-mix(in srgb,#34D399 75%,var(--mv-fg))">Foundation</text></g></g><g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round"><g class="pele-edge" data-id="1-clients-hub"><path id="panels-edge-0" d="M188.08,88L193.08,88" stroke="#38BDF8" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M188.08,88L193.08,88" stroke="#38BDF8" stroke-width="2.2" fill="none" class="panels-flow"/><path class="pele-marker" d="M200.08,88L192.08,91.36L192.08,84.64Z" fill="#38BDF8" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="1-hub-backends"><path id="panels-edge-1" d="M380.16,88L385.16,88" stroke="#A78BFA" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M380.16,88L385.16,88" stroke="#A78BFA" stroke-width="2.2" fill="none" class="panels-flow"/><path class="pele-marker" d="M392.16,88L384.16,91.36L384.16,84.64Z" fill="#A78BFA" fill-opacity="0.88" stroke="none"/></g><g class="pele-edge" data-id="1-tools-base"><path id="panels-edge-2" d="M380.16,230L385.16,230" stroke="#60A5FA" stroke-width="2" stroke-opacity="0.32" fill="none"/><path d="M380.16,230L385.16,230" stroke="#60A5FA" stroke-width="2.2" fill="none" class="panels-flow"/><path class="pele-marker" d="M392.16,230L384.16,233.36L384.16,226.64Z" fill="#60A5FA" fill-opacity="0.88" stroke="none"/></g></g><g class="panels-packets"><circle r="3.8" fill="#38BDF8"><animateMotion dur="2.10s" begin="-0.20s" repeatCount="indefinite"><mpath href="#panels-edge-0"/></animateMotion></circle><circle r="3.8" fill="#A78BFA"><animateMotion dur="2.32s" begin="-0.63s" repeatCount="indefinite"><mpath href="#panels-edge-1"/></animateMotion></circle><circle r="3.8" fill="#60A5FA"><animateMotion dur="2.54s" begin="-1.06s" repeatCount="indefinite"><mpath href="#panels-edge-2"/></animateMotion></circle></g><g class="pele-nodes"><g class="pele-node pele-shape-rect hub panels-hub-node" data-id="hub" transform="translate(290.12,88)"><rect x="-97.0" y="-87.0" width="194.1" height="174.0" rx="24" fill="none" stroke="#38BDF8" stroke-opacity="0.35" stroke-width="1.5" class="panels-pulse"/><rect x="-90.04" y="-80" width="180.08" height="160" rx="18" fill="url(#panels-hub-bg)" stroke="#38BDF8" stroke-opacity="0.65" stroke-width="1.6"/><text class="pele-label" text-anchor="middle" xml:space="preserve"><tspan x="0" y="-4.9">agentpool</tspan><tspan x="0" y="16.1">agents in one YAML</tspan></text></g><g class="pele-node pele-shape-rect" data-id="zed" transform="translate(98.04,72)"><rect x="-78.04" y="-16" width="156.08" height="32" rx="8" fill="#38BDF8" fill-opacity="0.1" stroke="#38BDF8" stroke-opacity="0.42" stroke-width="1"/><circle cx="-64.04" cy="0" r="3.5" fill="#38BDF8"/><text class="pele-label mv-chip-label" x="-52.04" y="4.5" text-anchor="start">Zed</text></g><g class="pele-node pele-shape-rect" data-id="toad" transform="translate(98.04,132)"><rect x="-78.04" y="-16" width="156.08" height="32" rx="8" fill="#38BDF8" fill-opacity="0.1" stroke="#38BDF8" stroke-opacity="0.42" stroke-width="1"/><circle cx="-64.04" cy="0" r="3.5" fill="#38BDF8"/><text class="pele-label mv-chip-label" x="-52.04" y="4.5" text-anchor="start">Toad</text></g><g class="pele-node pele-shape-rect" data-id="claude" transform="translate(482.2,72)"><rect x="-78.04" y="-16" width="156.08" height="32" rx="8" fill="#A78BFA" fill-opacity="0.1" stroke="#A78BFA" stroke-opacity="0.42" stroke-width="1"/><circle cx="-64.04" cy="0" r="3.5" fill="#A78BFA"/><text class="pele-label mv-chip-label" x="-52.04" y="4.5" text-anchor="start">Claude Code</text></g><g class="pele-node pele-shape-rect" data-id="codex" transform="translate(482.2,132)"><rect x="-78.04" y="-16" width="156.08" height="32" rx="8" fill="#A78BFA" fill-opacity="0.1" stroke="#A78BFA" stroke-opacity="0.42" stroke-width="1"/><circle cx="-64.04" cy="0" r="3.5" fill="#A78BFA"/><text class="pele-label mv-chip-label" x="-52.04" y="4.5" text-anchor="start">Codex</text></g><g class="pele-node pele-shape-rect" data-id="exec" transform="translate(74.03,244)"><rect x="-54.03" y="-16" width="108.05" height="32" rx="8" fill="#60A5FA" fill-opacity="0.1" stroke="#60A5FA" stroke-opacity="0.42" stroke-width="1"/><circle cx="-40.03" cy="0" r="3.5" fill="#60A5FA"/><text class="pele-label mv-chip-label" x="-28.03" y="4.5" text-anchor="start">exxec</text></g><g class="pele-node pele-shape-rect" data-id="search" transform="translate(194.08,244)"><rect x="-54.03" y="-16" width="108.05" height="32" rx="8" fill="#60A5FA" fill-opacity="0.1" stroke="#60A5FA" stroke-opacity="0.42" stroke-width="1"/><circle cx="-40.03" cy="0" r="3.5" fill="#60A5FA"/><text class="pele-label mv-chip-label" x="-28.03" y="4.5" text-anchor="start">searchly</text></g><g class="pele-node pele-shape-rect" data-id="docs" transform="translate(314.13,244)"><rect x="-54.03" y="-16" width="108.05" height="32" rx="8" fill="#60A5FA" fill-opacity="0.1" stroke="#60A5FA" stroke-opacity="0.42" stroke-width="1"/><circle cx="-40.03" cy="0" r="3.5" fill="#60A5FA"/><text class="pele-label mv-chip-label" x="-28.03" y="4.5" text-anchor="start">docler</text></g><g class="pele-node pele-shape-rect" data-id="fs" transform="translate(482.2,244)"><rect x="-78.04" y="-16" width="156.08" height="32" rx="8" fill="#34D399" fill-opacity="0.1" stroke="#34D399" stroke-opacity="0.42" stroke-width="1"/><circle cx="-64.04" cy="0" r="3.5" fill="#34D399"/><text class="pele-label mv-chip-label" x="-52.04" y="4.5" text-anchor="start">upathtools</text></g></g>
+  </g>
+
+  <rect x="131" y="388" width="422" height="30" rx="15" class="panels-card"/>
+  <text x="342.5" y="407" text-anchor="middle" class="panels-footer">class &lt;block&gt; emerald: a panel, its blocks chips</text>
+</svg>

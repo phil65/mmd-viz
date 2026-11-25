@@ -7,6 +7,7 @@ import {
   type EffectContext,
   entranceCss,
 } from "./effects.js";
+import { accentPanels, chipBody, panelCss, timelineCards } from "./panels.js";
 import { ACCENT_PALETTE } from "./themes.js";
 
 /**
@@ -48,6 +49,8 @@ const STRUCTURE_TYPES = new Set<string>(["class", "er", "requirement", "wardley"
 const COMPARTMENT_TYPES = new Set<string>(["class", "er", "requirement"]);
 /** Compact nodes whose label the accent bar would touch. */
 const BARLESS_TYPES = new Set<string>(["state"]);
+/** Types whose containers (subgraphs, nested blocks) can be accented panels. */
+const PANEL_TYPES = new Set<string>(["flowchart", "block"]);
 /** Particles on the widest sankey ribbon; narrower ones get proportionally fewer. */
 const MAX_SANKEY_PARTICLES = 6;
 /** Seconds per relay step, and how far into the first step the loop starts. */
@@ -87,9 +90,22 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
   // Relations, not traffic: drawn once, no packets
   const isStructure = STRUCTURE_TYPES.has(diagramType);
 
+  // 0. Framed: accented containers become panels, their nodes chips in their color
+  const isBlock = diagramType === "block";
+  const panels = framed && PANEL_TYPES.has(diagramType) ? accentPanels(inner, pfx) : null;
+  const hasPanels = panels !== null && panels.clusterColor.size > 0;
+  if (panels) inner = panels.inner;
+  const edgeIds = hasPanels
+    ? [...inner.matchAll(/<g class="pele-edge[^"]*" data-id="([^"]+)"/g)].map((m) => edgeEnds(m[1] ?? "", isBlock))
+    : [];
+  const attached = (id: string) =>
+    edgeIds.some((e) => endsAt(e, id));
+
   // 1. Framed: flowchart-style nodes become cards with an accent bar (`:::cyan` …), hubs glow
   const nodeColor = new Map<string, string>();
   const nodeIsHub = new Set<string>();
+  /** Nodes with a color of their own: a class, or a panel around them. */
+  const nodeColored = new Set<string>();
   const nodeRegex =
     /<g class="pele-node([^"]*)" data-id="([^"]+)" transform="translate\(([^,]+),([^)]+)\)">([\s\S]*?)<\/g>/g;
 
@@ -101,17 +117,24 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
       (_full, classes: string, nodeId: string, tx: string, ty: string, body: string) => {
         const classList = classes.trim().split(/\s+/).filter(Boolean);
         const matchedClass = classList.find((c) => c in ACCENT_PALETTE);
-        const color = matchedClass ? (ACCENT_PALETTE[matchedClass] ?? DEFAULT_ACCENT) : DEFAULT_ACCENT;
         const isHub = classList.includes("hub");
+        const panelColor = isHub ? undefined : panels?.colorAt(Number.parseFloat(tx), Number.parseFloat(ty));
+        const color = matchedClass
+          ? (ACCENT_PALETTE[matchedClass] ?? DEFAULT_ACCENT)
+          : (panelColor ?? DEFAULT_ACCENT);
         nodeColor.set(nodeId, color);
+        if (matchedClass || panelColor) nodeColored.add(nodeId);
         if (isHub) nodeIsHub.add(nodeId);
 
         const rectMatch = body.match(
           /<rect\s+x="([^"]+)"\s+y="([^"]+)"\s+width="([^"]+)"\s+height="([^"]+)"([^>]*)\/>/
         );
         let upgradedBody = body;
+        const chip = panelColor ? chipBody(body, color, !attached(nodeId)) : null;
 
-        if (rectMatch && rectMatch[1] && rectMatch[2] && rectMatch[3] && rectMatch[4]) {
+        if (chip) {
+          upgradedBody = chip;
+        } else if (rectMatch && rectMatch[1] && rectMatch[2] && rectMatch[3] && rectMatch[4]) {
           const rx = Number.parseFloat(rectMatch[1]);
           const ry = Number.parseFloat(rectMatch[2]);
           const rw = Number.parseFloat(rectMatch[3]);
@@ -275,6 +298,10 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
       }
     }
   } else if (isTimeline) {
+    if (framed) {
+      // Periods as cards; labels on the colored pills stay dark, the pills are light in every theme
+      inner = timelineCards(inner, pfx).replaceAll('fill="var(--_bg)"', 'fill="#070B14"');
+    }
     // A pulse travels the axis, milestone dots pulse in turn
     const axisMatch = inner.match(/<path class="pele-axis" d="([^"]+)"([^>]*)\/>/);
     if (axisMatch?.[1]) {
@@ -299,8 +326,9 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
       let dotIdx = 0;
       inner = inner.replace(
         /<circle class="pele-dot" cx="([^"]+)" cy="([^"]+)" r="([^"]+)"([^>]*)\/>/g,
-        (full, cx: string, cy: string, r: string) => {
-          const color = accent(dotIdx);
+        (full, cx: string, cy: string, r: string, attrs: string) => {
+          // The halo in the dot's own (section) color
+          const color = /fill="([^"]+)"/.exec(attrs)?.[1] ?? accent(dotIdx);
           const haloR = (Number.parseFloat(r) + 4.5).toFixed(1);
           const delay = ((dotIdx++ * 0.45) / speed).toFixed(2);
           return `${full}<circle cx="${cx}" cy="${cy}" r="${haloR}" fill="none" stroke="${color}" stroke-width="1.4" class="${pfx}-pulse" style="animation-delay:-${delay}s"/>`;
@@ -353,7 +381,11 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
       /<g class="(pele-edge[^"]*)" data-id="([^"]+)">\s*<path d="([^"]+)"([^>]*)\/>([\s\S]*?)<\/g>/g;
 
     const totalEdges = [...inner.matchAll(edgeRegex)].length;
-    const sortedNodes = [...nodeColor.entries()].sort((a, b) => b[0].length - a[0].length);
+    const sortedNodes = [...nodeColor.entries(), ...(panels?.clusterColor ?? [])].sort(
+      (a, b) => b[0].length - a[0].length
+    );
+    const colorIds = new Set(sortedNodes.map(([nid]) => nid));
+    const colored = new Set([...nodeColored, ...(panels?.clusterColor.keys() ?? [])]);
     let edgeIndex = 0;
 
     inner = inner.replace(
@@ -366,16 +398,16 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
         if (isRelay || isArchitecture || isC4) {
           color = accent(idx);
         } else {
-          const stripped = edgeId.replace(/^L_/, "").replace(/_\d+$/, "");
-          let matched = false;
-          for (const [nid, ncolor] of sortedNodes) {
-            if (nodeIsHub.has(nid)) continue;
-            if (stripped.startsWith(`${nid}_`) || stripped.endsWith(`_${nid}`)) {
-              color = ncolor;
-              matched = true;
-              break;
-            }
-          }
+          const ends = edgeEnds(edgeId, isBlock);
+          // Longest id first; where both ends are known, one with a color of its own
+          // (a class, a panel) wins over one in the default color
+          const both = exactEnds(ends, colorIds);
+          const candidates = sortedNodes.filter(
+            ([nid]) => !nodeIsHub.has(nid) && (both ? both.includes(nid) : endsAt(ends, nid))
+          );
+          const end = (both && candidates.find(([nid]) => colored.has(nid))) || candidates[0];
+          const matched = end !== undefined;
+          if (end) color = end[1];
           if (!matched && (isAgentflow || isSwimlane)) color = accent(idx);
         }
 
@@ -454,7 +486,10 @@ export function applyMotion(source: string, options: MotionOptions): Motion {
     inner = before ? inner.replace(before, `${group}${before}`) : `${inner}${group}`;
   }
 
-  return { inner, css: animate ? motionCss(pfx, speed, { entrances, beat, mindmap: isMindmap }) : "", defs };
+  const css =
+    (animate ? motionCss(pfx, speed, { entrances, beat, mindmap: isMindmap }) : "") +
+    (hasPanels || (framed && isTimeline) ? panelCss(pfx) : "");
+  return { inner, css, defs };
 }
 
 function motionCss(
@@ -490,6 +525,30 @@ function motionCss(
         /* SMIL ignores the media query: what moves by it (packets, playhead, markers) goes */
         .${pfx}-packets, .${pfx}-smil { display: none; }
       }${grow}${entrances ? entranceCss(pfx, speed) : ""}${beat ? beatCss(pfx, speed) : ""}`;
+}
+
+/**
+ * The two ends of an edge id, joined by `sep`: flowcharts `L_a_b_0`, blocks `1-a-b`.
+ */
+function edgeEnds(edgeId: string, block: boolean): { ends: string; sep: string } {
+  return block
+    ? { ends: edgeId.replace(/^\d+-/, ""), sep: "-" }
+    : { ends: edgeId.replace(/^L_/, "").replace(/_\d+$/, ""), sep: "_" };
+}
+
+/** Both ends of an edge, where they are known ids. */
+function exactEnds({ ends, sep }: { ends: string; sep: string }, ids: Set<string>): [string, string] | null {
+  for (let i = ends.indexOf(sep); i > 0; i = ends.indexOf(sep, i + 1)) {
+    const from = ends.slice(0, i);
+    const to = ends.slice(i + sep.length);
+    if (ids.has(from) && ids.has(to)) return [from, to];
+  }
+  return null;
+}
+
+/** Whether `id` is one end of an edge. */
+function endsAt({ ends, sep }: { ends: string; sep: string }, id: string): boolean {
+  return ends.startsWith(`${id}${sep}`) || ends.endsWith(`${sep}${id}`);
 }
 
 /** Depth of a mind map node: from its outline id ("0.2.1" is 2), else 1. */

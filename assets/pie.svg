@@ -16,6 +16,9 @@
         --pele-series-3: #FBBF24;
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
+        --pele-series-6: #FB7185;
+        --pele-series-7: #A78BFA;
+        --pele-series-8: #2DD4BF;
       }
       .pie-bg { fill: var(--mv-bg); }
       .pie-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
@@ -34,7 +37,7 @@
       .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .pie-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .pie-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .pie-hub-node .pele-label tspan:nth-child(n+2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
       .pie-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: pie-dash 1.80s linear infinite; }
       .pie-pulse { transform-box: fill-box; transform-origin: center; animation: pie-ring 3.20s ease-in-out infinite; }
       @keyframes pie-dash { to { stroke-dashoffset: -40; } }

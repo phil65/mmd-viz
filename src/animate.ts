@@ -9,8 +9,10 @@ import { THEMES, type AnimateOptions, type ThemePalette } from "./themes.js";
  * zero-JS styled & animated SVG (compatible with GitHub READMEs and static docs).
  *
  * Supported standard Mermaid conventions:
- * - `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet`
+ * - `:::cyan`, `:::indigo`, `:::amber`, `:::emerald`, `:::pink`, `:::rose`, `:::violet`, `:::blue`, `:::orange`, `:::teal`
  *   adds a colored accent bar to a node and color-matches its connected edges and packets.
+ * - The same colors on a flowchart subgraph or block-beta block (`class backend emerald`)
+ *   make it a panel in that color, its nodes chips, its wires and packets that color.
  * - `:::hub` styles a node as a highlighted focal hub with a gradient fill and pulsing ring.
  * - `<br/>` in node labels creates a bold primary title + muted secondary subtitle.
  * - `==>` (thick) and `-.->` (dotted) edges adjust wire weight and packet speed.
@@ -79,7 +81,6 @@ export function renderAnimatedSvg(
   // as they are, and eight branch colors.
   const labelCss = isMindmap
     ? `
-      .${pfx}-stage { --pele-series-1: #38BDF8; --pele-series-2: #818CF8; --pele-series-3: #FBBF24; --pele-series-4: #34D399; --pele-series-5: #F472B6; --pele-series-6: #FB7185; --pele-series-7: #A78BFA; --pele-series-8: #2DD4BF; }
       .pele-root .pele-label { font-weight: 600; }`
     : `
       .pele-label tspan:first-child { font-size: 14.5px; font-weight: 700; fill: var(--mv-fg); }
@@ -131,6 +132,9 @@ export function renderAnimatedSvg(
         --pele-series-3: #FBBF24;
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
+        --pele-series-6: #FB7185;
+        --pele-series-7: #A78BFA;
+        --pele-series-8: #2DD4BF;
       }${autoLightCss}
       .${pfx}-bg { fill: var(--mv-bg); }
       .${pfx}-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
@@ -147,7 +151,7 @@ ${branchCss}
       .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .${pfx}-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .${pfx}-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${motion.css}
+      .${pfx}-hub-node .pele-label tspan:nth-child(n+2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }${motion.css}
     </style>
     <pattern id="${pfx}-dots" width="28" height="28" patternUnits="userSpaceOnUse">
       <circle cx="1.5" cy="1.5" r="1" class="${pfx}-dot"/>

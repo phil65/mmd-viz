@@ -11,10 +11,10 @@ All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get 
 
 | Pele Type | Mermaid Syntax | Animation |
 | :--- | :--- | :--- |
-| `flowchart` | `flowchart LR` / `TD`, `graph` | Dashed wires + traveling packets; pulsing `:::hub` ring. `:::cyan` … `:::violet`, `<br/>` title/subtitle, `==>` thick and `-.->` dotted weights |
+| `flowchart` | `flowchart LR` / `TD`, `graph` | Dashed wires + traveling packets; pulsing `:::hub` ring. `:::cyan` … `:::violet`, `<br/>` title/subtitle, `==>` thick and `-.->` dotted weights; `class <subgraph> emerald` makes a subgraph a panel: header in its color, nodes as chips, its wires in its color |
 | `architecture` | `architecture-beta` | Service-to-service traffic packets |
 | `c4` | `C4Context` / `C4Container` / `C4Component` | Packets along relationship arrows |
-| `block` | `block-beta` | Packets between blocks |
+| `block` | `block-beta` | Packets between blocks; `class <block> emerald` makes a nested block a panel (as flowchart subgraphs) |
 | `swimlane` | `swimlane-beta` | Cross-lane handoff packets |
 | `usecase` | `usecase-beta` | Packets from actors to their use cases |
 | `sankey` | `sankey-beta` | Particles along each ribbon's centerline, **as many as it carries** (the widest ribbon gets six, the others in proportion) |
@@ -34,7 +34,7 @@ All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get 
 | Pele Type | Mermaid Syntax | Animation |
 | :--- | :--- | :--- |
 | `gantt` | `gantt` | A playhead sweeps the timeline; tasks in cycling accents, done ones faded, the active one glowing, critical ones red |
-| `timeline` | `timeline` | A pulse travels the axis, milestone dots pulse in turn |
+| `timeline` | `timeline` | A pulse travels the axis, milestone dots pulse in turn. A period's events share one card in its color, as a list; under a `section`, the period's pill is outlined |
 | `journey` | `journey` | Tasks and faces appear, the satisfaction line draws, then a marker keeps walking it: the experience over time |
 
 ## Own motion

@@ -16,6 +16,9 @@
         --pele-series-3: #FBBF24;
         --pele-series-4: #34D399;
         --pele-series-5: #F472B6;
+        --pele-series-6: #FB7185;
+        --pele-series-7: #A78BFA;
+        --pele-series-8: #2DD4BF;
       }
       .mindmap-bg { fill: var(--mv-bg); }
       .mindmap-card { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1.2; }
@@ -24,7 +27,6 @@
       .mindmap-footer { font: 500 12px ui-monospace, SFMono-Regular, Menlo, monospace; fill: var(--mv-muted); }
       .mindmap-stage { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 14px; fill: var(--mv-fg); }
       .pele-label { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; fill: var(--mv-fg); }
-      .mindmap-stage { --pele-series-1: #38BDF8; --pele-series-2: #818CF8; --pele-series-3: #FBBF24; --pele-series-4: #34D399; --pele-series-5: #F472B6; --pele-series-6: #FB7185; --pele-series-7: #A78BFA; --pele-series-8: #2DD4BF; }
       .pele-root .pele-label { font-weight: 600; }
       .pele-cluster-label { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; fill: var(--mv-muted); }
       .pele-edge-label rect { fill: var(--mv-card); stroke: var(--mv-border); stroke-width: 1; rx: 6; }
@@ -34,7 +36,7 @@
       .pele-task .pele-label[fill] { fill: #070B14; }
       .pele-commit-label text { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; fill: var(--mv-muted); }
       .mindmap-hub-node .pele-label tspan:first-child { font-size: 16px; font-weight: 700; fill: var(--mv-fg); }
-      .mindmap-hub-node .pele-label tspan:nth-child(2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
+      .mindmap-hub-node .pele-label tspan:nth-child(n+2) { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; fill: var(--mv-title); }
       .mindmap-flow { stroke-dasharray: 6 14; stroke-linecap: round; animation: mindmap-dash 1.80s linear infinite; }
       .mindmap-pulse { transform-box: fill-box; transform-origin: center; animation: mindmap-ring 3.20s ease-in-out infinite; }
       @keyframes mindmap-dash { to { stroke-dashoffset: -40; } }
