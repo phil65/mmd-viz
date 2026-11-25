@@ -13,6 +13,13 @@ const SOURCES: Record<string, string> = {
   gitGraph: 'gitGraph\n  commit id: "a"\n  branch feat\n  checkout feat\n  commit id: "b"\n  checkout main\n  merge feat',
   sankey: "sankey-beta\n  A,B,10\n  B,C,6\n  B,D,4\n  X,D,3",
   subgraphs: "flowchart LR\n  u --> api\n  subgraph backend [Backend]\n    api --> db\n  end",
+  // Points close together (labels overlap), a name twice, one point styled to keep its label
+  quadrantChart:
+    "quadrantChart\n  Alpha:::frontier: [0.30, 0.60]\n  Beta: [0.31, 0.61]\n  Gamma: [0.32, 0.59]\n  Dup: [0.1, 0.1]\n  Dup: [0.9, 0.9]\n  classDef frontier color: #109f5c, radius: 9",
+  xychart: 'xychart-beta\n  x-axis [a, b, c]\n  bar "Plan" [10, 50, 80]\n  line "Real" [20, 40, 90]',
+};
+const OPTIONS: Record<string, Parameters<typeof interactive>[1]> = {
+  quadrantChart: { labels: "focus", keepLabels: ".frontier" },
 };
 
 const api: Record<string, unknown> = {};
@@ -27,7 +34,7 @@ for (const [name, source] of Object.entries(SOURCES)) {
     }
     document.body.append(box);
     const type = name === "subgraphs" ? "flowchart" : name;
-    api[box.id] = interactive(box.querySelector("svg")!, { type });
+    api[box.id] = interactive(box.querySelector("svg")!, { type, ...OPTIONS[name] });
   }
 }
 // Set up while hidden (a host showing the drawing a moment later): measured once visible

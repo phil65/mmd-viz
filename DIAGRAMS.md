@@ -54,9 +54,9 @@ All **33** diagram types [`pele`](https://github.com/obsidianmd/pele) draws get 
 | `requirement` | `requirementDiagram` | Requirements and elements, then their relations |
 | `wardley` | `wardley-beta` | Components, then the value chain draws |
 | `pie` | `pie` | Slices bloom from the center one after another, then labels and legend |
-| `xychart` | `xychart-beta` | Bars grow from the axis, lines draw, points pop |
+| `xychart` | `xychart-beta` | Bars grow from the axis, lines draw, points pop; in a page, [`interactive`](README.md#interaction-in-a-page-opt-in) highlights a series |
 | `radar` | `radar-beta` | Curves bloom from the center, series after series |
-| `quadrantChart` | `quadrantChart` | Quadrants fade in, points pop in |
+| `quadrantChart` | `quadrantChart` | Quadrants fade in, points pop in; in a page, [`interactive`](README.md#interaction-in-a-page-opt-in) highlights the hovered point and can show labels only on hover |
 | `treemap` | `treemap-beta` | Sections, then their tiles |
 | `venn` | `venn-beta` | Sets pop in, then the regions' labels |
 | `kanban` | `kanban` | Cards drop into their columns, column by column |

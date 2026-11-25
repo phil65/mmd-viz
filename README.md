@@ -193,6 +193,27 @@ controls.reset();
 - **Hover** a node: it, its edges and its neighbors stay, the rest fades (flowchart, C4,
   architecture, state, class, ER, …). **Sankey**: a node shows every flow through it, a ribbon its
   two ends. **gitGraph**: a branch, commit or line shows that branch.
+- **Quadrant charts**: the point nearest the pointer (within `reach`, 12 SVG units by default;
+  where points crowd, the one whose center is closest) or under a label stays with its label, the
+  rest fades. A point's id is its label (`focus`, `focusOn("Claude Opus")`; a name used twice
+  highlights both). For charts where labels overlap, `labels: "focus"` hides them all but the
+  focused point's, and `keepLabels` (a CSS selector on the points, e.g. `".frontier"` for
+  `Name:::frontier: [x, y]`) keeps some:
+
+  ```ts
+  const chart = interactive(svg, {
+    labels: "focus",
+    keepLabels: ".frontier",
+    onChange: ({ focus }) => showDetails(focus), // e.g. a tooltip or the matching table row
+  });
+  row.addEventListener("pointerenter", () => chart.focusOn(row.dataset.model!));
+  ```
+
+  Points get `mmdi-on` when focused, labels `mmdi-on` / `mmdi-keep`; pele draws labels apart
+  from their points without an id, so they're paired by text (the nearest where names repeat).
+- **xychart**: a series with a title (`line "Revenue" [...]`) is its id: hovering its bars, line
+  or legend entry shows it, the other series fade. Single bars and points have no id in pele's
+  drawing (missing values leave gaps), so they can't be focused one by one.
 - **Stepping** (`steps > 0` for sequence, state, agentflow and event-model diagrams): `next()`,
   `prev()`, `setStep(n)`, `reset()`; past steps stay dimmed, the current one is bright, and where
   a step leads somewhere (a state, the agent work is handed to) that node lights up too. Packets

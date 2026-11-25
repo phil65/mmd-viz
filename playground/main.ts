@@ -22,6 +22,9 @@ const copyBtn = document.getElementById("copyBtn") as HTMLButtonElement;
 const downloadBtn = document.getElementById("downloadBtn") as HTMLButtonElement;
 const stepperEl = document.getElementById("stepper") as HTMLSpanElement;
 const stepLabelEl = document.getElementById("stepLabel") as HTMLSpanElement;
+const labelsChkEl = document.getElementById("labelsChk") as HTMLLabelElement;
+const focusLabelsEl = document.getElementById("focusLabels") as HTMLInputElement;
+const focusNameEl = document.getElementById("focusName") as HTMLSpanElement;
 
 // Hover highlights, and stepping through sequence and state diagrams
 let controls: Interactive | null = null;
@@ -29,6 +32,8 @@ let controls: Interactive | null = null;
 let folds = new Set<string>();
 let keyAt: ((index: number, id: string) => string | null) | null = null;
 function showStep(): void {
+  // What a host would show in a tooltip: the focused point's name
+  focusNameEl.textContent = controls?.focus ? `· ${controls.focus}` : "";
   const steps = controls?.steps ?? 0;
   stepperEl.hidden = steps === 0;
   if (!controls || steps === 0) return;
@@ -82,7 +87,10 @@ function update(): void {
     controls?.destroy();
     const svg = previewEl.querySelector("svg");
     const type = isOutline(sourceEl.value) ? "mindmap" : (detectType(sourceEl.value) ?? undefined);
-    controls = svg ? interactive(svg, { ...(type ? { type } : {}), onChange: showStep }) : null;
+    // Quadrant charts: labels only for the hovered point and the `:::frontier` ones
+    labelsChkEl.hidden = type !== "quadrantChart";
+    const labels = focusLabelsEl.checked ? { labels: "focus" as const, keepLabels: ".frontier" } : {};
+    controls = svg ? interactive(svg, { ...(type ? { type } : {}), ...labels, onChange: showStep }) : null;
     // What can fold shows a pointer
     [...previewEl.querySelectorAll<SVGGElement>("g.pele-node[data-id]")].forEach((node, index) => {
       if (keyAt?.(index, node.dataset.id ?? "")) node.style.cursor = "pointer";
@@ -127,7 +135,7 @@ previewEl.addEventListener("click", (event) => {
   else folds.add(key);
   update();
 });
-for (const el of [themeEl, speedEl, animateEl, transparentEl, titleEl, footerEl, sourceEl]) {
+for (const el of [themeEl, speedEl, animateEl, transparentEl, titleEl, footerEl, sourceEl, focusLabelsEl]) {
   el.addEventListener("input", update);
   el.addEventListener("change", update);
 }

@@ -6,6 +6,9 @@
  * - hover a node: it, its edges and its neighbors stay, the rest fades
  * - sankey: hover a node or ribbon to see the flows through it
  * - gitGraph: hover a branch, commit or line to see that branch
+ * - quadrant charts: hover near a point to see it and its label (optionally
+ *   only the focused point's label shows, for charts with many points)
+ * - xychart: hover a series (bars, line or legend entry) to see that series
  * - sequence, state, agentflow and event-model diagrams: step through their
  *   messages, transitions or handoffs in order
  *
@@ -20,6 +23,18 @@ export interface InteractiveOptions {
   hover?: boolean;
   /** Called when the step or the highlight changes. */
   onChange?: (state: InteractiveState) => void;
+  /**
+   * Quadrant chart point labels: `"all"` (default, as drawn) or `"focus"`: hidden but
+   * the focused point's, for charts where many labels overlap.
+   */
+  labels?: "all" | "focus";
+  /**
+   * With `labels: "focus"`, points matching this CSS selector keep their labels, e.g.
+   * `".frontier"` for points styled `Name:::frontier: [x, y]`.
+   */
+  keepLabels?: string;
+  /** How far from a quadrant chart point the pointer still finds it, in SVG units (default 12). */
+  reach?: number;
 }
 
 export interface InteractiveState {
@@ -27,7 +42,10 @@ export interface InteractiveState {
   steps: number;
   /** The current step, or `-1` when not stepping (everything shown). */
   step: number;
-  /** What's highlighted: a node's or ribbon's id, or `null`. */
+  /**
+   * What's highlighted: a node's or ribbon's id, a quadrant chart point's label, an
+   * xychart series' title, or `null`.
+   */
   focus: string | null;
 }
 
@@ -40,7 +58,10 @@ export interface Interactive extends InteractiveState {
   prev(): void;
   /** Leave stepping and drop the highlight. */
   reset(): void;
-  /** Highlight a node (or sankey node or ribbon, git branch) by id; `null` drops it. */
+  /**
+   * Highlight a node (or sankey node or ribbon, git branch, quadrant chart point, xychart
+   * series) by id; `null` drops it.
+   */
   focusOn(id: string | null): void;
   /**
    * Measure the drawing again, e.g. after the host changed its layout (it's
@@ -63,12 +84,25 @@ const PAST = "mmdi-past";
 const NOW = "mmdi-now";
 /** A state diagram: stepping also shows which state it's in. */
 const STATES = "mmdi-states";
+/** Quadrant chart point labels show only for the focused point (and kept ones). */
+const LABELS = "mmdi-labels";
+const KEEP = "mmdi-keep";
+/** An xychart: legend entries fade with their series. */
+const SERIES = "mmdi-series";
+/** A quadrant chart point's label (not the quadrants' own labels). */
+const POINT_LABEL = ".pele-point-labels > .pele-label";
 
 const STYLE = `
   .${FOCUS} .pele-node:not(.${ON}), .${FOCUS} .pele-edge:not(.${ON}), .${FOCUS} .pele-edge-label:not(.${ON}),
   .${FOCUS} .pele-sankey-link:not(.${ON}), .${FOCUS} .pele-sankey-node:not(.${ON}), .${FOCUS} g.pele-label:not(.${ON}),
   .${FOCUS} .pele-commit:not(.${ON}), .${FOCUS} .pele-commit-label:not(.${ON}), .${FOCUS} .pele-branch:not(.${ON}),
-  .${FOCUS} [class$="-packets"], .${FOCUS} [class$="-flow"]:not(.${ON}):not(.${ON} *) { opacity: 0.18; transition: opacity 0.15s; }
+  .${FOCUS} [class$="-packets"], .${FOCUS} [class$="-flow"]:not(.${ON}):not(.${ON} *),
+  .${FOCUS} .pele-point:not(.${ON}), .${FOCUS} ${POINT_LABEL}:not(.${ON}),
+  .${FOCUS} .pele-plot .pele-series:not(.${ON}), .${FOCUS}.${SERIES} .pele-legend-item:not(.${ON}),
+  .${FOCUS} .pele-data-labels { opacity: 0.18; transition: opacity 0.15s; }
+  .${FOCUS} .pele-point.${ON} { stroke: var(--_fg); stroke-width: 1.5px; }
+  .${LABELS} ${POINT_LABEL} { transition: opacity 0.15s; }
+  .${LABELS} ${POINT_LABEL}:not(.${ON}):not(.${KEEP}) { opacity: 0; pointer-events: none; }
   .${STEPPING} .pele-edge:not(.${PAST}):not(.${NOW}),
   .${STEPPING} .pele-edge-label:not(.${PAST}):not(.${NOW}) { opacity: 0.12; }
   .${STEPPING} .${PAST} { opacity: 0.55; }
@@ -78,6 +112,7 @@ const STYLE = `
   .${STEPPING} .pele-node.${NOW} > :first-child { stroke-width: 2.4; }
   .${STEPPING} [class$="-packets"] { display: none; }
   .pele-node, .pele-sankey-link, .pele-sankey-node, .pele-commit, .pele-branch { cursor: default; }
+  @media (prefers-reduced-motion: reduce) { .${FOCUS} *, .${LABELS} * { transition: none !important; } }
 `;
 
 export interface Box {
@@ -111,6 +146,61 @@ export function nearestBox(point: Point, boxes: ReadonlyMap<string, Box>, reach 
     }
   }
   return best;
+}
+
+export interface Circle extends Point {
+  id: string;
+  r: number;
+}
+
+/**
+ * The id of the circle whose center is nearest a point, among those within `reach` of
+ * their rim: where points overlap, the one pointed at most closely.
+ */
+export function nearestCircle(point: Point, circles: readonly Circle[], reach = 12): string | null {
+  let best: string | null = null;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  for (const circle of circles) {
+    const distance = Math.hypot(point.x - circle.x, point.y - circle.y);
+    if (distance <= circle.r + reach && distance < bestDistance) {
+      best = circle.id;
+      bestDistance = distance;
+    }
+  }
+  return best;
+}
+
+export interface Placed extends Point {
+  /** A point's id or a label's text. */
+  id: string;
+}
+
+/**
+ * Which point each label belongs to (its index, `-1` for none). Pele draws a quadrant
+ * chart's labels apart from its points, with no id: a label goes to the point named
+ * like its text (whitespace aside, as wrapping splits it), the nearest one where names
+ * repeat; a label no name matches goes to the nearest point left.
+ */
+export function pairLabels(points: readonly Placed[], labels: readonly Placed[]): number[] {
+  const bare = (text: string) => text.replace(/\s+/g, "");
+  const names = points.map((point) => bare(point.id));
+  const taken = new Set<number>();
+  const nearest = (label: Placed, fits: (index: number) => boolean) => {
+    let best = -1;
+    let bestDistance = Number.POSITIVE_INFINITY;
+    points.forEach((point, index) => {
+      if (taken.has(index) || !fits(index)) return;
+      const distance = Math.hypot(point.x - label.x, point.y - label.y);
+      if (distance < bestDistance) {
+        best = index;
+        bestDistance = distance;
+      }
+    });
+    if (best >= 0) taken.add(best);
+    return best;
+  };
+  const result = labels.map((label) => nearest(label, (index) => names[index] === bare(label.id)));
+  return result.map((index, at) => (index >= 0 ? index : nearest(labels[at]!, () => true)));
 }
 
 /** Sankey link ids are `source->target`. */
@@ -196,6 +286,7 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
     [...svg.classList].find((name) => name.startsWith("pele-"))?.slice("pele-".length) ??
     "";
   if (REACHES.has(type)) svg.classList.add(STATES);
+  if (type === "xychart") svg.classList.add(SERIES);
   const style = document.createElementNS("http://www.w3.org/2000/svg", "style");
   style.textContent = STYLE;
   svg.prepend(style);
@@ -206,6 +297,31 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
     nodes.set(el.dataset.id ?? "", el);
   }
   const edges = [...svg.querySelectorAll<SVGGElement>("g.pele-edge")];
+
+  // Quadrant chart points, and which label is whose (from where pele put them)
+  const points = type === "quadrantChart" ? [...svg.querySelectorAll<SVGCircleElement>("circle.pele-point[data-id]")] : [];
+  const pointLabels = points.length > 0 ? [...svg.querySelectorAll<SVGTextElement>(POINT_LABEL)] : [];
+  const labelOwners = new Map<Element, SVGCircleElement>();
+  const at = (el: Element) => {
+    const anchor = el.hasAttribute("x") ? el : (el.querySelector("[x]") ?? el);
+    return { x: Number(anchor.getAttribute("x")) || 0, y: Number(anchor.getAttribute("y")) || 0 };
+  };
+  const pairs = pairLabels(
+    points.map((point) => ({ id: point.dataset.id ?? "", x: point.cx.baseVal.value, y: point.cy.baseVal.value })),
+    pointLabels.map((label) => ({ id: label.textContent ?? "", ...at(label) }))
+  );
+  pairs.forEach((index, label) => {
+    const point = points[index];
+    if (point) labelOwners.set(pointLabels[label]!, point);
+  });
+  const labelsOf = (id: string) =>
+    [...labelOwners].filter(([, point]) => point.dataset.id === id).map(([label]) => label);
+  if (points.length > 0 && options.labels === "focus") {
+    svg.classList.add(LABELS);
+    if (options.keepLabels) {
+      for (const [label, point] of labelOwners) if (point.matches(options.keepLabels)) label.classList.add(KEEP);
+    }
+  }
   const edgePaths = edges.map((edge) => edge.querySelector<SVGPathElement>("path:not(.pele-marker)"));
 
   /**
@@ -216,6 +332,7 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
   let measured: {
     edgeEnds: (readonly [string | null, string | null])[];
     labels: Map<number, SVGGElement>;
+    circles: Circle[];
   } | null = null;
   const measure = () => {
     const boxes = new Map<string, Box>();
@@ -247,8 +364,16 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
       });
       if (best >= 0) labels.set(best, label);
     }
+    const circles: Circle[] = [];
+    for (const point of points) {
+      const box = boxIn(svg, point);
+      if (!box || box.width === 0) continue;
+      const r = box.width / 2;
+      circles.push({ id: point.dataset.id ?? "", x: box.x + r, y: box.y + box.height / 2, r });
+    }
     // Nothing measurable yet (hidden): try again next time
-    return { edgeEnds, labels, empty: nodes.size > 0 && boxes.size === 0 };
+    const empty = (nodes.size > 0 && boxes.size === 0) || (points.length > 0 && circles.length === 0);
+    return { edgeEnds, labels, circles, empty };
   };
   const geometry = () => {
     if (!measured) {
@@ -301,6 +426,13 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
           if (next && /-flow\b/.test(next.getAttribute("class") ?? "")) next.classList.add(ON);
         }
       }
+    } else if (type === "quadrantChart") {
+      mark(points.filter((point) => point.dataset.id === id));
+      mark(labelsOf(id));
+    } else if (type === "xychart") {
+      for (const el of svg.querySelectorAll<SVGElement>(".pele-series[data-id], .pele-legend-item[data-id]")) {
+        if (el.dataset.id === id) el.classList.add(ON);
+      }
     } else {
       mark([nodes.get(id)]);
       geometry().edgeEnds.forEach(([from, to], index) => {
@@ -334,11 +466,26 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
       ? ".pele-sankey-link[data-id], .pele-sankey-node[data-id], .pele-label[data-id]"
       : type === "gitGraph"
         ? ".pele-branch[data-id], .pele-commit[data-id]"
-        : "g.pele-node[data-id]";
+        : type === "xychart"
+          ? ".pele-series[data-id], .pele-legend-item[data-id]"
+          : "g.pele-node[data-id]";
   const onOver = (event: Event) => {
     if (state.step >= 0) return;
     const target = (event.target as Element).closest<SVGElement>(hoverable);
     const id = target?.dataset.id ?? null;
+    if (id !== state.focus) focusOn(id);
+  };
+  // Quadrant chart points are small and crowd: the point nearest the pointer, or the
+  // point whose label it's on
+  const onMove = (event: PointerEvent) => {
+    if (state.step >= 0) return;
+    const label = (event.target as Element).closest(POINT_LABEL);
+    let id = label ? (labelOwners.get(label)?.dataset.id ?? null) : null;
+    const toSvg = svg.getScreenCTM()?.inverse();
+    if (!label && toSvg) {
+      const pointer = new DOMPoint(event.clientX, event.clientY).matrixTransform(toSvg);
+      id = nearestCircle(pointer, geometry().circles, options.reach);
+    }
     if (id !== state.focus) focusOn(id);
   };
   const onLeave = () => {
@@ -346,7 +493,8 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
   };
   const hover = options.hover ?? true;
   if (hover) {
-    svg.addEventListener("pointerover", onOver);
+    if (points.length > 0) svg.addEventListener("pointermove", onMove);
+    else svg.addEventListener("pointerover", onOver);
     svg.addEventListener("pointerleave", onLeave);
   }
 
@@ -373,9 +521,10 @@ export function interactive(svg: SVGSVGElement, options: InteractiveOptions = {}
     },
     destroy: () => {
       svg.removeEventListener("pointerover", onOver);
+      svg.removeEventListener("pointermove", onMove);
       svg.removeEventListener("pointerleave", onLeave);
-      clear(ON, PAST, NOW);
-      svg.classList.remove(FOCUS, STEPPING, STATES);
+      clear(ON, PAST, NOW, KEEP);
+      svg.classList.remove(FOCUS, STEPPING, STATES, LABELS, SERIES);
       style.remove();
     },
   };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { distanceToBox, flowThrough, nearestBox, sankeyEnds } from "../src/interactive.js";
+import { distanceToBox, flowThrough, nearestBox, nearestCircle, pairLabels, sankeyEnds } from "../src/interactive.js";
 
 describe("interactive geometry", () => {
   const boxes = new Map([
@@ -34,5 +34,48 @@ describe("sankey flows", () => {
     );
     expect(through.has("Prompt->Direct")).toBe(false);
     expect(through.has("Other->Coder")).toBe(false);
+  });
+});
+
+describe("quadrant chart points", () => {
+  const circles = [
+    { id: "big", x: 100, y: 100, r: 9 },
+    { id: "small", x: 106, y: 100, r: 5 },
+    { id: "far", x: 300, y: 300, r: 5 },
+  ];
+
+  it("finds the point whose center is nearest, where points overlap", () => {
+    expect(nearestCircle({ x: 105, y: 100 }, circles)).toBe("small");
+    expect(nearestCircle({ x: 98, y: 101 }, circles)).toBe("big");
+  });
+
+  it("finds a point near its rim, within reach", () => {
+    expect(nearestCircle({ x: 300, y: 315 }, circles)).toBe("far");
+    expect(nearestCircle({ x: 300, y: 330 }, circles)).toBeNull();
+    expect(nearestCircle({ x: 300, y: 330 }, circles, 30)).toBe("far");
+  });
+
+  it("pairs labels with points by name, the nearest where names repeat", () => {
+    // Pele draws points in reverse and labels in source order, labels below or above
+    const points = [
+      { id: "Dup", x: 400, y: 50 },
+      { id: "Dup", x: 80, y: 420 },
+      { id: "A long name", x: 200, y: 200 },
+    ];
+    const labels = [
+      { id: "A long\nname", x: 200, y: 221 },
+      { id: "Dup", x: 80, y: 441 },
+      { id: "Dup", x: 400, y: 71 },
+    ];
+    expect(pairLabels(points, labels)).toEqual([2, 1, 0]);
+  });
+
+  it("pairs a label no name matches with the nearest point left", () => {
+    const points = [
+      { id: "A", x: 0, y: 0 },
+      { id: "B", x: 100, y: 0 },
+    ];
+    expect(pairLabels(points, [{ id: "B…", x: 100, y: 20 }, { id: "A", x: 0, y: 20 }])).toEqual([1, 0]);
+    expect(pairLabels(points, [])).toEqual([]);
   });
 });

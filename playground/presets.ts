@@ -196,6 +196,60 @@ export const PRESETS: Preset[] = [
   Campaign C: [0.7, 0.8]`,
   },
   {
+    name: "Quadrant Chart, 40 points (hover a point)",
+    title: "QUADRANTS · PRICE × QUALITY",
+    footer: "hover a point: its label shows",
+    source: `quadrantChart
+  title Price and quality
+  x-axis Cheap --> Expensive
+  y-axis Weak --> Strong
+  quadrant-1 Premium
+  quadrant-2 Bargains
+  quadrant-3 Budget
+  quadrant-4 Overpriced
+  Nova Mini: [0.1, 0.27]
+  Nova Lite:::frontier: [0.27, 0.43]
+  Nova Pro: [0.48, 0.52]
+  Nova Max: [0.67, 0.69]
+  Quill Mini: [0.11, 0.18]
+  Quill Lite: [0.32, 0.47]
+  Quill Pro: [0.47, 0.55]
+  Quill Max:::frontier: [0.7, 0.83]
+  Atlas Mini:::frontier: [0.16, 0.33]
+  Atlas Lite:::frontier: [0.31, 0.48]
+  Atlas Pro: [0.51, 0.53]
+  Atlas Max: [0.67, 0.73]
+  Orbit Mini: [0.18, 0.26]
+  Orbit Lite: [0.4, 0.4]
+  Orbit Pro: [0.58, 0.52]
+  Orbit Max: [0.71, 0.71]
+  Ember Mini: [0.18, 0.22]
+  Ember Lite: [0.38, 0.41]
+  Ember Pro: [0.53, 0.64]
+  Ember Max: [0.75, 0.72]
+  Lumen Mini: [0.17, 0.31]
+  Lumen Lite: [0.37, 0.39]
+  Lumen Pro: [0.58, 0.53]
+  Lumen Max: [0.7, 0.8]
+  Vega Mini: [0.1, 0.18]
+  Vega Lite:::frontier: [0.3, 0.46]
+  Vega Pro: [0.47, 0.65]
+  Vega Max:::frontier: [0.63, 0.79]
+  Cobalt Mini: [0.18, 0.24]
+  Cobalt Lite:::frontier: [0.39, 0.49]
+  Cobalt Pro: [0.53, 0.62]
+  Cobalt Max: [0.67, 0.79]
+  Juniper Mini: [0.23, 0.3]
+  Juniper Lite: [0.34, 0.4]
+  Juniper Pro: [0.56, 0.51]
+  Juniper Max: [0.72, 0.71]
+  Sable Mini:::frontier: [0.05, 0.29]
+  Sable Lite:::frontier: [0.24, 0.38]
+  Sable Pro:::frontier: [0.45, 0.65]
+  Sable Max:::frontier: [0.6, 0.75]
+  classDef frontier color: #109f5c, radius: 7`,
+  },
+  {
     name: "Requirements (requirementDiagram)",
     title: "REQUIREMENTS · BUILD-UP",
     footer: "",
